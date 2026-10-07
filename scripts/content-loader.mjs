@@ -15,7 +15,9 @@ export function loadContent(entry = 'app/content/index.ts') {
     const require = (id) => {
       if (!id.startsWith('.')) return createRequire(path)(id)
       const target = resolve(dirname(path), id.replace(/\?raw$/, ''))
-      if (id.endsWith('?raw')) return readFileSync(target, 'utf8')
+      // Git checks out LF on Linux; existing Windows files can still have CRLF.
+      // A snapshot must not depend on the machine that captures it.
+      if (id.endsWith('?raw')) return readFileSync(target, 'utf8').replace(/\r\n/g, '\n')
       if (id.endsWith('.json')) return JSON.parse(readFileSync(target, 'utf8'))
       return load(existsSync(target) ? target : target + '.ts')
     }

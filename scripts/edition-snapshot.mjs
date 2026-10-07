@@ -26,7 +26,7 @@ export function historicalSource(commit, cwd = process.cwd()) {
     const require = (id) => {
       if (!id.startsWith('.')) throw new Error(`Unexpected historical dependency: ${id}`)
       const target = posix.normalize(posix.join(posix.dirname(path), id.replace(/\?raw$/, '')))
-      if (id.endsWith('?raw')) return source(target)
+      if (id.endsWith('?raw')) return source(target).replace(/\r\n/g, '\n')
       if (id.endsWith('.json')) return JSON.parse(source(target))
       return load(target.endsWith('.ts') ? target : target + '.ts')
     }
