@@ -1,6 +1,9 @@
 import { readFile, readdir } from 'node:fs/promises'
-import { resolve } from 'node:path'
+import { resolve, relative } from 'node:path'
 import assert from 'node:assert/strict'
+import { loadContent } from './content-loader.mjs'
+
+const { resolveWikiRoute } = loadContent('app/content/editions.ts')
 
 const root = resolve('.output/public')
 async function walk(path) {
@@ -34,6 +37,18 @@ for (const [file, html] of documents) {
   assert.match(html, /hreflang="en"/, file)
   assert.match(html, /hreflang="fr"/, file)
   assert.match(html, /<h1\b/, file)
+  const route =
+    '/' +
+    relative(root, file)
+      .replaceAll('\\', '/')
+      .replace(/(?:\/)?index\.html$/, '')
+  const location = resolveWikiRoute(route)
+  assert(location.exists, `Generated route absent from edition registry: ${route}`)
+  const canonical = 'https://wiki.nimbyrails-france.fr' + location.canonical
+  assert(
+    html.includes(`rel="canonical" href="${canonical}"`),
+    `Incorrect canonical: ${route} → ${canonical}`,
+  )
   for (const [, href] of html.matchAll(/<a\b[^>]*\bhref="([^" ]+)"/g)) {
     if (
       (!href.startsWith('/') && !href.startsWith('#')) ||
@@ -43,6 +58,15 @@ for (const [file, html] of documents) {
     )
       continue
     const [path, hash] = href.split('#')
+    if (path) {
+      const linked = resolveWikiRoute(path)
+      assert(linked.versioned, `Unversioned internal link: ${route} → ${href}`)
+      assert.equal(
+        linked.edition,
+        location.edition,
+        `Unexpected edition switch: ${route} → ${href}`,
+      )
+    }
     const target = path ? resolve(root, '.' + path, 'index.html') : file
     const targetHtml = documents.get(target)
     assert(targetHtml, `Lien interne absent : ${file} → ${href}`)

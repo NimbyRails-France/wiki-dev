@@ -11,3 +11,5 @@ dist/
 .idea/
 test-results/
 playwright-report/
+verification/**/.gradle/
+verification/**/.kotlin/

@@ -1,0 +1,17 @@
+{
+  "current": "0.9",
+  "editions": [
+    {
+      "id": "0.9",
+      "sdkVersion": "0.9.0-alpha.1",
+      "archived": false,
+      "sha256": "122cbe06c959c9ae5e8d4c51c38429e2b6b6e834f519ea8485e45e51a9887fac"
+    },
+    {
+      "id": "0.8",
+      "sdkVersion": "0.8.0-alpha.8",
+      "archived": true,
+      "sha256": "96ee0e76c49a6c5c6c07357af71d47af6c999a8a44d277428ad7e58aebd38ebc"
+    }
+  ]
+}

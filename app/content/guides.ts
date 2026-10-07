@@ -4,6 +4,7 @@ import firstMod from './snippets/FirstMod.kt?raw'
 import signalModels from './snippets/SignalModels.kt?raw'
 import approachSignal from './snippets/ApproachSignal.kt?raw'
 import blinkSignal from './snippets/BlinkSignal.kt?raw'
+import connection from './snippets/jvm/Connection.kt?raw'
 
 export const guides: Article[] = [
   {
@@ -35,7 +36,7 @@ export const guides: Article[] = [
               [
                 'Créer un mod de signalisation',
                 'nimby · signalMod',
-                'Kotlin/Native, chargé par le loader dans le jeu',
+                'Kotlin/Native, exécuté dans un processus isolé par mod',
               ],
               [
                 'Créer un outil, un TCO ou un banc de test',
@@ -109,7 +110,7 @@ export const guides: Article[] = [
             'Le kit contient sdk.json, les bibliothèques Kotlin, le pont natif et gradle-repository. Recopiez son chemin dans nrfSdkDir. Pour utiliser une modification locale du SDK, ajoutez son projet au profil développeur du Hub, compilez le SDK, puis recompilez les mods avec le kit sélectionné par cette construction. Activez ensuite le profil, jeu fermé.',
           ),
           note(
-            'Cette documentation suit le SDK 0.8.0-alpha.3. Les fenêtres d’outils, les métadonnées traduites et la génération de mod.txt exigent le kit et le SDK du jeu de cette version ou une version compatible plus récente. Le catalogue du Hub indique ce qui est effectivement distribué.',
+            'Cette documentation suit le SDK 0.9.0-alpha.1. Utilisez un kit de compilation et un SDK installé issus du même build pour les exemples de cette branche. Le catalogue du Hub indique les versions effectivement distribuées ; cette documentation ne constitue pas une annonce de publication.',
             'Version de ce guide',
           ),
           text(
@@ -174,7 +175,7 @@ rootProject.name = "mon-premier-mod"`,
   "module": "MonPremierMod",
   "version": "0.1.0",
   "language": "kotlin-native",
-  "sdkMin": "0.8.0-alpha.3",
+  "sdkMin": "0.9.0-alpha.1",
   "sdkMaxExclusive": "0.9.0",
   "gameSha256": ["fff49ac21720abfc824c2b4f68b862727630eb0db71cfe1f9ea8f685d0db10ae"]
 }`,
@@ -185,7 +186,10 @@ rootProject.name = "mon-premier-mod"`,
             ['Fichier / dossier à créer', 'Rôle'],
             [
               ['src/main/kotlin/Entry.kt', 'Le point d’entrée createMod() et vos règles.'],
-              ['construction(states)', 'Le catalogue de textures et le signal constructible, déclarés dans le modèle Kotlin.'],
+              [
+                'construction(states)',
+                'Le catalogue de textures et le signal constructible, déclarés dans le modèle Kotlin.',
+              ],
               ['assets/closed.svg et assets/open.svg', 'Les images de vos indications.'],
               ['src/test/kotlin/', 'Vos tests de règles, sans partie ouverte.'],
             ],
@@ -223,10 +227,7 @@ rootProject.name = "mon-premier-mod"`,
           text(
             'Le modèle déclare construction(states = listOf("closed.svg", "open.svg")). Le SDK génère mod.txt pendant la compilation : ne créez plus ce fichier dans assets. Ajoutez seulement les deux images ci-dessous.',
           ),
-          code(
-            'construction(states = listOf("closed.svg", "open.svg"))',
-            'Dans le modèle Kotlin',
-          ),
+          code('construction(states = listOf("closed.svg", "open.svg"))', 'Dans le modèle Kotlin'),
           code(
             '<svg xmlns="http://www.w3.org/2000/svg" width="32" height="64" viewBox="0 0 32 64"><rect x="6" y="2" width="20" height="48" rx="10" fill="#161616"/><circle cx="16" cy="15" r="7" fill="#ef4444"/><path d="M16 50v14" stroke="#888" stroke-width="4"/></svg>',
             'assets/closed.svg',
@@ -378,7 +379,7 @@ rootProject.name = "mon-premier-mod"`,
             'Le SDK fournit directement next à tous les modèles : ID, type, décision et consigne déclarée par le voisin. Aucun adaptateur ni fichier Neighbours à écrire. Vous pouvez lire sa consigne générique ou utiliser of(mainSignal) pour ses enums. Le modèle amont reste responsable de son interprétation et du repli pour les informations inconnues.',
           ),
           text(
-            'Le contexte fournit aussi settings, observation, fresh et settingsStatus. Un profil absent reçoit les défauts déclarés ; un profil indisponible rend l’observation non fraîche. Le statut est conservé pour vos règles. next concerne le lien aval résolu dans le réseau du mod, pas tous les signaux géographiquement proches ni les décisions privées des autres mods.',
+            'Le contexte fournit aussi settings, observation, fresh et settingsStatus. Un signal connu sans valeurs sauvegardées reçoit les défauts déclarés avec le statut Present ; Unavailable rend l’observation non fraîche. Absent désigne un signal absent du catalogue observé. next concerne le lien aval résolu dans le réseau du mod, pas tous les signaux géographiquement proches ni les décisions privées des autres mods.',
           ),
           text(
             'Une règle qui dépend du voisin doit aussi décider comment traiter ses propres observations inconnues. Le SDK ne transforme pas automatiquement un canton inconnu en canton libre.',
@@ -524,8 +525,14 @@ rootProject.name = "mon-premier-mod"`,
           table(
             ['Statut', 'Sens'],
             [
-              ['Present', 'Le profil a été lu.'],
-              ['Absent', 'Aucun profil enregistré pour ce signal.'],
+              [
+                'Present',
+                'Les valeurs effectives sont disponibles, y compris les défauts d’un signal connu sans profil sauvegardé.',
+              ],
+              [
+                'Absent',
+                'Le signal est absent du catalogue observé ; aucun profil effectif ne peut lui être attribué.',
+              ],
               ['Unavailable', 'Le SDK ne peut pas fournir le profil.'],
             ],
           ),
@@ -675,7 +682,7 @@ rootProject.name = "mon-premier-mod"`,
         title: 'L’entrée conseillée : Nimby.connect',
         blocks: [
           code(
-            'import fr.nimby.sdk.Nimby\nimport java.nio.file.Path\n\nfun observer(sdk: Path, trainId: Long) {\n    Nimby.connect(sdk).use { game ->\n        val train = game.trains.read(trainId)\n        println(train?.speedMps)\n        val snapshot = game.snapshot()\n        println(snapshot.clock?.toInstant())\n    }\n}',
+            'import fr.nimby.sdk.Nimby\nimport java.nio.file.Path\n\nfun observer(sdk: Path, trainId: Long) {\n    Nimby.connect(sdk).use { game ->\n        val train = game.trains.read(trainId)\n        println(train?.speedMps)\n        println(game.clock.read()?.toInstant())\n    }\n}',
           ),
           text(
             'Sans processId, connect exige un seul jeu ouvert. Game regroupe trains, clock, signals, mods et construction. game.advanced donne accès aux opérations détaillées de NimbyClient sur la même connexion ; ne le fermez pas séparément.',
@@ -687,11 +694,9 @@ rootProject.name = "mon-premier-mod"`,
         id: 'ouvrir',
         title: 'Choisir explicitement le jeu',
         blocks: [
-          code(
-            'import fr.nimby.sdk.*\nimport java.nio.file.Path\n\nfun lireReseau(dll: Path) {\n    val games = GameProcesses.discover()\n    require(games.size == 1) { "Choisissez un processus de jeu" }\n    NimbyClient.open(dll, games.single().pid).use { client ->\n        val snapshot = client.capture()\n        snapshot.trains.forEach { train ->\n            println("${train.name} : ${train.speedKmh ?: "inconnue"} km/h")\n        }\n    }\n}',
-          ),
+          code(connection, 'Connection.kt — lecture ciblée des vitesses'),
           text(
-            'Passez le chemin réel de la DLL SDK installée. open vérifie la version SDK 0.8.x et l’ABI 2. Si plusieurs jeux sont ouverts, demandez à l’utilisateur de choisir : ne sélectionnez pas le premier silencieusement.',
+            'Passez le chemin réel de la DLL SDK installée et le processId choisi parmi Nimby.runningGames(). Si plusieurs jeux sont ouverts, demandez à l’utilisateur de choisir : ne sélectionnez pas le premier silencieusement. Cette requête lit les vitesses sans demander les services, lieux, horaires ou catalogues optionnels.',
           ),
           note(
             'Ce chapitre concerne les outils JVM. Le point d’entrée createMod du mod de signalisation reçoit ses observations automatiquement.',
@@ -818,7 +823,7 @@ rootProject.name = "mon-premier-mod"`,
         title: 'Lire une date UTC',
         blocks: [
           code(
-            'val snapshot = client.capture()\nval date = snapshot.clock?.toInstant()\nprintln(date ?: "Horloge indisponible")',
+            'val date = client.readSimulationClock()?.toInstant()\nprintln(date ?: "Horloge indisponible")',
           ),
           text(
             'SimulationClock contient epochSeconds et ticks. Un tick représente un centième de seconde. toInstant combine les deux et accepte une époque antérieure à 1970 ; des ticks négatifs sont rejetés.',
@@ -857,7 +862,7 @@ rootProject.name = "mon-premier-mod"`,
             'fun testerSignal(client: fr.nimby.sdk.NimbyClient, modId: String, signalId: Long, aspect: Int) {\n    client.acquireModControl(modId, leaseMillis = 5000).use { recipe ->\n        recipe.forceSignal(signalId, aspect)\n        val state = recipe.readSignal(signalId)\n        println(state.detail)\n        recipe.restoreSignal(signalId)\n    }\n}',
           ),
           text(
-            'Le mod doit être chargé dans le processus choisi et avoir observé un monde. Les codes d’indication et indices de case appartiennent au mod. Le SDK ne devine pas la signification d’un nombre. Le mod peut refuser un forçage.',
+            'Le mod doit être actif pour le jeu choisi et avoir observé un monde. Les codes d’indication et indices de case appartiennent au mod. Le SDK ne devine pas la signification d’un nombre. Le mod peut refuser un forçage.',
           ),
         ],
       },
@@ -1010,43 +1015,6 @@ rootProject.name = "mon-premier-mod"`,
             'Un journal peut contenir des chemins locaux et des noms de données du jeu. Relisez ce que vous partagez. Les erreurs JVM et les crashs natifs ne produisent pas les mêmes diagnostics.',
           ),
           links({ label: 'DiagnosticLog : méthodes et rotation', to: '/reference/diagnosticlog' }),
-        ],
-      },
-    ],
-  },
-  {
-    slug: 'maintenance/contribuer',
-    title: 'Faire évoluer le wiki',
-    group: 'Maintenance',
-    description: 'Le site officiel se corrige dans le dépôt wiki, au même rythme que l’API.',
-    sections: [
-      {
-        id: 'sources',
-        title: 'Un site, une source versionnée',
-        blocks: [
-          text(
-            'Les guides vivent dans app/content sous forme de pages structurées TypeScript, sans collection de fichiers Markdown à parcourir. Les composants Vue affichent les textes, exemples, tableaux et liens. La référence Kotlin est un instantané extrait des déclarations publiques du SDK.',
-          ),
-          code(
-            'npm ci\nnpm run api:sync -- --sdk ../sdk\nnpm test\nnpm run typecheck\nnpm run generate',
-            'Depuis le dépôt wiki',
-            'shell',
-          ),
-          text(
-            'api:sync nécessite les sources du SDK localement ; le build du site utilise l’instantané versionné et reste autonome. Après une modification de l’API, révisez aussi les explications et exemples : une signature extraite ne remplace pas un tutoriel.',
-          ),
-        ],
-      },
-      {
-        id: 'production',
-        title: 'Préparer la mise en ligne',
-        blocks: [
-          text(
-            'La génération produit un site statique dans .output/public. Le domaine prévu est wiki.nimbyrails-france.fr, servi en HTTPS par Caddy. Le fichier de déploiement du dépôt est un modèle à intégrer à la configuration existante ; il ne modifie pas le VPS.',
-          ),
-          note(
-            'Le VPS reste réservé à la production. Les installations de dépendances, tests et générations se font sur le poste de développement ou sur un runner distinct. Aucune publication n’est déclenchée par la consultation du wiki.',
-          ),
         ],
       },
     ],

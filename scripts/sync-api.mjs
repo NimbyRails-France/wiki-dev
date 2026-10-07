@@ -1,40 +1,18 @@
-import { readFile, writeFile, readdir, mkdir } from 'node:fs/promises'
-import { resolve, relative, dirname } from 'node:path'
-import { createHash } from 'node:crypto'
+import { readFile, writeFile, mkdir } from 'node:fs/promises'
+import { resolve, dirname } from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { declarations } from './kotlin-api.mjs'
+import { catalogue } from './api-catalogue.mjs'
+import { readSdkSources } from './sdk-sources.mjs'
 
 const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const sdkArg = process.argv.indexOf('--sdk')
 const sdk = resolve(sdkArg >= 0 ? process.argv[sdkArg + 1] : resolve(root, '../sdk'))
-const scopes = [
-  { directory: 'kotlin/src/nimby', runtime: 'Kotlin/Native', package: 'nimby' },
-  {
-    directory: 'kotlin-client/src/main/kotlin/fr/nimby/sdk',
-    runtime: 'Kotlin/JVM',
-    package: 'fr.nimby.sdk',
-  },
-]
-const files = []
-for (const scope of scopes) {
-  for (const name of (await readdir(resolve(sdk, scope.directory)))
-    .filter((n) => n.endsWith('.kt'))
-    .sort()) {
-    const path = resolve(sdk, scope.directory, name)
-    const source = (await readFile(path, 'utf8')).replace(/\r\n/g, '\n')
-    const symbols = declarations(source)
-    if (!symbols.length) continue
-    files.push({
-      file: name,
-      path: relative(sdk, path).replaceAll('\\', '/'),
-      runtime: scope.runtime,
-      package: scope.package,
-      sha256: createHash('sha256').update(source).digest('hex'),
-      symbols,
-    })
-  }
+const { files } = await readSdkSources(sdk)
+const legacy = JSON.parse(await readFile(resolve(root, 'scripts/api-legacy.json'), 'utf8'))
+const result = {
+  sdkVersion: (await readFile(resolve(sdk, 'VERSION'), 'utf8')).trim(),
+  ...catalogue(files, legacy),
 }
-const result = { sdkVersion: (await readFile(resolve(sdk, 'VERSION'), 'utf8')).trim(), files }
 const destination = resolve(root, 'app/content/generated/api.json')
 const encoded = JSON.stringify(result, null, 2) + '\n'
 if (process.argv.includes('--check')) {

@@ -57,8 +57,8 @@ export const details: Record<string, Section[]> = {
             ],
             [
               'settingsStatus == Absent',
-              'Aucun profil enregistré pour cette instance.',
-              'Utiliser les valeurs par défaut déclarées.',
+              'Cette instance est absente du catalogue observé.',
+              'Appliquer le repli du modèle ; un signal connu sans profil sauvegardé est Present avec ses valeurs par défaut.',
             ],
             [
               'settingsStatus == Unavailable',
@@ -234,6 +234,10 @@ export const details: Record<string, Section[]> = {
         text(
           'Une exception après createSignals peut cacher une écriture déjà effectuée. Conservez le ticket de préparation et interrogez-le ; renvoyer CREATE pourrait dupliquer les signaux. Même APPLIED ne prouve pas que votre calcul de distance ou votre politique d’aiguilles était correct.',
         ),
+        text(
+          'Copiez le résultat final dès sa réception. Les tickets ne sont pas un historique durable : une nouvelle préparation valide peut remplacer une ancienne opération terminée et son accès à l’annulation. Un ticket périmé ne signifie pas que la création précédente n’a rien modifié. Fermer le menu ne doit pas interrompre le suivi d’une commande en cours.',
+        ),
+        links({ label: 'Cycle de vie et refus temporaires', to: '/mods/cycle-outils' }),
       ],
     },
   ],

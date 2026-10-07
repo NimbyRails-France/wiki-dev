@@ -8,8 +8,8 @@
   },
   "scripts": {
     "dev": "nuxt dev --host 127.0.0.1",
-    "build": "nuxt build",
-    "generate": "nuxt generate",
+    "build": "npm run edition:check && nuxt build",
+    "generate": "npm run edition:check && nuxt generate",
     "preview": "nuxt preview --host 127.0.0.1",
     "typecheck": "nuxt typecheck",
     "test": "node --test tests/*.test.mjs",
@@ -17,7 +17,9 @@
     "check:generated": "node scripts/check-generated.mjs",
     "api:sync": "node scripts/sync-api.mjs",
     "api:check": "node scripts/sync-api.mjs --check",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "edition:capture": "node scripts/snapshot-edition.mjs",
+    "edition:check": "node scripts/snapshot-edition.mjs --check"
   },
   "dependencies": {
     "highlight.js": "11.12.0",

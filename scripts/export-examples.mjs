@@ -7,11 +7,19 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..')
 const { englishCode } = loadContent(resolve(root, 'app/content/localization.ts'))
 const output = resolve(root, '.validation/example-check/en')
 mkdirSync(output, { recursive: true })
-for (const name of readdirSync(resolve(root, 'app/content/snippets')).filter((name) =>
-  name.endsWith('.kt'),
-)) {
-  writeFileSync(
-    resolve(output, name),
-    englishCode(readFileSync(resolve(root, 'app/content/snippets', name), 'utf8')),
-  )
+function exportDirectory(relative = '') {
+  for (const entry of readdirSync(resolve(root, 'app/content/snippets', relative), {
+    withFileTypes: true,
+  })) {
+    const name = relative ? `${relative}/${entry.name}` : entry.name
+    if (entry.isDirectory()) exportDirectory(name)
+    else if (entry.name.endsWith('.kt')) {
+      mkdirSync(dirname(resolve(output, name)), { recursive: true })
+      writeFileSync(
+        resolve(output, name),
+        englishCode(readFileSync(resolve(root, 'app/content/snippets', name), 'utf8')),
+      )
+    }
+  }
 }
+exportDirectory()

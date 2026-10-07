@@ -1,21 +1,31 @@
-import {
-  articlesFor,
-  groupsFor,
-  translate,
-  routeLocale,
-  basePath,
-  localePath,
-} from '~/content/localization'
+import ui from '~/content/ui-en.json'
+import messages from '~/content/en.json'
+import { currentEdition, editionPath, editionRegistry, wikiRoute } from '~/content/edition-paths'
+import type { Locale } from '~/content/edition-paths'
+import { editionSnapshot, resolveWikiRoute, switchEdition } from '~/content/editions'
+
+const english: Record<string, string> = { ...messages, ...ui }
 
 export function useWikiLocale() {
   const route = useRoute()
-  const locale = computed(() => routeLocale(route.path))
-  const path = (value: string) => localePath(value, locale.value)
-  const t = (value: string) => translate(value, locale.value)
-  const articles = computed(() => articlesFor(locale.value))
-  const groups = computed(() => groupsFor(locale.value))
-  // Hash is kept only client-side to avoid hydration differences: browsers do
-  // not send fragments to the server. The link is updated after mounting.
+  const location = computed(() => resolveWikiRoute(route.path))
+  const locale = computed(() => location.value.locale)
+  const edition = computed(
+    () =>
+      editionRegistry.editions.find((entry) => entry.id === location.value.edition) ||
+      editionRegistry.editions.find((entry) => entry.id === currentEdition)!,
+  )
+  const snapshot = computed(() => editionSnapshot(edition.value.id)!)
+  const path = (value: string) => editionPath(value, locale.value, edition.value.id)
+  const t = (value: string) => {
+    if (locale.value === 'fr') return value
+    const translated = english[value]
+    if (translated === undefined) throw new Error('Missing English interface translation: ' + value)
+    return translated
+  }
+  const articles = computed(() => snapshot.value.locales[locale.value].articles)
+  const groups = computed(() => snapshot.value.locales[locale.value].groups)
+  // Fragments are not sent to the server; update only after hydration.
   const fragment = ref('')
   onMounted(() => {
     fragment.value = route.hash
@@ -27,32 +37,47 @@ export function useWikiLocale() {
     },
   )
   const alternate = computed(
-    () => localePath(basePath(route.path), locale.value === 'en' ? 'fr' : 'en') + fragment.value,
+    () =>
+      editionPath(
+        '/' + location.value.slug,
+        locale.value === 'en' ? 'fr' : 'en',
+        edition.value.id,
+      ) + fragment.value,
   )
-  return { locale, path, t, articles, groups, alternate }
+  const editionTarget = (id: string) => switchEdition(route.path + fragment.value, id)
+  return {
+    locale,
+    edition,
+    snapshot,
+    editions: editionRegistry.editions,
+    path,
+    t,
+    articles,
+    groups,
+    alternate,
+    editionTarget,
+  }
 }
 
 export function useWikiHead() {
   const route = useRoute()
-  useHead(() => ({
-    htmlAttrs: { lang: routeLocale(route.path) },
-    link: [
-      {
-        rel: 'canonical',
-        href: 'https://wiki.nimbyrails-france.fr' + localePath(route.path, routeLocale(route.path)),
-      },
-      ...(['fr', 'en'] as const).map((locale) => ({
-        rel: 'alternate' as const,
-        type: 'text/html',
-        hreflang: locale,
-        href: 'https://wiki.nimbyrails-france.fr' + localePath(route.path, locale),
-      })),
-      {
-        rel: 'alternate',
-        type: 'text/html',
-        hreflang: 'x-default',
-        href: 'https://wiki.nimbyrails-france.fr' + basePath(route.path),
-      },
-    ],
-  }))
+  useHead(() => {
+    const location = resolveWikiRoute(route.path)
+    const target = (locale: Locale) =>
+      'https://wiki.nimbyrails-france.fr' +
+      editionPath('/' + location.slug, locale, location.edition || currentEdition)
+    return {
+      htmlAttrs: { lang: wikiRoute(route.path).locale },
+      link: [
+        { rel: 'canonical', href: target(location.locale) },
+        ...(['fr', 'en'] as const).map((locale) => ({
+          rel: 'alternate' as const,
+          type: 'text/html',
+          hreflang: locale,
+          href: target(locale),
+        })),
+        { rel: 'alternate', type: 'text/html', hreflang: 'x-default', href: target('fr') },
+      ],
+    }
+  })
 }

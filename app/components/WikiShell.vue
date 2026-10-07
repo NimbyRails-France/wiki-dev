@@ -1,5 +1,6 @@
 <script setup lang="ts">
-const { articles, groups, t, path, locale, alternate } = useWikiLocale()
+const { articles, groups, t, path, locale, alternate, edition, editions, snapshot, editionTarget } =
+  useWikiLocale()
 useWikiHead()
 const query = ref('')
 const menuOpen = ref(false)
@@ -7,6 +8,10 @@ const search = ref<HTMLInputElement>()
 const menuButton = ref<HTMLButtonElement>()
 const theme = ref('dark')
 const route = useRoute()
+function selectEdition(event: Event) {
+  const target = editionTarget((event.target as HTMLSelectElement).value)
+  if (target) navigateTo(target)
+}
 const closeMenu = () => {
   menuOpen.value = false
   menuButton.value?.focus()
@@ -46,10 +51,18 @@ const normalize = (value: string) =>
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .toLowerCase()
+// Articles change when the language changes, not on each search keystroke.
+// Normalize the full reference once per language instead of repeatedly walking
+// every signature and contract while the reader is typing.
+const searchIndex = computed(() =>
+  articles.value.map((article) => ({ article, text: normalize(JSON.stringify(article)) })),
+)
 const results = computed(() => {
   const terms = normalize(query.value).trim().split(/\s+/).filter(Boolean)
   return terms.length
-    ? articles.value.filter((a) => terms.every((t) => normalize(JSON.stringify(a)).includes(t)))
+    ? searchIndex.value
+        .filter((entry) => terms.every((term) => entry.text.includes(term)))
+        .map((entry) => entry.article)
     : []
 })
 </script>
@@ -57,7 +70,8 @@ const results = computed(() => {
   <a class="skip-link" href="#main">{{ t('Aller au contenu') }}</a>
   <header class="mobile-header">
     <NuxtLink class="brand" :to="path('/')"
-      ><img src="/favicon.svg" alt="" width="28" height="28" />NRF <strong>Guide</strong></NuxtLink
+      ><img src="/favicon.svg" alt="" width="28" height="28" />NRF
+      <strong>SDK {{ edition.id }}</strong></NuxtLink
     >
     <button
       ref="menuButton"
@@ -113,11 +127,20 @@ const results = computed(() => {
           <kbd aria-hidden="true">Ctrl K</kbd>
         </div>
       </form>
-      <NuxtLink class="edition" :to="path('/commencer/bienvenue')"
-        ><span class="book-icon" aria-hidden="true">▤</span
-        ><span>{{ t('Documentation Kotlin') }}<small>SDK 0.8 · Windows</small></span
-        ><span aria-hidden="true">⌄</span></NuxtLink
-      >
+      <div class="edition-picker">
+        <label for="wiki-edition">{{ t('Documentation') }} SDK {{ edition.id }}</label>
+        <select
+          id="wiki-edition"
+          :value="edition.id"
+          :aria-label="t('Édition de la documentation')"
+          @change="selectEdition"
+        >
+          <option v-for="item in editions" :key="item.id" :value="item.id">
+            SDK {{ item.id }} · {{ t(item.archived ? 'Archive' : 'Édition actuelle') }}
+          </option>
+        </select>
+        <small>{{ edition.sdkVersion }} · Windows</small>
+      </div>
       <div class="sidebar-scroll">
         <nav v-if="query.trim()" :aria-label="t('Résultats de recherche')" class="search-results">
           <p role="status">
@@ -208,7 +231,39 @@ const results = computed(() => {
       </div>
     </aside>
     <div class="main-column">
-      <main id="main" tabindex="-1"><slot /></main>
+      <main id="main" tabindex="-1">
+        <aside v-if="edition.archived" class="archive-banner">
+          <strong>{{ t('Archive') }} · SDK {{ edition.sdkVersion }}</strong>
+          <p>
+            {{
+              t(
+                'Cette archive conserve la documentation de cette version. Elle ne décrit pas les ajouts ni les corrections des éditions suivantes.',
+              )
+            }}
+          </p>
+          <a
+            v-if="snapshot.provenance.sdkCommit"
+            :href="'https://github.com/NimbyRails-France/sdk/tree/' + snapshot.provenance.sdkCommit"
+            >{{ t('Sources du SDK') }} · {{ snapshot.sdkVersion }} ↗</a
+          >
+          <a
+            v-if="snapshot.provenance.baseWikiCommit"
+            :href="
+              'https://github.com/NimbyRails-France/wiki/tree/' + snapshot.provenance.baseWikiCommit
+            "
+            >{{ t('Base documentaire historique') }} ·
+            {{ snapshot.provenance.baseWikiCommit.slice(0, 8) }} ↗</a
+          >
+          <a
+            v-if="snapshot.provenance.wikiCommit"
+            :href="
+              'https://github.com/NimbyRails-France/wiki/tree/' + snapshot.provenance.wikiCommit
+            "
+            >{{ t('Source historique') }} · {{ snapshot.provenance.wikiCommit.slice(0, 8) }} ↗</a
+          >
+        </aside>
+        <slot />
+      </main>
       <footer class="site-footer">
         <span>{{
           t('Le wiki des créateurs de mods avec le SDK developer par NimbyRails France.')

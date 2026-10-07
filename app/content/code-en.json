@@ -51,5 +51,11 @@
   "Les deux fichiers SVG sont déclarés une seule fois dans construction.": "Both SVG files are declared once in construction.",
   "Votre nom": "Your name",
   "Mon premier mod de signalisation.": "My first signalling mod.",
-  "Mes signaux personnalisés.": "My custom signals."
+  "Mes signaux personnalisés.": "My custom signals.",
+  "\"inconnue\"": "\"unknown\"",
+  "Vitesse inconnue": "Unknown speed",
+  "Longueur inconnue": "Unknown length",
+  "Horloge indisponible": "Clock unavailable",
+  "votre décision à partir des observations": "your decision based on observations",
+  "Un zéro de présentation ne prouve pas que le train est arrêté.": "A presentation zero does not prove the train is stopped."
 }

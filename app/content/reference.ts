@@ -1,6 +1,20 @@
 import snapshot from './generated/api.json'
 import type { Article, Section } from './schema'
 import { text, code, note, links, table } from './schema'
+import existingEnglish from './en.json'
+import { reviewedApiContracts, reviewedContractGuides } from './api-contracts'
+
+export const referenceEnglish: Record<string, string> = {}
+const t = (fr: string, en: string): string => {
+  referenceEnglish[fr] = en
+  return fr
+}
+const literal = (value: string) => t(value, value)
+function documentation(symbol: { id: string; documentation: string }): string {
+  const reviewed = reviewedApiContracts[symbol.id]
+  if (!reviewed) throw new Error(`Public API contract needs FR/EN review: ${symbol.id}`)
+  return t(...reviewed)
+}
 
 const descriptions: Record<string, string> = {
   Nimby: 'Point d’entrée du client : connexion et fonctions regroupées par usage dans Game.',
@@ -13,6 +27,30 @@ const descriptions: Record<string, string> = {
   ModServices: 'Déclarer un outil ou une action disponible lorsqu’un autre mod est chargé.',
   ToolContext:
     'Lire le réseau, préparer une pose, publier des boutons et écrire dans le journal depuis un outil.',
+  NumberSetting: t(
+    'Réglages entiers persistants et bornés dans les panneaux de signaux.',
+    'Persistent bounded integer settings in signal panels.',
+  ),
+  ToolOperationException: t(
+    'Refus typés des opérations et reprise des présentations temporaires.',
+    'Typed operation refusals and recovery of temporary presentations.',
+  ),
+  ToolTopology: t(
+    'Parcours des voies avec distances et connexions observées.',
+    'Track traversal using observed distances and connections.',
+  ),
+  TrainObservation: t(
+    'Copies de trains, services, lignes et arrêts accessibles dans les callbacks.',
+    'Copied trains, services, lines and stops available in callbacks.',
+  ),
+  TrainTypes: t(
+    'Identifiants typés, options de lecture et caractéristiques du matériel.',
+    'Typed identifiers, read options and material characteristics.',
+  ),
+  TrainServices: t(
+    'États, alertes et jointures des données de trains dans une capture.',
+    'States, alerts and joins of train data within a snapshot.',
+  ),
   SignalTypes: 'Valider les identifiants, catalogues et cases des modèles de signaux.',
   AutomaticDriving: 'Construire des consignes génériques avec les vitesses choisies par votre mod.',
   Translations: 'Textes d’interface traduits depuis le JSON du mod, avec paramètres et repli.',
@@ -67,7 +105,10 @@ const extra: Record<string, Section[]> = {
           ],
         ),
         note(
-          'Ces API sont expérimentales sur la branche de développement. La construction nécessite le pont Windows correspondant. Les essais en jeu du nouveau panneau restent à effectuer.',
+          t(
+            'La construction reste expérimentale. Après une réponse incertaine, consulter le ticket existant : ne pas répéter une création ou une annulation. Un refus temporaire d’aperçu ou de panneau peut être repris au prochain tick, en bloquant les confirmations locales.',
+            'Construction remains experimental. After an uncertain response, poll the existing ticket: do not repeat creation or undo. A temporary preview or panel refusal may be retried at the next tick while blocking local confirmations.',
+          ),
         ),
         links({ label: 'Créer un outil optionnel', to: '/mods/outils-optionnels' }),
       ],
@@ -139,8 +180,187 @@ const extra: Record<string, Section[]> = {
   ],
 }
 
+const trainContracts: Section[] = [
+  {
+    id: 'contrats-trains',
+    title: t(
+      'Choisir la lecture et interpréter les résultats',
+      'Choose a read and interpret its results',
+    ),
+    blocks: [
+      text(
+        t(
+          'Dans un mod, utiliser ToolContext.trains(query). Dans une application JVM, utiliser game.trains.snapshot(query = query) ; sélectionner un train demande aussi son plan de ligne. Une requête groupe tous les trains : ne pas créer une capture par train. La lecture de l’horloge et la lecture ciblée d’un train sont séparées.',
+          'In a mod, use ToolContext.trains(query). In a JVM application, use game.trains.snapshot(query = query); selecting a train also requests its line plan. One query batches all trains: do not create a snapshot per train. Clock reads and targeted single-train reads are separate.',
+        ),
+      ),
+      table(
+        [
+          t('Option TrainQuery', 'TrainQuery option'),
+          t('Par défaut', 'Default'),
+          t('Données demandées', 'Requested data'),
+        ],
+        [
+          [
+            literal('includeService'),
+            literal('true'),
+            t('État, service et affectation observés.', 'Observed state, service and assignment.'),
+          ],
+          [
+            literal('includeLocations'),
+            literal('true'),
+            t(
+              'Positions et références de localisation nécessaires.',
+              'Positions and required location references.',
+            ),
+          ],
+          [
+            literal('includeCharacteristics'),
+            literal('false'),
+            t(
+              'Profils du matériel configuré et actuel.',
+              'Configured and current material profiles.',
+            ),
+          ],
+          [
+            literal('includeTimetables'),
+            literal('false'),
+            t(
+              'Informations d’horaires disponibles ; implique includeService.',
+              'Available timetable information; implies includeService.',
+            ),
+          ],
+          [
+            literal('includeTags'),
+            literal('false'),
+            t(
+              'Tags déclarés et références pour leur héritage ; implique includeLines.',
+              'Declared tags and inheritance references; implies includeLines.',
+            ),
+          ],
+          [
+            literal('includePassengers'),
+            literal('false'),
+            t(
+              'Occupants observés, distincts de la capacité.',
+              'Observed occupants, distinct from capacity.',
+            ),
+          ],
+          [
+            literal('includeLines'),
+            literal('false'),
+            t(
+              'Catalogue des lignes, y compris celles sans train affecté.',
+              'Line catalog, including lines with no assigned train.',
+            ),
+          ],
+          [
+            literal('includeComposition'),
+            literal('false'),
+            t(
+              'Véhicules ordonnés des compositions configurée et actuelle et modèles référencés.',
+              'Ordered vehicles of configured and current compositions and referenced models.',
+            ),
+          ],
+        ],
+      ),
+      note(
+        t(
+          'Une capture dédiée aux trains ne fournit pas le réseau complet, les occupations, les réservations et les états des signaux. Pour ces données, utiliser la capture réseau correspondante ; une collection non demandée ne prouve pas que la carte est vide.',
+          'A train-data snapshot does not provide the full network, occupations, reservations and signal states. Use the corresponding network snapshot for that data; an unrequested collection does not prove that the map is empty.',
+        ),
+      ),
+      table(
+        [t('Valeur', 'Value'), t('Unité et contrat', 'Unit and contract')],
+        [
+          [
+            literal('Train.speedMps / Train.speedKmh'),
+            t(
+              'Vitesse actuelle. Native : une mesure indisponible reste null. JVM : vérifier aussi speedDefaulted avant d’interpréter une valeur de secours comme une mesure.',
+              'Current speed. Native: an unavailable measurement remains null. JVM: also check speedDefaulted before treating a fallback value as a measurement.',
+            ),
+          ],
+          [
+            literal('maximumSpeedMps / maximumSpeedKmh'),
+            t(
+              'Vitesse maximale du matériel, en m/s ou km/h ; distincte de la vitesse actuelle et de la limite de voie.',
+              'Material maximum speed, in m/s or km/h; distinct from current speed and the track speed limit.',
+            ),
+          ],
+          [
+            literal('lengthM / emptyMassKg / maximumAccelerationMps2'),
+            t(
+              'Mètres, kilogrammes, mètres par seconde carrée.',
+              'Metres, kilograms, metres per second squared.',
+            ),
+          ],
+          [literal('powerW / tractiveForceN'), t('Watts et newtons.', 'Watts and newtons.')],
+          [
+            literal('passengers / passengerCapacity / carCount'),
+            t(
+              'Occupants, capacité et nombre de véhicules : trois quantités distinctes.',
+              'Occupants, capacity and vehicle count: three distinct quantities.',
+            ),
+          ],
+          [
+            literal('configured / current / composition'),
+            t(
+              'Profils indépendants, sans remplacement des valeurs absentes. Composition null : inconnue ou non demandée ; liste vide : composition observée vide.',
+              'Independent profiles, without filling missing values from one another. Null composition: unknown or unrequested; empty list: observed empty composition.',
+            ),
+          ],
+          [
+            literal('predictedArrivalDelayUs / predictedArrivalDelaySeconds'),
+            t(
+              'Estimation signée, en microsecondes ou secondes ; négative pour une arrivée prévue en avance. Ni âge d’échéance ni priorité.',
+              'Signed estimate in microseconds or seconds; negative for predicted early arrival. Neither deadline age nor priority.',
+            ),
+          ],
+          [
+            literal('arrivalOffsetSeconds / departureOffsetSeconds'),
+            t(
+              'Offsets validés, en secondes depuis l’origine du plan de ligne. Ne pas les convertir en date absolue d’un train.',
+              'Validated offsets in seconds from the line-plan origin. Do not convert them into a train’s absolute date.',
+            ),
+          ],
+          [
+            literal('arrivalTimeUs / departureTimeUs / dispatchRetryTimeUs'),
+            t(
+              'Microsecondes depuis l’origine de simulation, pas depuis 1970. Utiliser les helpers de calendrier ; une date reste null si l’origine est inconnue.',
+              'Microseconds from the simulation origin, not 1970. Use calendar helpers; dates remain null when the origin is unknown.',
+            ),
+          ],
+          [
+            literal('capturedAtMillis / ageMillis'),
+            t(
+              'Heure UTC de l’ordinateur / âge monotone lors de la copie ; distincts du calendrier du jeu.',
+              'Computer UTC time / monotonic age when copying; distinct from the game calendar.',
+            ),
+          ],
+        ],
+      ),
+      text(
+        t(
+          'Les identifiants typés sont opaques. TimetableShiftId est unique seulement avec son TimetableId. LineType distingue uniquement Depot et Other ; aucune catégorie voyageurs/fret n’est inférée. Un nom d’horaire indisponible reste null. Les tags sont des libellés, sans priorité automatique ; un héritage incomplet ou cyclique reste inconnu. VehicleModel.nameEnglish conserve le nom anglais du catalogue.',
+          'Typed identifiers are opaque. TimetableShiftId is unique only together with its TimetableId. LineType distinguishes only Depot and Other; no passenger/freight category is inferred. An unavailable timetable name remains null. Tags are labels without automatic priority; incomplete or cyclic inheritance remains unknown. VehicleModel.nameEnglish retains the English catalog name.',
+        ),
+      ),
+      text(
+        t(
+          'TrainVehicle décrit un véhicule dans une composition. Le type nimby.Vehicle utilisé par le calcul de conduite est un autre contrat. Ne pas mélanger les classes homonymes des packages nimby et fr.nimby.sdk.',
+          'TrainVehicle describes a vehicle within a composition. The nimby.Vehicle type used in driving calculations is a different contract. Do not mix identically named classes from nimby and fr.nimby.sdk.',
+        ),
+      ),
+    ],
+  },
+]
+
 export const referenceArticles: Article[] = snapshot.files.map((file) => {
   const name = file.file.replace('.kt', '')
+  const title = name === 'TrainTypes' ? literal(`${name} · ${file.runtime}`) : literal(name)
+  literal(file.runtime)
+  literal(file.package)
+  literal(file.path)
   const sections: Section[] = [
     {
       id: 'contexte',
@@ -148,30 +368,83 @@ export const referenceArticles: Article[] = snapshot.files.map((file) => {
       blocks: [
         table(['Module', 'Package', 'Source SDK'], [[file.runtime, file.package, file.path]]),
         text(
-          `Signatures extraites de la version ${snapshot.sdkVersion}. Les paramètres, leurs valeurs par défaut et les propriétés de constructeur sont conservés. Les corps des méthodes ne font pas partie de cette référence.`,
+          t(
+            `API publique du SDK ${snapshot.sdkVersion}. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus.`,
+            `Public API for SDK ${snapshot.sdkVersion}. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above.`,
+          ),
         ),
         note(
-          'Une signature sans type de retour explicite utilise l’inférence Kotlin : l’expression affichée ou la KDoc précise son résultat. Les annotations de transport ne sont pas nécessaires pour appeler ces fonctions.',
+          t(
+            'Les valeurs optionnelles, données non demandées et réponses en attente ont des significations distinctes. Consultez le contrat avant de remplacer null par une valeur par défaut ou de répéter une commande.',
+            'Optional values, data that was not requested and pending responses have distinct meanings. Read the contract before replacing null with a default or repeating a command.',
+          ),
+        ),
+        code(
+          [
+            ...new Set(
+              snapshot.exports
+                .filter(
+                  (item) =>
+                    item.package === file.package &&
+                    item.runtime === file.runtime &&
+                    item.to.startsWith(`/${file.slug}#`),
+                )
+                .map((item) => `import ${item.import}`),
+            ),
+            ...file.imports.map((item) => `import ${item}`),
+          ].join('\n'),
+          t('Imports de cette page', 'Imports on this page'),
         ),
       ],
     },
     ...(extra[name] || []),
+    ...(['TrainTypes', 'TrainObservation', 'TrainServices', 'Observation'].includes(name)
+      ? trainContracts
+      : []),
   ]
-  file.symbols.forEach((symbol, index) => {
+  file.symbols.forEach((symbol) => {
+    const comment = documentation(symbol)
     sections.push({
-      id: `symbol-${index}`,
-      title: symbol.owner ? `${symbol.owner}.${symbol.name}` : symbol.name,
+      id: symbol.anchor,
+      title: literal(symbol.owner ? `${symbol.owner}.${symbol.name}` : symbol.name),
       blocks: [
-        code(symbol.signature, `${file.package} · ${symbol.kind}`),
-        ...(symbol.documentation ? [text(symbol.documentation)] : []),
+        code(symbol.signature, literal(`${file.package} · ${symbol.kind}`)),
+        ...('defaultNotes' in symbol && symbol.defaultNotes?.includes('model-title')
+          ? [
+              text(
+                t(
+                  'Par défaut, name reprend le titre du modèle ; catalogueName reprend name.',
+                  'By default, name uses the model title; catalogueName uses name.',
+                ),
+              ),
+            ]
+          : []),
+        ...(comment ? [text(comment)] : []),
+        ...(reviewedContractGuides[symbol.id]?.length
+          ? [
+              links(
+                ...reviewedContractGuides[symbol.id]!.map((to, index) => ({
+                  label: t(
+                    index === 0
+                      ? 'Guide et exemple d’utilisation →'
+                      : `Guide complémentaire ${index + 1} →`,
+                    index === 0 ? 'Usage guide and example →' : `Related guide ${index + 1} →`,
+                  ),
+                  to,
+                })),
+              ),
+            ]
+          : []),
       ],
     })
   })
   return {
-    slug: `reference/${name.toLowerCase()}`,
-    title: name,
+    slug: file.slug,
+    title,
     group: 'Référence',
-    description: descriptions[name] || 'Déclarations publiques Kotlin du SDK.',
+    description:
+      descriptions[name] ||
+      t('Déclarations publiques Kotlin du SDK.', 'Public Kotlin SDK declarations.'),
     status: ['Construction', 'ToolContext', 'ModServices'].includes(name)
       ? 'experimental'
       : name === 'SignalMod'
@@ -198,12 +471,15 @@ export const referenceIndex: Article = {
         links(
           ...referenceArticles
             .filter(
-              (a) =>
-                snapshot.files.find(
-                  (f) => `reference/${f.file.replace('.kt', '').toLowerCase()}` === a.slug,
-                )?.runtime === 'Kotlin/Native',
+              (a) => snapshot.files.find((f) => f.slug === a.slug)?.runtime === 'Kotlin/Native',
             )
-            .map((a) => ({ label: `${a.title} — ${a.description}`, to: `/${a.slug}` })),
+            .map((a) => ({
+              label: t(
+                `${a.title} — ${a.description}`,
+                `${a.title} — ${referenceEnglish[a.description] || (existingEnglish as Record<string, string>)[a.description]}`,
+              ),
+              to: `/${a.slug}`,
+            })),
         ),
       ],
     },
@@ -216,13 +492,14 @@ export const referenceIndex: Article = {
         ),
         links(
           ...referenceArticles
-            .filter(
-              (a) =>
-                snapshot.files.find(
-                  (f) => `reference/${f.file.replace('.kt', '').toLowerCase()}` === a.slug,
-                )?.runtime === 'Kotlin/JVM',
-            )
-            .map((a) => ({ label: `${a.title} — ${a.description}`, to: `/${a.slug}` })),
+            .filter((a) => snapshot.files.find((f) => f.slug === a.slug)?.runtime === 'Kotlin/JVM')
+            .map((a) => ({
+              label: t(
+                `${a.title} — ${a.description}`,
+                `${a.title} — ${referenceEnglish[a.description] || (existingEnglish as Record<string, string>)[a.description]}`,
+              ),
+              to: `/${a.slug}`,
+            })),
         ),
       ],
     },
@@ -231,10 +508,16 @@ export const referenceIndex: Article = {
       title: 'Ce que couvre cette référence',
       blocks: [
         text(
-          `${snapshot.files.length} fichiers publics Kotlin sont recensés dans cet instantané. Les constructeurs de data class indiquent leurs propriétés ; les enums affichent leurs valeurs. Les classes internes, détails JNA et adaptateurs C++ ne constituent pas l’API à utiliser dans vos mods.`,
+          t(
+            `${snapshot.files.length} fichiers publics Kotlin sont recensés. Chaque propriété de constructeur et valeur d’enum possède une entrée. Les mêmes noms dans nimby et fr.nimby.sdk appartiennent à deux API distinctes : choisir les imports du bon environnement.`,
+            `${snapshot.files.length} public Kotlin files are listed. Each constructor property and enum entry has its own entry. Identical names in nimby and fr.nimby.sdk belong to two distinct APIs: choose imports for the correct environment.`,
+          ),
         ),
         note(
-          'Cette référence couvre l’API Kotlin effectivement présente dans les sources synchronisées. Elle ne prétend pas exposer toutes les fonctions internes du jeu. Les ajouts de boutons arbitraires, la traction directe et les fonctions non qualifiées ne deviennent pas disponibles par leur mention dans le wiki.',
+          t(
+            'Cette référence décrit l’API publique disponible dans les sources synchronisées. Une signature ne prouve pas qu’une donnée sera disponible sur chaque train ou dans chaque partie. Respecter les valeurs null et les contrats de chaque lecture.',
+            'This reference describes the public API in the synchronized sources. A signature does not prove that data is available for every train or game. Respect null values and the contracts of each read.',
+          ),
         ),
       ],
     },

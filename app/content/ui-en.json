@@ -73,5 +73,14 @@
   "La page n’a pas pu être chargée.": "The page could not be loaded.",
   "La page demandée n’existe pas ou a changé d’adresse.": "The requested page does not exist or has moved.",
   "Revenez à l’accueil pour reprendre votre lecture.": "Return to the home page to continue reading.",
-  "Retour au wiki →": "Back to the wiki →"
+  "Retour au wiki →": "Back to the wiki →",
+  "Édition de la documentation": "Documentation edition",
+  "Archive": "Archive",
+  "Édition actuelle": "Current edition",
+  "Source historique": "Historical source",
+  "Sources du SDK": "SDK sources",
+  "Base documentaire historique": "Historical documentation baseline",
+  "Cette archive conserve la documentation de cette version. Elle ne décrit pas les ajouts ni les corrections des éditions suivantes.": "This archive preserves the documentation for this version. It does not describe additions or corrections from later editions.",
+  "Utilisez un kit et un SDK installé correspondant à la version documentée dans cette édition.": "Use a kit and installed SDK matching the version documented in this edition.",
+  "Cette édition décrit une version en développement. Les fonctions expérimentales sont indiquées sur leur page.": "This edition describes a version in development. Experimental features are marked on their pages."
 }

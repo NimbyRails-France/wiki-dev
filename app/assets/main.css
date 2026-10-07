@@ -152,6 +152,46 @@ kbd {
   border-radius: 4px;
   padding: 2px 4px;
 }
+.edition-picker {
+  display: grid;
+  gap: 7px;
+  margin: 18px 0;
+  font-size: 13px;
+}
+.edition-picker label {
+  font-weight: 650;
+}
+.edition-picker select {
+  width: 100%;
+  padding: 9px;
+  color: var(--ink);
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  font: inherit;
+}
+.edition-picker small {
+  color: var(--muted);
+}
+.archive-banner {
+  margin: 24px clamp(20px, 4vw, 64px) 0;
+  padding: 16px 20px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+}
+.archive-banner p {
+  margin: 8px 0;
+}
+.archive-banner a {
+  display: inline-block;
+  margin-right: 18px;
+}
+.archive-home h1 {
+  font-size: clamp(28px, 4vw, 48px);
+}
+.archive-home section {
+  margin: 28px 0;
+}
 .edition {
   display: flex;
   align-items: center;
@@ -181,6 +221,8 @@ kbd {
 .sidebar-scroll {
   min-height: 0;
   overflow-y: auto;
+  /* Reaching the end of the menu must not scroll the article behind it. */
+  overscroll-behavior-y: contain;
   scrollbar-width: thin;
   scrollbar-color: var(--line) transparent;
   flex: 1;
@@ -253,7 +295,9 @@ kbd {
   border-radius: 6px;
   padding: 6px 8px;
 }
-.language-switch:hover { background: var(--soft); }
+.language-switch:hover {
+  background: var(--soft);
+}
 .github-link {
   font-size: 12px;
   color: var(--muted);
@@ -554,6 +598,7 @@ tr:last-child td {
   font-size: 12px;
   max-height: calc(100dvh - 70px);
   overflow-y: auto;
+  overscroll-behavior-y: contain;
   scrollbar-width: thin;
 }
 .table-of-contents > p {

@@ -20,11 +20,12 @@ data class Public(
 `)
   assert.deepEqual(
     symbols.map((s) => s.name),
-    ['Public', 'distance'],
+    ['Public', 'speed', 'position', 'distance'],
   )
   assert.match(symbols[0].signature, /val position: Long\?/)
-  assert.equal(symbols[1].owner, 'Public')
-  assert.equal(symbols[1].documentation, 'Measured distance.')
+  assert(symbols.slice(1).every((s) => s.owner === 'Public'))
+  assert.equal(symbols[3].documentation, 'Measured distance.')
+  assert.equal(symbols[3].signature, 'fun distance(scale: Double): Double')
 })
 
 test('typed DSL function name survives nested generic bounds', () => {
@@ -40,11 +41,64 @@ test('enum values survive semicolons inside comments, strings and entry bodies',
     Clear(1, ";"),
     /** Permission at the remembered speed; keep independent restrictions. */
     ApproachPassable(128, "pass") { fun local() { println(1); println(2) } };
-    fun member() = bit
+    fun member(): Int = bit
   }`)
   assert.match(flag.signature, /ApproachPassable\(128/)
-  assert.match(flag.signature, /keep independent restrictions\. \*\//)
   assert(!flag.signature.includes('fun member'))
+  assert(!flag.signature.includes('fun local'))
+  assert(!flag.signature.includes('println'))
+  const permission = declarations(
+    `enum class Flag { /** Permission; retained. */ Pass(128) }`,
+  ).find((s) => s.kind === 'enum-entry')
+  assert.equal(permission.name, 'Pass')
+  assert.equal(permission.documentation, 'Permission; retained.')
+})
+
+test('annotations preserve complete multiline signatures and do not steal previous KDoc', () => {
+  const symbols = declarations(`class API {
+    /** Only the first method. */
+    @Synchronized fun first(train: Long, speed: Double,
+      enabled: Boolean = false): String = privateHelper(train)
+    @Synchronized fun second(): Int = privateCode
+  }`)
+  assert.match(symbols[1].signature, /^fun first\(train: Long, speed: Double,/)
+  assert.match(symbols[1].signature, /enabled: Boolean = false\): String$/)
+  assert.equal(symbols[1].documentation, 'Only the first method.')
+  assert.equal(symbols[2].documentation, '')
+  assert(!JSON.stringify(symbols).includes('privateHelper'))
+})
+
+test('getters, initializers and superclass construction do not expose implementation', () => {
+  const symbols =
+    declarations(`class Error(val status: Int, reason: String): IllegalStateException(format(reason)) {
+    val available: Boolean get() = hiddenFlags and 1025 != 0
+    val name: String = readPrivateCatalogue()
+  }
+class Log(private val maximumBytes: Long = 2097152)
+typealias PublicError = Error`)
+  assert.equal(
+    symbols[0].signature,
+    'class Error(val status: Int, reason: String): IllegalStateException',
+  )
+  assert.equal(symbols.find((s) => s.name === 'available').signature, 'val available: Boolean')
+  assert.equal(symbols.find((s) => s.name === 'name').signature, 'val name: String')
+  assert.equal(
+    symbols.find((s) => s.name === 'Log').signature,
+    'class Log(maximumBytes: Long = 2097152)',
+  )
+  assert(!symbols.some((s) => s.name === 'maximumBytes'))
+  assert.equal(symbols.at(-1).signature, 'typealias PublicError = Error')
+  assert(!JSON.stringify(symbols).includes('hiddenFlags'))
+  assert(!JSON.stringify(symbols).includes('readPrivateCatalogue'))
+})
+
+test('an unreviewed inferred public type stops synchronization instead of leaking its body', () => {
+  assert.throws(() => declarations('val ratio = 1 / 2.0'), /inferred type requires review/)
+  assert.throws(
+    () => declarations('fun unknown() = nativeDecoder()'),
+    /inferred type requires review/,
+  )
+  assert.equal(declarations('val enabled = false')[0].signature, 'val enabled: Boolean = false')
 })
 
 test('internal constructors hide transport parameters but preserve public properties', () => {
@@ -61,6 +115,17 @@ test('internal constructors hide transport parameters but preserve public proper
   )
   assert(symbols.slice(1).every((s) => s.owner === 'Context'))
   assert(!JSON.stringify(symbols).includes('private val native'))
+})
+
+test('a same-named property cannot change a block-bodied function return type', () => {
+  const symbols = declarations(`class SignalModelBuilder {
+    var observeApproach = base.observeApproach
+    fun observeApproach(blocks: Int) { observeApproach = true }
+    fun observeApproach(blocks: Int, enabled: Boolean): Boolean { return enabled }
+  }`)
+  assert.equal(symbols[1].signature, 'var observeApproach: Boolean')
+  assert.equal(symbols[2].signature, 'fun observeApproach(blocks: Int): Unit')
+  assert.equal(symbols[3].signature, 'fun observeApproach(blocks: Int, enabled: Boolean): Boolean')
 })
 
 test('snapshot covers the two SDK surfaces without native internals', async () => {
@@ -84,6 +149,11 @@ test('snapshot covers the two SDK surfaces without native internals', async () =
     'AutomaticDriving',
     'ConstructionResult',
     'ModControlSession',
+    'TrainQuery',
+    'TrainVehicle',
+    'VehicleModel',
+    'ToolOperationException',
+    'ToolTopology',
   ])
     assert(names.includes(required), required)
   for (const hidden of [
@@ -94,4 +164,29 @@ test('snapshot covers the two SDK surfaces without native internals', async () =
     'buildSignalMod',
   ])
     assert(!names.includes(hidden), hidden)
+  const signatureText = snapshot.files.flatMap((f) => f.symbols.map((s) => s.signature)).join('\n')
+  for (const hidden of [
+    'nativeCall',
+    'catalogue.lines',
+    'servicesById',
+    'and 1025',
+    'buildSignalMod(',
+    'base.title',
+  ])
+    assert(!signatureText.includes(hidden), hidden)
+  assert.equal(snapshot.files.filter((f) => f.file === 'TrainTypes.kt').length, 2)
+  for (const file of snapshot.files.filter((f) => f.file === 'TrainTypes.kt')) {
+    const fields = file.symbols.filter((s) => s.owner === 'TrainQuery').map((s) => s.name)
+    assert.deepEqual(fields, [
+      'includeService',
+      'includeLocations',
+      'includeCharacteristics',
+      'includeTimetables',
+      'includeTags',
+      'includePassengers',
+      'includeLines',
+      'includeComposition',
+    ])
+    assert(!file.symbols.some((s) => s.name === 'flags'))
+  }
 })

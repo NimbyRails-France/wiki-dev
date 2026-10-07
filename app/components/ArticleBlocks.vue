@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { Block } from '~/content/schema'
 defineProps<{ blocks: Block[] }>()
+const { path } = useWikiLocale()
 </script>
 <template>
   <template v-for="(block, i) in blocks" :key="i">
@@ -39,7 +40,7 @@ defineProps<{ blocks: Block[] }>()
       </table>
     </div>
     <div v-else-if="block.kind === 'links'" class="related-links">
-      <NuxtLink v-for="item in block.items" :key="item.to" :to="item.to"
+      <NuxtLink v-for="item in block.items" :key="item.to" :to="path(item.to)"
         >{{ item.label }} <span aria-hidden="true">↗</span></NuxtLink
       >
     </div>

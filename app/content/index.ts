@@ -1,10 +1,15 @@
-import { guides } from './guides'
 import { referenceArticles, referenceIndex } from './reference'
-import { details } from './details'
 import { translationsGuide } from './translations'
 import { capabilities } from './capabilities'
 import { authoring } from './authoring'
 import { toolAuthoring } from './tool-authoring'
+import { trainGuides } from './train-guides'
+import { performanceGuides } from './performance-guides'
+import { gettingStartedGuides } from './getting-started-guides'
+import { gradleProjectGuides } from './gradle-project-guide'
+import { maintenanceGuides } from './maintenance-guides'
+import { observationGuides } from './observation-guides'
+import { signalGuides } from './signal-guides'
 export const groups = [
   'Commencer',
   'Créer un mod',
@@ -12,17 +17,20 @@ export const groups = [
   'Référence',
   'Maintenance',
 ] as const
-const expandedGuides = guides.map((article) => ({
-  ...article,
-  sections: [...article.sections, ...(details[article.slug] || [])],
-}))
 export const articles = [
-  ...expandedGuides.filter((a) => a.group !== 'Maintenance'),
+  ...gettingStartedGuides,
   ...capabilities,
+  ...gradleProjectGuides.filter((article) => article.group !== 'Référence'),
+  ...signalGuides,
   ...authoring,
   ...toolAuthoring,
+  ...observationGuides,
+  ...trainGuides,
+  ...performanceGuides.filter((article) => article.group !== 'Maintenance'),
   translationsGuide,
   referenceIndex,
+  ...gradleProjectGuides.filter((article) => article.group === 'Référence'),
   ...referenceArticles,
-  ...expandedGuides.filter((a) => a.group === 'Maintenance'),
+  ...maintenanceGuides,
+  ...performanceGuides.filter((article) => article.group === 'Maintenance'),
 ]

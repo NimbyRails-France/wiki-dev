@@ -1,5 +1,5 @@
 <script setup lang="ts">
-const { articles, path: localPath, t, locale } = useWikiLocale()
+const { articles, groups, path: localPath, t, locale, edition } = useWikiLocale()
 useSeoMeta({
   title: () => t('Créer des mods en Kotlin — Wiki NimbyRails France'),
   description: () =>
@@ -60,7 +60,23 @@ const preview = computed(() =>
 </script>
 <template>
   <WikiShell>
-    <div class="home-content">
+    <div v-if="edition.archived" class="home-content archive-home">
+      <p class="eyebrow">{{ t('Archive') }}</p>
+      <h1>{{ t('Documentation') }} SDK {{ edition.id }}</h1>
+      <p class="article-lead">SDK {{ edition.sdkVersion }}</p>
+      <section v-for="group in groups" :key="group">
+        <h2>{{ group }}</h2>
+        <ul class="prose-list">
+          <li
+            v-for="article in articles.filter((item) => item.group === group)"
+            :key="article.slug"
+          >
+            <NuxtLink :to="localPath('/' + article.slug)">{{ article.title }}</NuxtLink>
+          </li>
+        </ul>
+      </section>
+    </div>
+    <div v-else class="home-content">
       <div class="home-topline">
         <span>{{ t('Documentation officielle') }}</span
         ><span><i class="status-dot" /> Kotlin · Windows</span>
@@ -95,13 +111,14 @@ const preview = computed(() =>
         </div>
       </section>
       <div class="release-note">
-        <span class="badge">SDK 0.8</span>
+        <span class="badge">SDK {{ edition.id }}</span>
         <p>
           {{
             t(
-              'Cette édition suit le SDK 0.8 en développement. Les fonctions expérimentales sont indiquées sur leur page.',
+              'Cette édition décrit une version en développement. Les fonctions expérimentales sont indiquées sur leur page.',
             )
           }}
+          · {{ edition.sdkVersion }}
         </p>
       </div>
       <section class="learning-path">

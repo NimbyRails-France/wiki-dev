@@ -4,10 +4,36 @@ import ui from './ui-en.json'
 import codeText from './code-en.json'
 import { authoringEnglish } from './authoring'
 import { toolAuthoringEnglish } from './tool-authoring'
+import { referenceEnglish } from './reference'
+import { trainGuidesEnglish, trainCodeEnglish } from './train-guides'
+import { capabilitiesEnglish } from './capabilities'
+import { performanceGuidesEnglish } from './performance-guides'
+import { performanceCodeEnglish } from './performance-code'
+import { gettingStartedEnglish } from './getting-started-guides'
+import { gradleProjectEnglish } from './gradle-project-guide'
+import { maintenanceEnglish } from './maintenance-guides'
+import { observationGuidesEnglish } from './observation-guides'
+import { signalGuidesEnglish } from './signal-guides'
+import { translationsEnglish } from './translations'
 import type { Article, Block } from './schema'
 
 export type Locale = 'fr' | 'en'
-const english: Record<string, string> = { ...messages, ...ui, ...authoringEnglish, ...toolAuthoringEnglish }
+const english: Record<string, string> = {
+  ...messages,
+  ...ui,
+  ...authoringEnglish,
+  ...toolAuthoringEnglish,
+  ...referenceEnglish,
+  ...trainGuidesEnglish,
+  ...capabilitiesEnglish,
+  ...performanceGuidesEnglish,
+  ...gettingStartedEnglish,
+  ...gradleProjectEnglish,
+  ...maintenanceEnglish,
+  ...observationGuidesEnglish,
+  ...signalGuidesEnglish,
+  ...translationsEnglish,
+}
 
 // A missing translation is a build/test error, never a silent French fallback.
 export function translate(value: string, locale: Locale): string {
@@ -30,7 +56,13 @@ export function localePath(path: string, locale: Locale): string {
 export function englishCode(code: string): string {
   // Translate explanations and example labels only. Identifiers, service IDs,
   // texture names and real SDK error literals retain their documented values.
-  for (const [source, target] of Object.entries(codeText)) code = code.split(source).join(target)
+  // Translate complete comments before shorter phrases shared with older examples.
+  const replacements = Object.entries({
+    ...codeText,
+    ...trainCodeEnglish,
+    ...performanceCodeEnglish,
+  }).sort(([a], [b]) => b.length - a.length)
+  for (const [source, target] of replacements) code = code.split(source).join(target)
   return code
 }
 function blockInEnglish(block: Block): Block {

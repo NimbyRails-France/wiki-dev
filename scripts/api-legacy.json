@@ -1,0 +1,1434 @@
+[
+  {
+    "id": "native:nimby:AutomaticDriving",
+    "slug": "reference/automaticdriving",
+    "symbols": [
+      {
+        "key": "object:AutomaticDriving",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "fun:AutomaticDriving.clear()",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "fun:AutomaticDriving.stop()",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "fun:AutomaticDriving.announceStop(Int,Double,Boolean,Boolean,Boolean)",
+        "anchor": "symbol-3"
+      },
+      {
+        "key": "fun:AutomaticDriving.limitAtSignal(Double,Boolean)",
+        "anchor": "symbol-4"
+      },
+      {
+        "key": "fun:AutomaticDriving.limitUntilClearThenRear(Double,Int,Boolean)",
+        "anchor": "symbol-5"
+      },
+      {
+        "key": "fun:AutomaticDriving.restrictedUntilNextSignal(Double,Double,Boolean)",
+        "anchor": "symbol-6"
+      }
+    ]
+  },
+  {
+    "id": "native:nimby:Files",
+    "slug": "reference/files",
+    "symbols": [
+      {
+        "key": "fun:readTextFile(String)",
+        "anchor": "symbol-0"
+      }
+    ]
+  },
+  {
+    "id": "native:nimby:GameDateTime",
+    "slug": "reference/gamedatetime",
+    "symbols": [
+      {
+        "key": "class:GameDateTime",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "fun:GameDateTime.toUtcSeconds()",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "fun:GameDateTime.toString()",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "fun:GameDateTime.Companion.fromUtcSeconds(Long)",
+        "anchor": "symbol-3"
+      },
+      {
+        "key": "fun:ToolClock.dateTime()",
+        "anchor": "symbol-4"
+      }
+    ]
+  },
+  {
+    "id": "native:nimby:Mod",
+    "slug": "reference/mod",
+    "symbols": [
+      {
+        "key": "class:Checkbox",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "class:SignalType",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "class:Occupancy",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "class:SettingsStatus",
+        "anchor": "symbol-3"
+      },
+      {
+        "key": "class:Observation",
+        "anchor": "symbol-4"
+      },
+      {
+        "key": "class:Decision",
+        "anchor": "symbol-5"
+      },
+      {
+        "key": "class:Signal",
+        "anchor": "symbol-6"
+      },
+      {
+        "key": "class:Vehicle",
+        "anchor": "symbol-7"
+      },
+      {
+        "key": "class:DrivingSettings",
+        "anchor": "symbol-8"
+      },
+      {
+        "key": "class:Constraint",
+        "anchor": "symbol-9"
+      },
+      {
+        "key": "class:DrivingInput",
+        "anchor": "symbol-10"
+      },
+      {
+        "key": "class:DrivingPlan",
+        "anchor": "symbol-11"
+      },
+      {
+        "key": "class:DrivingFlag",
+        "anchor": "symbol-12"
+      },
+      {
+        "key": "class:DrivingRule",
+        "anchor": "symbol-13"
+      },
+      {
+        "key": "class:SignallingMod",
+        "anchor": "symbol-14"
+      },
+      {
+        "key": "val:SignallingMod.textureSet",
+        "anchor": "symbol-15"
+      },
+      {
+        "key": "val:SignallingMod.checkboxes",
+        "anchor": "symbol-16"
+      },
+      {
+        "key": "val:SignallingMod.signalTypes",
+        "anchor": "symbol-17"
+      },
+      {
+        "key": "fun:SignallingMod.migrateSettings(String,Map<String,Boolean>)",
+        "anchor": "symbol-18"
+      },
+      {
+        "key": "val:SignallingMod.maximumLineSpeed",
+        "anchor": "symbol-19"
+      },
+      {
+        "key": "val:SignallingMod.diagnosticFile",
+        "anchor": "symbol-20"
+      },
+      {
+        "key": "val:SignallingMod.unknownDecision",
+        "anchor": "symbol-21"
+      },
+      {
+        "key": "val:SignallingMod.invalidNetworkDecision",
+        "anchor": "symbol-22"
+      },
+      {
+        "key": "val:SignallingMod.modelLocalIndications",
+        "anchor": "symbol-23"
+      },
+      {
+        "key": "fun:SignallingMod.unknownDecision(String)",
+        "anchor": "symbol-24"
+      },
+      {
+        "key": "fun:SignallingMod.invalidNetworkDecision(String)",
+        "anchor": "symbol-25"
+      },
+      {
+        "key": "fun:SignallingMod.indication(Decision)",
+        "anchor": "symbol-26"
+      },
+      {
+        "key": "fun:SignallingMod.evaluate(Map<String,Boolean>,Observation)",
+        "anchor": "symbol-27"
+      },
+      {
+        "key": "fun:SignallingMod.evaluate(String,Map<String,Boolean>,Observation)",
+        "anchor": "symbol-28"
+      },
+      {
+        "key": "fun:SignallingMod.decide(Signal,Decision?)",
+        "anchor": "symbol-29"
+      },
+      {
+        "key": "fun:SignallingMod.fromLive(Signal)",
+        "anchor": "symbol-30"
+      },
+      {
+        "key": "fun:SignallingMod.texture(Decision,Long,Long)",
+        "anchor": "symbol-31"
+      },
+      {
+        "key": "fun:SignallingMod.animation(Decision)",
+        "anchor": "symbol-32"
+      },
+      {
+        "key": "fun:SignallingMod.forcedDecision(Int)",
+        "anchor": "symbol-33"
+      },
+      {
+        "key": "fun:SignallingMod.forcedDecision(String,Int)",
+        "anchor": "symbol-34"
+      },
+      {
+        "key": "fun:SignallingMod.drivingRule(Decision)",
+        "anchor": "symbol-35"
+      },
+      {
+        "key": "fun:SignallingMod.isFault(Decision)",
+        "anchor": "symbol-36"
+      },
+      {
+        "key": "fun:SignallingMod.isActive(Decision)",
+        "anchor": "symbol-37"
+      },
+      {
+        "key": "fun:SignallingMod.aspectName(Int)",
+        "anchor": "symbol-38"
+      },
+      {
+        "key": "fun:SignallingMod.reasonName(Int)",
+        "anchor": "symbol-39"
+      },
+      {
+        "key": "fun:SignallingMod.plan(Vehicle,DrivingSettings,DrivingInput,List<Constraint>)",
+        "anchor": "symbol-40"
+      },
+      {
+        "key": "fun:SignallingMod.evaluateNetwork(List<Signal>)",
+        "anchor": "symbol-41"
+      }
+    ]
+  },
+  {
+    "id": "native:nimby:ModResources",
+    "slug": "reference/modresources",
+    "symbols": [
+      {
+        "key": "class:ModInfo",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "class:ModMetadata",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "class:SignalConstruction",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "val:SignalConstruction.states",
+        "anchor": "symbol-3"
+      },
+      {
+        "key": "fun:signalMod(ModInfo,SignalModelsBuilder.()->Unit)",
+        "anchor": "symbol-4"
+      },
+      {
+        "key": "fun:toolMod(ModInfo,ToolModBuilder.()->Unit)",
+        "anchor": "symbol-5"
+      }
+    ]
+  },
+  {
+    "id": "native:nimby:ModServices",
+    "slug": "reference/modservices",
+    "symbols": [
+      {
+        "key": "class:SignalAction",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "class:SignalActionRequest",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "class:GameMod",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "val:GameMod.id",
+        "anchor": "symbol-3"
+      },
+      {
+        "key": "val:GameMod.title",
+        "anchor": "symbol-4"
+      },
+      {
+        "key": "val:GameMod.metadata",
+        "anchor": "symbol-5"
+      },
+      {
+        "key": "val:GameMod.windows",
+        "anchor": "symbol-6"
+      },
+      {
+        "key": "fun:GameMod.onWindowEvent(ToolWindowEvent,ToolContext)",
+        "anchor": "symbol-7"
+      },
+      {
+        "key": "val:GameMod.services",
+        "anchor": "symbol-8"
+      },
+      {
+        "key": "fun:GameMod.onSignalAction(SignalActionRequest,ToolContext)",
+        "anchor": "symbol-9"
+      },
+      {
+        "key": "fun:GameMod.onTick(ToolContext)",
+        "anchor": "symbol-10"
+      },
+      {
+        "key": "fun:GameMod.onStop()",
+        "anchor": "symbol-11"
+      },
+      {
+        "key": "class:ToolMod",
+        "anchor": "symbol-12"
+      },
+      {
+        "key": "val:ToolMod.id",
+        "anchor": "symbol-13"
+      },
+      {
+        "key": "val:ToolMod.title",
+        "anchor": "symbol-14"
+      },
+      {
+        "key": "val:ToolMod.metadata",
+        "anchor": "symbol-15"
+      },
+      {
+        "key": "val:ToolMod.windows",
+        "anchor": "symbol-16"
+      },
+      {
+        "key": "val:ToolMod.services",
+        "anchor": "symbol-17"
+      },
+      {
+        "key": "fun:ToolMod.onSignalAction(SignalActionRequest,ToolContext)",
+        "anchor": "symbol-18"
+      },
+      {
+        "key": "fun:ToolMod.onTick(ToolContext)",
+        "anchor": "symbol-19"
+      },
+      {
+        "key": "fun:ToolMod.onStop()",
+        "anchor": "symbol-20"
+      },
+      {
+        "key": "fun:ToolMod.onWindowEvent(ToolWindowEvent,ToolContext)",
+        "anchor": "symbol-21"
+      },
+      {
+        "key": "class:ToolModBuilder",
+        "anchor": "symbol-22"
+      },
+      {
+        "key": "fun:ToolModBuilder.window(String,String,String,ToolContext.(ToolWindowEvent)->Unit)",
+        "anchor": "symbol-23"
+      },
+      {
+        "key": "fun:ToolModBuilder.metadata(String,String,String?)",
+        "anchor": "symbol-24"
+      },
+      {
+        "key": "fun:ToolModBuilder.service(String,ToolContext.(SignalActionRequest)->Unit)",
+        "anchor": "symbol-25"
+      },
+      {
+        "key": "fun:ToolModBuilder.onTick(ToolContext.()->Unit)",
+        "anchor": "symbol-26"
+      },
+      {
+        "key": "fun:ToolModBuilder.onStop(()->Unit)",
+        "anchor": "symbol-27"
+      },
+      {
+        "key": "fun:toolMod(String,String,ToolModBuilder.()->Unit)",
+        "anchor": "symbol-28"
+      }
+    ]
+  },
+  {
+    "id": "native:nimby:SignalAnimation",
+    "slug": "reference/signalanimation",
+    "symbols": [
+      {
+        "key": "class:SignalAnimation",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "val:SignalAnimation.first",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "val:SignalAnimation.alternate",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "val:SignalAnimation.everyMs",
+        "anchor": "symbol-3"
+      },
+      {
+        "key": "fun:SignalAnimation.frameAt(Long)",
+        "anchor": "symbol-4"
+      },
+      {
+        "key": "fun:steady(String)",
+        "anchor": "symbol-5"
+      },
+      {
+        "key": "fun:blink(String,String,Long)",
+        "anchor": "symbol-6"
+      }
+    ]
+  },
+  {
+    "id": "native:nimby:SignalMod",
+    "slug": "reference/signalmod",
+    "symbols": [
+      {
+        "key": "class:Indication",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "class:SignalModDsl",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "class:SignalContext",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "val:SignalContext.next",
+        "anchor": "symbol-3"
+      },
+      {
+        "key": "val:SignalContext.signal",
+        "anchor": "symbol-4"
+      },
+      {
+        "key": "val:SignalContext.observation",
+        "anchor": "symbol-5"
+      },
+      {
+        "key": "val:SignalContext.block",
+        "anchor": "symbol-6"
+      },
+      {
+        "key": "val:SignalContext.fresh",
+        "anchor": "symbol-7"
+      },
+      {
+        "key": "val:SignalContext.routeKnown",
+        "anchor": "symbol-8"
+      },
+      {
+        "key": "val:SignalContext.approachingTrain",
+        "anchor": "symbol-9"
+      },
+      {
+        "key": "val:SignalContext.trainApproaching",
+        "anchor": "symbol-10"
+      },
+      {
+        "key": "val:SignalContext.settingsStatus",
+        "anchor": "symbol-11"
+      },
+      {
+        "key": "fun:SignalContext.enabled(Checkbox)",
+        "anchor": "symbol-12"
+      },
+      {
+        "key": "class:SignalDefinition",
+        "anchor": "symbol-13"
+      },
+      {
+        "key": "var:SignalDefinition.observeApproach",
+        "anchor": "symbol-14"
+      },
+      {
+        "key": "var:SignalDefinition.approachBlocks",
+        "anchor": "symbol-15"
+      },
+      {
+        "key": "fun:SignalDefinition.observeApproach(Int)",
+        "anchor": "symbol-16"
+      },
+      {
+        "key": "fun:SignalDefinition.checkbox(String,String,String,Boolean,Boolean)",
+        "anchor": "symbol-17"
+      },
+      {
+        "key": "fun:SignalDefinition.rules(SignalContext<A,R>.()->Indication<A,R>?)",
+        "anchor": "symbol-18"
+      },
+      {
+        "key": "fun:SignalDefinition.action(String,String,String,String)",
+        "anchor": "symbol-19"
+      },
+      {
+        "key": "fun:SignalDefinition.evaluate((Map<String,Boolean>,Observation)->Indication<A,R>)",
+        "anchor": "symbol-20"
+      },
+      {
+        "key": "fun:SignalDefinition.migrateSettings((Map<String,Boolean>)->Map<String,Boolean>)",
+        "anchor": "symbol-21"
+      },
+      {
+        "key": "fun:SignalDefinition.prepareObservation((Signal)->Signal)",
+        "anchor": "symbol-22"
+      },
+      {
+        "key": "fun:SignalDefinition.allowForcedAspect((A)->Indication<A,R>?)",
+        "anchor": "symbol-23"
+      },
+      {
+        "key": "class:SignalModBuilder",
+        "anchor": "symbol-24"
+      },
+      {
+        "key": "var:SignalModBuilder.maximumLineSpeed",
+        "anchor": "symbol-25"
+      },
+      {
+        "key": "var:SignalModBuilder.diagnosticFile",
+        "anchor": "symbol-26"
+      },
+      {
+        "key": "fun:SignalModBuilder.signal(String,String,String,SignalDefinition<A,R>.()->Unit)",
+        "anchor": "symbol-27"
+      },
+      {
+        "key": "fun:SignalModBuilder.signal(SignalType,SignalDefinition<A,R>.()->Unit)",
+        "anchor": "symbol-28"
+      },
+      {
+        "key": "fun:SignalModBuilder.images((Indication<A,R>)->String)",
+        "anchor": "symbol-29"
+      },
+      {
+        "key": "fun:SignalModBuilder.animatedImages((Indication<A,R>,Long,Long)->String)",
+        "anchor": "symbol-30"
+      },
+      {
+        "key": "fun:SignalModBuilder.appearance((Indication<A,R>)->SignalAnimation)",
+        "anchor": "symbol-31"
+      },
+      {
+        "key": "fun:SignalModBuilder.driving((Indication<A,R>)->DrivingRule?)",
+        "anchor": "symbol-32"
+      },
+      {
+        "key": "fun:SignalModBuilder.faults((Indication<A,R>)->Boolean)",
+        "anchor": "symbol-33"
+      },
+      {
+        "key": "fun:SignalModBuilder.activeWhen((Indication<A,R>)->Boolean)",
+        "anchor": "symbol-34"
+      },
+      {
+        "key": "fun:SignalModBuilder.aspectNames((A)->String)",
+        "anchor": "symbol-35"
+      },
+      {
+        "key": "fun:SignalModBuilder.reasonNames((R)->String)",
+        "anchor": "symbol-36"
+      },
+      {
+        "key": "fun:SignalModBuilder.drivingPlan((Vehicle,DrivingSettings,DrivingInput,List<Constraint>)->DrivingPlan)",
+        "anchor": "symbol-37"
+      },
+      {
+        "key": "fun:signalMod(String,String,Indication<A,R>,Indication<A,R>,SignalModBuilder<A,R>.()->Unit)",
+        "anchor": "symbol-38"
+      }
+    ]
+  },
+  {
+    "id": "native:nimby:SignalModel",
+    "slug": "reference/signalmodel",
+    "symbols": [
+      {
+        "key": "class:SignalIndication",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "val:SignalIndication.aspect",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "val:SignalIndication.reason",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "val:SignalIndication.type",
+        "anchor": "symbol-3"
+      },
+      {
+        "key": "val:SignalIndication.drivingRule",
+        "anchor": "symbol-4"
+      },
+      {
+        "key": "val:SignalIndication.active",
+        "anchor": "symbol-5"
+      },
+      {
+        "key": "fun:SignalIndication.of(SignalModel<A,R>)",
+        "anchor": "symbol-6"
+      },
+      {
+        "key": "class:SignalNeighbour",
+        "anchor": "symbol-7"
+      },
+      {
+        "key": "val:SignalNeighbour.id",
+        "anchor": "symbol-8"
+      },
+      {
+        "key": "val:SignalNeighbour.indication",
+        "anchor": "symbol-9"
+      },
+      {
+        "key": "val:SignalNeighbour.type",
+        "anchor": "symbol-10"
+      },
+      {
+        "key": "val:SignalNeighbour.drivingRule",
+        "anchor": "symbol-11"
+      },
+      {
+        "key": "val:SignalNeighbour.active",
+        "anchor": "symbol-12"
+      },
+      {
+        "key": "fun:SignalNeighbour.of(SignalModel<A,R>)",
+        "anchor": "symbol-13"
+      },
+      {
+        "key": "class:SignalRuleContext",
+        "anchor": "symbol-14"
+      },
+      {
+        "key": "val:SignalRuleContext.next",
+        "anchor": "symbol-15"
+      },
+      {
+        "key": "val:SignalRuleContext.signal",
+        "anchor": "symbol-16"
+      },
+      {
+        "key": "val:SignalRuleContext.settings",
+        "anchor": "symbol-17"
+      },
+      {
+        "key": "val:SignalRuleContext.observation",
+        "anchor": "symbol-18"
+      },
+      {
+        "key": "val:SignalRuleContext.block",
+        "anchor": "symbol-19"
+      },
+      {
+        "key": "val:SignalRuleContext.fresh",
+        "anchor": "symbol-20"
+      },
+      {
+        "key": "val:SignalRuleContext.routeKnown",
+        "anchor": "symbol-21"
+      },
+      {
+        "key": "val:SignalRuleContext.approachingTrain",
+        "anchor": "symbol-22"
+      },
+      {
+        "key": "val:SignalRuleContext.trainApproaching",
+        "anchor": "symbol-23"
+      },
+      {
+        "key": "val:SignalRuleContext.settingsStatus",
+        "anchor": "symbol-24"
+      },
+      {
+        "key": "fun:SignalRuleContext.enabled(Checkbox)",
+        "anchor": "symbol-25"
+      },
+      {
+        "key": "class:SignalModelBuilder",
+        "anchor": "symbol-26"
+      },
+      {
+        "key": "fun:SignalModelBuilder.construction(List<String>,String,String,String,String?,String?)",
+        "currentKey": "fun:SignalModelBuilder.construction(List<String>,String,String,String,String?,String?,Int,Boolean)",
+        "anchor": "symbol-27"
+      },
+      {
+        "key": "var:SignalModelBuilder.observeApproach",
+        "anchor": "symbol-28"
+      },
+      {
+        "key": "var:SignalModelBuilder.approachBlocks",
+        "anchor": "symbol-29"
+      },
+      {
+        "key": "fun:SignalModelBuilder.observeApproach(Int)",
+        "anchor": "symbol-30"
+      },
+      {
+        "key": "fun:SignalModelBuilder.checkbox(String,String,String,Boolean,Boolean)",
+        "anchor": "symbol-31"
+      },
+      {
+        "key": "fun:SignalModelBuilder.action(String,String,String,String)",
+        "anchor": "symbol-32"
+      },
+      {
+        "key": "fun:SignalModelBuilder.rules(SignalRuleContext.()->Indication<A,R>?)",
+        "anchor": "symbol-33"
+      },
+      {
+        "key": "fun:SignalModelBuilder.evaluate((Map<String,Boolean>,Observation)->Indication<A,R>)",
+        "anchor": "symbol-34"
+      },
+      {
+        "key": "fun:SignalModelBuilder.evaluate((Map<String,Boolean>,Observation,A)->Indication<A,R>)",
+        "anchor": "symbol-35"
+      },
+      {
+        "key": "fun:SignalModelBuilder.migrateSettings((Map<String,Boolean>)->Map<String,Boolean>)",
+        "anchor": "symbol-36"
+      },
+      {
+        "key": "fun:SignalModelBuilder.prepareObservation((Signal)->Signal)",
+        "anchor": "symbol-37"
+      },
+      {
+        "key": "fun:SignalModelBuilder.allowForcedAspect((A)->Indication<A,R>?)",
+        "anchor": "symbol-38"
+      },
+      {
+        "key": "fun:SignalModelBuilder.images((Indication<A,R>)->String)",
+        "anchor": "symbol-39"
+      },
+      {
+        "key": "fun:SignalModelBuilder.animatedImages((Indication<A,R>,Long,Long)->String)",
+        "anchor": "symbol-40"
+      },
+      {
+        "key": "fun:SignalModelBuilder.appearance((Indication<A,R>)->SignalAnimation)",
+        "anchor": "symbol-41"
+      },
+      {
+        "key": "fun:SignalModelBuilder.driving((Indication<A,R>)->DrivingRule?)",
+        "anchor": "symbol-42"
+      },
+      {
+        "key": "fun:SignalModelBuilder.faults((Indication<A,R>)->Boolean)",
+        "anchor": "symbol-43"
+      },
+      {
+        "key": "fun:SignalModelBuilder.activeWhen((Indication<A,R>)->Boolean)",
+        "anchor": "symbol-44"
+      },
+      {
+        "key": "fun:SignalModelBuilder.aspectNames((A)->String)",
+        "anchor": "symbol-45"
+      },
+      {
+        "key": "fun:SignalModelBuilder.reasonNames((R)->String)",
+        "anchor": "symbol-46"
+      },
+      {
+        "key": "class:SignalModel",
+        "anchor": "symbol-47"
+      },
+      {
+        "key": "val:SignalModel.type",
+        "anchor": "symbol-48"
+      },
+      {
+        "key": "fun:signalModel(String,String,String,Indication<A,R>,Indication<A,R>,SignalModelBuilder<A,R>.()->Unit)",
+        "anchor": "symbol-49"
+      },
+      {
+        "key": "fun:signalModel(SignalType,Indication<A,R>,Indication<A,R>,SignalModelBuilder<A,R>.()->Unit)",
+        "anchor": "symbol-50"
+      },
+      {
+        "key": "class:SignalModelsBuilder",
+        "anchor": "symbol-51"
+      },
+      {
+        "key": "fun:SignalModelsBuilder.metadata(String,String,String?)",
+        "anchor": "symbol-52"
+      },
+      {
+        "key": "var:SignalModelsBuilder.maximumLineSpeed",
+        "anchor": "symbol-53"
+      },
+      {
+        "key": "var:SignalModelsBuilder.diagnosticFile",
+        "anchor": "symbol-54"
+      },
+      {
+        "key": "fun:SignalModelsBuilder.signal(SignalModel<*,*>)",
+        "anchor": "symbol-55"
+      },
+      {
+        "key": "fun:SignalModelsBuilder.drivingPlan((Vehicle,DrivingSettings,DrivingInput,List<Constraint>)->DrivingPlan)",
+        "anchor": "symbol-56"
+      },
+      {
+        "key": "fun:signalMod(String,String,SignalModelsBuilder.()->Unit)",
+        "anchor": "symbol-57"
+      }
+    ]
+  },
+  {
+    "id": "native:nimby:SignalTypes",
+    "slug": "reference/signaltypes",
+    "symbols": [
+      {
+        "key": "fun:validateSignalTypes(List<SignalType>)",
+        "anchor": "symbol-0"
+      }
+    ]
+  },
+  {
+    "id": "native:nimby:ToolContext",
+    "slug": "reference/toolcontext",
+    "symbols": [
+      {
+        "key": "class:ToolTrack",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "class:ToolJunction",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "class:ToolSignal",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "class:ToolNetwork",
+        "anchor": "symbol-3"
+      },
+      {
+        "key": "class:SignalPosition",
+        "anchor": "symbol-4"
+      },
+      {
+        "key": "class:ConstructionState",
+        "anchor": "symbol-5"
+      },
+      {
+        "key": "class:ConstructionResult",
+        "anchor": "symbol-6"
+      },
+      {
+        "key": "class:ToolButton",
+        "anchor": "symbol-7"
+      },
+      {
+        "key": "class:ToolNumberInput",
+        "anchor": "symbol-8"
+      },
+      {
+        "key": "class:LogLevel",
+        "anchor": "symbol-9"
+      },
+      {
+        "key": "class:ToolContext",
+        "anchor": "symbol-10"
+      },
+      {
+        "key": "val:ToolContext.worldId",
+        "anchor": "symbol-11"
+      },
+      {
+        "key": "val:ToolContext.generation",
+        "anchor": "symbol-12"
+      },
+      {
+        "key": "fun:ToolContext.log(String,LogLevel)",
+        "anchor": "symbol-13"
+      },
+      {
+        "key": "fun:ToolContext.clock()",
+        "anchor": "symbol-14"
+      },
+      {
+        "key": "fun:ToolContext.changeTime(Long,Boolean)",
+        "anchor": "symbol-15"
+      },
+      {
+        "key": "fun:ToolContext.showWindow(ToolWindowEvent,String,List<ToolButton>,List<ToolNumberInput>)",
+        "anchor": "symbol-16"
+      },
+      {
+        "key": "fun:ToolContext.network()",
+        "anchor": "symbol-17"
+      },
+      {
+        "key": "fun:ToolContext.prepareConstruction(Long)",
+        "anchor": "symbol-18"
+      },
+      {
+        "key": "fun:ToolContext.showSignalPreview(SignalActionRequest,List<SignalPosition>)",
+        "anchor": "symbol-19"
+      },
+      {
+        "key": "fun:ToolContext.clearSignalPreview()",
+        "anchor": "symbol-20"
+      },
+      {
+        "key": "fun:ToolContext.createSignals(Long,Long,List<SignalPosition>)",
+        "anchor": "symbol-21"
+      },
+      {
+        "key": "fun:ToolContext.undoConstruction(Long)",
+        "anchor": "symbol-22"
+      },
+      {
+        "key": "fun:ToolContext.pollConstruction(Long)",
+        "anchor": "symbol-23"
+      },
+      {
+        "key": "fun:ToolContext.showPanel(SignalActionRequest,String,List<ToolButton>,List<ToolNumberInput>)",
+        "anchor": "symbol-24"
+      }
+    ]
+  },
+  {
+    "id": "native:nimby:ToolWindow",
+    "slug": "reference/toolwindow",
+    "symbols": [
+      {
+        "key": "class:ToolWindow",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "class:ToolWindowEvent",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "class:ToolClock",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "class:ToolTimeChange",
+        "anchor": "symbol-3"
+      }
+    ]
+  },
+  {
+    "id": "native:nimby:Translations",
+    "slug": "reference/translations",
+    "symbols": [
+      {
+        "key": "fun:tr(String,Pair<String,Any>)",
+        "anchor": "symbol-0"
+      }
+    ]
+  },
+  {
+    "id": "jvm:fr.nimby.sdk:Construction",
+    "slug": "reference/construction",
+    "symbols": [
+      {
+        "key": "class:ConstructionResult",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "class:ConstructionState",
+        "anchor": "symbol-1"
+      }
+    ]
+  },
+  {
+    "id": "jvm:fr.nimby.sdk:DiagnosticLog",
+    "slug": "reference/diagnosticlog",
+    "symbols": [
+      {
+        "key": "class:DiagnosticLog",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "fun:DiagnosticLog.Companion.defaultRoot()",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "fun:DiagnosticLog.Companion.forComponent(String)",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "val:DiagnosticLog.directory",
+        "anchor": "symbol-3"
+      },
+      {
+        "key": "val:DiagnosticLog.file",
+        "anchor": "symbol-4"
+      },
+      {
+        "key": "fun:DiagnosticLog.write(String,Throwable?,String)",
+        "anchor": "symbol-5"
+      },
+      {
+        "key": "fun:DiagnosticLog.startApplication(String)",
+        "anchor": "symbol-6"
+      }
+    ]
+  },
+  {
+    "id": "jvm:fr.nimby.sdk:DrivingObservation",
+    "slug": "reference/drivingobservation",
+    "symbols": [
+      {
+        "key": "class:TrainDynamics",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "class:DrivingObservation",
+        "anchor": "symbol-1"
+      }
+    ]
+  },
+  {
+    "id": "jvm:fr.nimby.sdk:ModControl",
+    "slug": "reference/modcontrol",
+    "symbols": [
+      {
+        "key": "class:ControlOperation",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "class:TrainControlMode",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "class:TrainControlState",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "class:ControlRequest",
+        "anchor": "symbol-3"
+      },
+      {
+        "key": "class:ControlResponse",
+        "anchor": "symbol-4"
+      },
+      {
+        "key": "class:ModControlSession",
+        "anchor": "symbol-5"
+      },
+      {
+        "key": "val:ModControlSession.modId",
+        "anchor": "symbol-6"
+      },
+      {
+        "key": "val:ModControlSession.owner",
+        "anchor": "symbol-7"
+      },
+      {
+        "key": "val:ModControlSession.generation",
+        "anchor": "symbol-8"
+      },
+      {
+        "key": "fun:ModControlSession.renew(Int)",
+        "anchor": "symbol-9"
+      },
+      {
+        "key": "fun:ModControlSession.forceSignal(Long,Int)",
+        "anchor": "symbol-10"
+      },
+      {
+        "key": "fun:ModControlSession.restoreSignal(Long)",
+        "anchor": "symbol-11"
+      },
+      {
+        "key": "fun:ModControlSession.setSetting(Long,Int,Boolean)",
+        "anchor": "symbol-12"
+      },
+      {
+        "key": "fun:ModControlSession.restoreSetting(Long,Int)",
+        "anchor": "symbol-13"
+      },
+      {
+        "key": "fun:ModControlSession.constrainTrain(ControlOperation.Train)",
+        "currentKey": "fun:ModControlSession.constrainTrain(Long,Double,TrainControlMode,Long,Boolean)",
+        "anchor": "symbol-14"
+      },
+      {
+        "key": "fun:ModControlSession.restoreTrain(Long)",
+        "anchor": "symbol-15"
+      },
+      {
+        "key": "fun:ModControlSession.readSignal(Long)",
+        "anchor": "symbol-16"
+      },
+      {
+        "key": "fun:ModControlSession.readTrain(Long)",
+        "anchor": "symbol-17"
+      },
+      {
+        "key": "fun:ModControlSession.clear()",
+        "anchor": "symbol-18"
+      },
+      {
+        "key": "fun:ModControlSession.close()",
+        "anchor": "symbol-19"
+      }
+    ]
+  },
+  {
+    "id": "jvm:fr.nimby.sdk:Nimby",
+    "slug": "reference/nimby",
+    "symbols": [
+      {
+        "key": "object:Nimby",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "fun:Nimby.runningGames()",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "fun:Nimby.connect(Path,Int?)",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "class:Game",
+        "anchor": "symbol-3"
+      },
+      {
+        "key": "val:Game.advanced",
+        "anchor": "symbol-4"
+      },
+      {
+        "key": "val:Game.trains",
+        "anchor": "symbol-5"
+      },
+      {
+        "key": "val:Game.clock",
+        "anchor": "symbol-6"
+      },
+      {
+        "key": "val:Game.signals",
+        "anchor": "symbol-7"
+      },
+      {
+        "key": "val:Game.mods",
+        "anchor": "symbol-8"
+      },
+      {
+        "key": "val:Game.construction",
+        "anchor": "symbol-9"
+      },
+      {
+        "key": "fun:Game.snapshot(Long?)",
+        "anchor": "symbol-10"
+      },
+      {
+        "key": "fun:Game.close()",
+        "anchor": "symbol-11"
+      },
+      {
+        "key": "class:Game.Trains",
+        "anchor": "symbol-12"
+      },
+      {
+        "key": "fun:Game.Trains.read(Long)",
+        "anchor": "symbol-13"
+      },
+      {
+        "key": "class:Game.Clock",
+        "anchor": "symbol-14"
+      },
+      {
+        "key": "fun:Game.Clock.read()",
+        "anchor": "symbol-15"
+      },
+      {
+        "key": "fun:Game.Clock.set(Instant,Boolean)",
+        "anchor": "symbol-16"
+      },
+      {
+        "key": "class:Game.Signals",
+        "anchor": "symbol-17"
+      },
+      {
+        "key": "fun:Game.Signals.showTexture(Long,String,String,Int)",
+        "anchor": "symbol-18"
+      },
+      {
+        "key": "fun:Game.Signals.restoreTexture(Long)",
+        "anchor": "symbol-19"
+      },
+      {
+        "key": "class:Game.Mods",
+        "anchor": "symbol-20"
+      },
+      {
+        "key": "fun:Game.Mods.status(String)",
+        "anchor": "symbol-21"
+      },
+      {
+        "key": "fun:Game.Mods.control(String,Int)",
+        "anchor": "symbol-22"
+      },
+      {
+        "key": "class:Game.Construction",
+        "anchor": "symbol-23"
+      },
+      {
+        "key": "fun:Game.Construction.prepare(Long)",
+        "anchor": "symbol-24"
+      },
+      {
+        "key": "fun:Game.Construction.create(Long,Long,List<Position>)",
+        "anchor": "symbol-25"
+      },
+      {
+        "key": "fun:Game.Construction.poll(Long)",
+        "anchor": "symbol-26"
+      },
+      {
+        "key": "fun:Game.Construction.undo(Long)",
+        "anchor": "symbol-27"
+      }
+    ]
+  },
+  {
+    "id": "jvm:fr.nimby.sdk:NimbyClient",
+    "slug": "reference/nimbyclient",
+    "symbols": [
+      {
+        "key": "class:NimbyClient",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "fun:NimbyClient.Companion.open(Path,Int)",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "fun:NimbyClient.readTrain(Long)",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "fun:NimbyClient.prepareConstruction(Long)",
+        "anchor": "symbol-3"
+      },
+      {
+        "key": "fun:NimbyClient.createSignals(Long,Long,List<Position>)",
+        "anchor": "symbol-4"
+      },
+      {
+        "key": "fun:NimbyClient.undoConstruction(Long)",
+        "anchor": "symbol-5"
+      },
+      {
+        "key": "fun:NimbyClient.pollConstruction(Long)",
+        "anchor": "symbol-6"
+      },
+      {
+        "key": "fun:NimbyClient.capture(Long?)",
+        "anchor": "symbol-7"
+      },
+      {
+        "key": "fun:NimbyClient.setSimulationDateTime(java.time.Instant,Boolean)",
+        "anchor": "symbol-8"
+      },
+      {
+        "key": "fun:NimbyClient.showSignalTextureFor(Long,String,String,Int)",
+        "anchor": "symbol-9"
+      },
+      {
+        "key": "fun:NimbyClient.restoreSignalTexture(Long)",
+        "anchor": "symbol-10"
+      },
+      {
+        "key": "fun:NimbyClient.modControl(String,ControlRequest)",
+        "anchor": "symbol-11"
+      },
+      {
+        "key": "fun:NimbyClient.acquireModControl(String,Int)",
+        "anchor": "symbol-12"
+      },
+      {
+        "key": "fun:NimbyClient.close()",
+        "anchor": "symbol-13"
+      }
+    ]
+  },
+  {
+    "id": "jvm:fr.nimby.sdk:Observation",
+    "slug": "reference/observation",
+    "symbols": [
+      {
+        "key": "class:Train",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "class:Position",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "class:Track",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "class:Station",
+        "anchor": "symbol-3"
+      },
+      {
+        "key": "class:TrackNode",
+        "anchor": "symbol-4"
+      },
+      {
+        "key": "class:TrackJunction",
+        "anchor": "symbol-5"
+      },
+      {
+        "key": "class:TrackUsage",
+        "anchor": "symbol-6"
+      },
+      {
+        "key": "class:Signal",
+        "anchor": "symbol-7"
+      },
+      {
+        "key": "class:Service",
+        "anchor": "symbol-8"
+      },
+      {
+        "key": "class:TrainDetails",
+        "anchor": "symbol-9"
+      },
+      {
+        "key": "class:Platform",
+        "anchor": "symbol-10"
+      },
+      {
+        "key": "class:LineStop",
+        "anchor": "symbol-11"
+      },
+      {
+        "key": "class:SimulationClock",
+        "anchor": "symbol-12"
+      },
+      {
+        "key": "fun:SimulationClock.toInstant()",
+        "anchor": "symbol-13"
+      },
+      {
+        "key": "class:SimulationTimeChange",
+        "anchor": "symbol-14"
+      },
+      {
+        "key": "class:Observation",
+        "anchor": "symbol-15"
+      },
+      {
+        "key": "interface:ObservationClient",
+        "anchor": "symbol-16"
+      },
+      {
+        "key": "fun:ObservationClient.capture(Long?)",
+        "anchor": "symbol-17"
+      },
+      {
+        "key": "class:GameProcess",
+        "anchor": "symbol-18"
+      },
+      {
+        "key": "object:GameProcesses",
+        "anchor": "symbol-19"
+      },
+      {
+        "key": "fun:GameProcesses.discover()",
+        "anchor": "symbol-20"
+      },
+      {
+        "key": "class:SdkException",
+        "anchor": "symbol-21"
+      }
+    ]
+  },
+  {
+    "id": "jvm:fr.nimby.sdk:TrackMetric",
+    "slug": "reference/trackmetric",
+    "symbols": [
+      {
+        "key": "class:TrackMetric",
+        "anchor": "symbol-0"
+      },
+      {
+        "key": "fun:TrackMetric.offsetM(Double)",
+        "anchor": "symbol-1"
+      },
+      {
+        "key": "fun:TrackMetric.fraction(Double)",
+        "anchor": "symbol-2"
+      },
+      {
+        "key": "fun:TrackMetric.distanceM(Double,Double)",
+        "anchor": "symbol-3"
+      },
+      {
+        "key": "fun:TrackMetric.positionAtMetres(Double,TrackDirection)",
+        "anchor": "symbol-4"
+      },
+      {
+        "key": "class:TrackDirection",
+        "anchor": "symbol-5"
+      }
+    ]
+  }
+]
