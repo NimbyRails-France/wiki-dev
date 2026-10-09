@@ -4,6 +4,7 @@ import { capabilities } from './capabilities'
 import { authoring } from './authoring'
 import { toolAuthoring } from './tool-authoring'
 import { modOptionsGuides } from './mod-options-guide'
+import { trainEditorGuides } from './train-editor-guide'
 import { trainGuides } from './train-guides'
 import { performanceGuides } from './performance-guides'
 import { gettingStartedGuides } from './getting-started-guides'
@@ -26,6 +27,7 @@ export const articles = [
   ...authoring,
   ...toolAuthoring,
   ...modOptionsGuides,
+  ...trainEditorGuides,
   ...observationGuides,
   ...trainGuides,
   ...performanceGuides.filter((article) => article.group !== 'Maintenance'),

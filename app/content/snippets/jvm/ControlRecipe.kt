@@ -11,6 +11,9 @@ fun <T> withSignalRecipe(
     aspectFromMod: Int,
     observe: (ModControlSession, ControlResponse) -> T,
 ): T = game.mods.control(modId, leaseMillis = 5_000).use { recipe ->
+    // Le mod fournit le code d'aspect ; le bail dure ici 5 secondes réelles.
     val accepted = recipe.forceSignal(signalId, aspectFromMod)
+    // La demande acceptée n'est pas la preuve du rendu : observe organise les vérifications.
     observe(recipe, accepted)
+    // use libère le bail même si observe lève une exception ; aucun renouvellement automatique.
 }

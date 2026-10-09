@@ -11,12 +11,13 @@ data class MaterialCard(
 )
 
 fun readMaterial(game: Game): List<MaterialCard> {
+    // Fiche matériel : aucun besoin de service ou de carte, mais les modèles sont affichés.
     val snapshot = game.trains.snapshot(query = TrainQuery(
         includeService = false,
         includeLocations = false,
         includeCharacteristics = true,
-        includeComposition = true,
-        includePassengers = true,
+        includeComposition = true, // Ordre des véhicules et modèles référencés.
+        includePassengers = true, // Occupants observés, distincts de la capacité.
     ))
     return snapshot.trains.mapNotNull { train ->
         val record = snapshot.train(train.trainId) ?: return@mapNotNull null
@@ -31,10 +32,13 @@ fun readMaterial(game: Game): List<MaterialCard> {
 
 // Un nombre d'occupants inconnu ne devient jamais zéro.
 fun occupancyPercent(passengers: Int?, current: TrainCharacteristics?): Double? {
+    // current est le profil actuel : ne pas utiliser configured comme remplacement.
     val capacity = current?.passengerCapacity ?: return null
     if (passengers == null || capacity <= 0) return null
+    // Exemple : 30 occupants / 120 places = 25 %. Un dépassement de 100 % est conservé.
     return passengers.toDouble() * 100.0 / capacity
 }
 
+// L'ordre et les répétitions de modèles décrivent la composition.
 fun orderedModelIds(profile: TrainCharacteristics?): List<VehicleModelId>? =
     profile?.composition?.map { it.modelId }

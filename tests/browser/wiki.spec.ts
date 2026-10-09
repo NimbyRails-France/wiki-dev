@@ -370,3 +370,45 @@ test('long reference contents follow scrolling, resizing and language changes', 
     '#' + id,
   )
 })
+
+test('train tutorial and callable reference explain inputs and results in both languages', async ({ page }) => {
+  for (const locale of ['fr', 'en']) {
+    const prefix = locale === 'en' ? '/en' : ''
+    await page.setViewportSize({ width: 390, height: 844 })
+    await page.goto(current(prefix + '/mods/composition-trains#regle'))
+    await expect(page.locator('#regle tbody tr')).toHaveCount(8)
+    await expect(page.locator('#regle pre')).toContainText('//')
+    await expect(page.locator('#resultats')).toContainText('810 + 60 = 870 m')
+    await expect(page.locator('#messages pre')).toContainText('"fr"')
+    await expect(page.locator('#messages pre')).toContainText('"en"')
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+    await page.screenshot({ path: `test-results/wiki-train-guide-${locale}.png` })
+
+    await page.goto(current(prefix + '/reference/native/nimby/traineditor#api-traineditorbuilder-maximumlength-8ad8b50aca'))
+    const section = page.locator('#api-traineditorbuilder-maximumlength-8ad8b50aca')
+    await expect(section.locator('table').first().locator('tbody tr')).toHaveCount(4)
+    await expect(section.locator('table').first()).toContainText('IntegerOption')
+    await expect(section.locator('table').first()).toContainText('10')
+    await expect(section.locator('table').nth(1)).toContainText('Unit')
+    expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true)
+  }
+})
+
+test('JVM tutorial exposes a complete runnable project in both languages', async ({ page }) => {
+  for (const locale of ['fr', 'en']) {
+    await page.goto(current((locale === 'en' ? '/en' : '') + '/lire/connexion#projet'))
+    for (const name of ['settings.gradle.kts', 'build.gradle.kts', 'src/main/kotlin/TrainDashboard.kt']) {
+      const content = await page.locator('#projet pre').evaluateAll(
+        (blocks, title) => blocks.find((block) => block.getAttribute('aria-label') === title)?.textContent,
+        name,
+      )
+      expect(content, name).toBeTruthy()
+      expect(content).not.toContain('\\n')
+      const path = resolve(`.validation/jvm-tutorial-generated-project-${locale}`, name)
+      await mkdir(dirname(path), { recursive: true })
+      await writeFile(path, content!, 'utf8')
+    }
+    await expect(page.locator('#projet')).toContainText('fun main(')
+    await expect(page.locator('#projet')).toContainText('0.9.0-alpha.3')
+  }
+})

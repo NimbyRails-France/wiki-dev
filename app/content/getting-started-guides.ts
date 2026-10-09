@@ -37,8 +37,8 @@ export const gettingStartedGuides: Article[] = [
           ),
           note(
             t(
-              'Cette documentation décrit le SDK 0.9.0-alpha.1 en développement pour Windows x64. Elle ne signifie pas que cette version est déjà distribuée. Pour compiler et essayer un exemple, utilisez le kit et le SDK installé correspondant au même build. Aucun kit Linux complet n’est annoncé comme validé ici.',
-              'This documentation describes the Windows x64 SDK 0.9.0-alpha.1 in development. It does not mean that this version is already distributed. To build and try an example, use a kit and installed SDK from the same build. No complete Linux kit is claimed as validated here.',
+              'Cette édition documente le SDK 0.9.0-alpha.3 pour Windows x64. Vérifiez la disponibilité du paquet dans le Hub, puis utilisez son kit de compilation et son SDK d’exécution ensemble. Une édition du manuel peut précéder la publication des paquets ; les exemples indiquent leurs prérequis. Le parcours Kotlin/Native présenté ici cible Windows x64.',
+              'This edition documents SDK 0.9.0-alpha.3 for Windows x64. Check package availability in the Hub, then use its compilation kit and runtime SDK together. A manual edition may precede package publication; examples state their prerequisites. The Kotlin/Native workflow presented here targets Windows x64.',
             ),
             t('Version documentée', 'Documented version'),
           ),
@@ -84,6 +84,10 @@ export const gettingStartedGuides: Article[] = [
               'The two Kotlin APIs have distinct types. An in-game tool uses nimby, just like a signal mod. An external application uses fr.nimby.sdk, opens its connection and closes it when finished. Always check the Native or JVM label in the reference before copying an import.',
             ),
           ),
+          text(t(
+            'Choisissez d’abord le lieu d’exécution, pas le nom de la fonction. Un bouton, un raccourci ou une règle de composition dans le jeu appartient au projet Native ; un écran lancé séparément appartient au projet JVM. Les noms proches, tels que TrainQuery ou Signal, ne permettent pas de partager leurs objets entre ces deux projets.',
+            'Choose where your program runs before choosing a function. An in-game button, shortcut or composition rule belongs to a Native project; a separately launched screen belongs to a JVM project. Similar names such as TrainQuery or Signal do not let you share their objects between these two projects.',
+          )),
           links(
             {
               label: t('Préparer un projet Native', 'Set up a Native project'),
@@ -224,8 +228,8 @@ export const gettingStartedGuides: Article[] = [
         blocks: [
           note(
             t(
-              'Cet assistant est prévu dans le Hub 0.4.2-alpha.2, en préparation avec cette édition du SDK. Ce guide ne signifie pas que cette version est déjà publiée. Si votre Hub ne propose pas « Créer un projet », utilisez le parcours manuel ci-dessous.',
-              'This assistant is planned for Hub 0.4.2-alpha.2, being prepared with this SDK edition. This guide does not mean that version is already published. If your Hub does not offer “Create a project”, use the manual workflow below.',
+              'Le Hub propose « Créer un projet » depuis la version 0.4.2-alpha.2. Activez les outils développeur et le profil Développer pour utiliser cet assistant. Si votre version ne propose pas ce bouton, le parcours manuel ci-dessous crée les mêmes fichiers de base. Pour une application externe Kotlin/JVM, utilisez le guide de connexion et son projet dédié.',
+              'The Hub provides “Create a project” starting with version 0.4.2-alpha.2. Enable developer tools and select the Develop profile to use this assistant. If your version lacks this button, the manual workflow below creates the same basic files. For an external Kotlin/JVM application, use the connection guide and its dedicated project.',
             ),
           ),
           list(
@@ -263,8 +267,9 @@ export const gettingStartedGuides: Article[] = [
             },
             {
               label: t('Développer un outil en jeu', 'Develop an in-game tool'),
-              to: '/mods/cycle-outils',
+              to: '/mods/horloge',
             },
+            { label: t('Créer une application JVM exécutable', 'Create a runnable JVM application'), to: '/lire/connexion' },
           ),
         ],
       },
@@ -424,6 +429,11 @@ rootProject.name = "mon-premier-mod"`,
               'A successful build does not replace files in an already running game. If the Hub reports incompatible builds, select the same kit and rebuild the affected mods before activation.',
             ),
           ),
+          list(
+            t('Fermez le jeu. Dans la fiche du projet du profil Développer, vérifiez le dossier source et le kit utilisés, puis compilez le projet.', 'Close the game. On the project card in the Develop profile, check the source directory and selected kit, then build the project.'),
+            t('Appliquez le profil Développer. Attendez la confirmation du Hub : un paquet prêt ne signifie pas encore que ce profil est actif.', 'Apply the Develop profile. Wait for Hub confirmation: a ready package does not yet mean that this profile is active.'),
+            t('Lancez le jeu depuis le Hub et utilisez une partie de test. Après une modification de code, recommencez compilation, activation jeu fermé et lancement.', 'Launch the game from the Hub and use a test game. After changing code, repeat the build, activation while the game is closed, and launch.'),
+          ),
         ],
       },
     ],
@@ -449,6 +459,12 @@ rootProject.name = "mon-premier-mod"`,
             ),
           ),
           code(firstMod, 'src/main/kotlin/Entry.kt'),
+          table([t('Entrée du modèle', 'Model input'), t('Résultat choisi par cet exemple', 'Result chosen by this example')], [
+            [literal('Occupancy.Clear + fresh + routeKnown + active'), t('Aspect.Open, Reason.Clear ; image open.svg et conduite clear().', 'Aspect.Open, Reason.Clear; open.svg image and clear() driving rule.')],
+            [literal('Occupancy.Occupied + fresh + routeKnown + active'), t('Aspect.Closed, Reason.Occupied ; image closed.svg et arrêt.', 'Aspect.Closed, Reason.Occupied; closed.svg image and stop.')],
+            [t('Donnée inconnue ou périmée', 'Unknown or stale data'), t('Aspect.Closed, Reason.Unknown ; aucun état libre inventé.', 'Aspect.Closed, Reason.Unknown; no invented clear state.')],
+            [literal('active = false'), t('Aspect.Closed, Reason.Disabled ; fermer reste ici un choix du mod.', 'Aspect.Closed, Reason.Disabled; closing remains a policy chosen by this mod.')],
+          ]),
           note(
             t(
               'Le nom et le package de createMod sont attendus par le plugin. modInfo est généré depuis mod.json dans nimby.mod : ne le redéclarez pas. createMod décrit votre mod et doit fonctionner sans partie ouverte, notamment pendant la génération du paquet.',
@@ -625,19 +641,22 @@ rootProject.name = "mon-premier-mod"`,
         blocks: [
           text(
             t(
-              'Objectif : guider une action avec un panneau, un aperçu et un résultat vérifiable. Prérequis : le projet Native. Conservez un calcul borné et traitez explicitement chaque opération en attente, refusée ou terminée.',
-              'Outcome: guide an action with a panel, a preview and a verifiable result. Prerequisite: the Native project. Keep calculations bounded and explicitly handle each pending, refused or completed operation.',
+              'Objectif : créer d’abord une fenêtre autonome, puis ajouter une action avec un aperçu et un résultat vérifiable. Prérequis : le projet Native du guide d’installation. Le premier outil n’a besoin ni d’un mod de signaux, ni d’un service fourni par un autre projet.',
+              'Outcome: first create a standalone window, then add an action with a preview and a verifiable result. Prerequisite: the Native project from the setup guide. The first tool needs neither a signalling mod nor a service supplied by another project.',
             ),
           ),
           links(
+            { label: t('1. Premier outil : lire l’horloge', '1. First tool: read the clock'), to: '/mods/horloge' },
+            { label: t('2. Formulaire et événements', '2. Forms and events'), to: '/mods/interface' },
+            { label: t('3. Préférences et raccourcis', '3. Preferences and shortcuts'), to: '/mods/options' },
             {
-              label: t('1. Services et outils', '1. Services and tools'),
+              label: t('4. Coopération avec un autre mod', '4. Cooperating with another mod'),
               to: '/mods/outils-optionnels',
             },
-            { label: t('2. Interface', '2. Interface'), to: '/mods/interface' },
-            { label: t('3. Cycle d’une action', '3. Action lifecycle'), to: '/mods/cycle-outils' },
-            { label: t('4. Parcours des voies', '4. Track traversal'), to: '/mods/parcours-voies' },
-            { label: t('5. Tests', '5. Tests'), to: '/maintenance/tests' },
+            { label: t('5. Aperçu et commande confirmée', '5. Preview and confirmed command'), to: '/mods/cycle-outils' },
+            { label: t('6. Parcours des voies', '6. Track traversal'), to: '/mods/parcours-voies' },
+            { label: t('7. Tests', '7. Tests'), to: '/maintenance/tests' },
+            { label: t('Autre exemple : une règle de composition sans fenêtre', 'Another example: a composition rule without a window'), to: '/mods/composition-trains' },
           ),
         ],
       },
@@ -647,12 +666,12 @@ rootProject.name = "mon-premier-mod"`,
         blocks: [
           text(
             t(
-              'Objectif : interroger les trains et leur contexte sans demander toutes les données à chaque lecture. Prérequis : un projet Kotlin/JVM. Commencez par une connexion fermée proprement, puis ajoutez les groupes de données nécessaires.',
-              'Outcome: query trains and their context without requesting every data group on each read. Prerequisite: a Kotlin/JVM project. Start with a properly closed connection, then add the data groups you need.',
+              'Objectif : créer un programme Kotlin/JVM exécutable, afficher une première lecture, puis interroger les trains et leur contexte. Le guide de connexion prépare ce projet séparément d’un mod Native. Ajoutez ensuite uniquement les groupes de données nécessaires à votre écran.',
+              'Outcome: create a runnable Kotlin/JVM program, display a first reading, then query trains and their context. The connection guide prepares this project separately from a Native mod. Then add only the data groups needed by your screen.',
             ),
           ),
           links(
-            { label: t('1. Connexion', '1. Connection'), to: '/lire/connexion' },
+            { label: t('1. Projet JVM, connexion et premier lancement', '1. JVM project, connection and first launch'), to: '/lire/connexion' },
             {
               label: t('2. Requêtes des trains', '2. Train queries'),
               to: '/lire/trains-observations',

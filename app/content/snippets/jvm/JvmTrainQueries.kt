@@ -14,8 +14,10 @@ data class TrainCard(
 )
 
 fun readTrainCards(game: Game): List<TrainCard> {
-    val snapshot = game.trains.snapshot(query = TrainQuery())
+    // Le tableau utilise l'état du service et les gares : demander ces deux groupes ensemble.
+    val snapshot = game.trains.snapshot(query = TrainQuery(includeService = true, includeLocations = true))
     return snapshot.trains.mapNotNull { train ->
+        // Jointure indexée dans la copie ; ce n'est pas une nouvelle requête au jeu.
         val record = snapshot.train(train.trainId) ?: return@mapNotNull null
         TrainCard(
             train.trainId, train.name, train.speedKmh,

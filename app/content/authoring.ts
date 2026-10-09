@@ -25,8 +25,8 @@ export const authoring: Article[] = [
         blocks: [
           text(
             t(
-              'Prérequis : un projet configuré et au moins un signalModel à assembler, ou un toolMod avec service ou fenêtre. Le plugin appelle createMod pour lire vos déclarations et générer le catalogue. Il ne lance pas le jeu et n’appelle ni rules, ni les services, ni onTick. Gardez createMod et les initialiseurs sans accès au jeu ni écriture de fichiers.',
-              'Prerequisites: a configured project and at least one signalModel to assemble, or a toolMod with a service or window. The plugin calls createMod to read declarations and generate the catalogue. It does not launch the game or call rules, services or onTick. Keep createMod and initializers free of game access and file writes.',
+              'Prérequis : un projet configuré et au moins un signalModel à assembler, ou un toolMod qui déclare un service, une fenêtre ou une règle trainEditor. Une règle de composition seule suffit : aucun signal ni bouton fictif n’est nécessaire. Le plugin appelle createMod pour lire vos déclarations et générer le catalogue. Gardez createMod et les initialiseurs sans accès à une partie ni écriture de fichiers.',
+              'Prerequisites: a configured project and at least one signalModel to assemble, or a toolMod declaring a service, window or trainEditor rule. A composition rule alone is sufficient: no fictitious signal or button is needed. The plugin calls createMod to read declarations and generate the catalogue. Keep createMod and initializers free of game access or file writes.',
             ),
           ),
           table(
@@ -42,8 +42,8 @@ export const authoring: Article[] = [
               [
                 literal('metadata(author, description, name)'),
                 t(
-                  'Auteur, description et nom affiché optionnel. name et description acceptent tr ; sans name, le nom provient de modInfo. La version complète, suffixe alpha compris, vient de mod.json.',
-                  'Author, description and optional display name. name and description accept tr; without name, the name comes from modInfo. The complete version, including its alpha suffix, comes from mod.json.',
+                  'Auteur et description obligatoires pour générer le paquet ; le nom affiché est facultatif. name et description acceptent tr ; sans name, le nom provient de modInfo. La version complète, suffixe alpha compris, vient de mod.json.',
+                  'Author and description are required to generate the package; the display name is optional. name and description accept tr; without name, the name comes from modInfo. The complete version, including its alpha suffix, comes from mod.json.',
                 ),
               ],
               [
@@ -70,7 +70,7 @@ export const authoring: Article[] = [
             ],
           ),
           code(
-            'import nimby.*\nimport nimby.mod.modInfo\n\nfun createMod() = signalMod(modInfo) {\n    metadata(author = "Votre nom", description = "Mes signaux personnalisés.")\n    signal(firstSignal)\n}',
+            'package nimby.mod\n\nimport nimby.*\n\n// firstSignal est le modèle du premier tutoriel, déclaré dans ce package.\nfun createMod() = signalMod(modInfo) {\n    // modInfo reprend id et name de mod.json ; ne le recréez pas ici.\n    metadata(author = "Votre nom", description = "Mes signaux personnalisés.")\n    signal(firstSignal)\n}',
             t('Assembler le mod', 'Assemble the mod'),
           ),
           note(
@@ -148,6 +148,11 @@ export const authoring: Article[] = [
               'Keep textureSet and the states order of a published catalogue, including old images still referenced by saves. Changing a file at an existing index changes that appearance; reordering indices can assign the wrong image to existing signals.',
             ),
           ),
+          table([t('À vérifier', 'Check'), t('Résultat attendu', 'Expected result')], [
+            [t('Chaque image retournée par le modèle', 'Every image returned by the model'), t('Son chemin figure dans states et désigne un fichier inclus dans le paquet.', 'Its path appears in states and identifies a file included in the package.')],
+            [t('Les deux phases d’un clignotement', 'Both blinking phases'), t('Deux chemins déclarés, même si une seule phase est visible au moment du test.', 'Two declared paths, even when only one phase is visible during the test.')],
+            [t('Un ancien catalogue dans une sauvegarde', 'An existing catalogue in a save'), t('Les mêmes identifiants et les mêmes indices désignent toujours les mêmes indications.', 'The same identities and indices still identify the same indications.')],
+          ]),
         ],
       },
       {
@@ -284,7 +289,7 @@ export const authoring: Article[] = [
             ],
           ),
           code(
-            'val range = NumberSetting("workBlocks", "Following blocks",\n    maximum = 64, defaultValue = 0, visibleWhen = "work")\n\n// Declare number(range) inside your signalModel.\n// Read range.read(settings) inside its rules.\nval proposedSettings = range.withValue(emptyMap(), 2)',
+            '// workBlocks est une identité stable ; visibleWhen nomme une case du même modèle.\nval range = NumberSetting("workBlocks", "Following blocks",\n    maximum = 64, defaultValue = 0, visibleWhen = "work")\n\n// Déclarer number(range) dans signalModel, immédiatement après la case work.\n// Lire range.read(settings) dans rules : un Int dans les bornes, pas une distance.\nval proposedSettings = range.withValue(emptyMap(), 2)',
             t('Déclaration et données copiées', 'Declaration and copied data'),
           ),
           text(

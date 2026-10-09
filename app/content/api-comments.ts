@@ -1,5 +1,17 @@
 /** Reviewed developer-facing wording. Keys are public API identities, not source lines. */
 export const apiComments: Record<string, [string, string]> = {
+  'native:nimby:class:TrainEditor': [
+    'Règles de composition déclarées une fois dans toolMod. Le mod choisit la préférence de longueur et ses messages ; le SDK contrôle les modifications. Aucun onTick ni fenêtre n’est nécessaire.',
+    'Composition rules declared once inside toolMod. The mod chooses the length preference and its messages; the SDK checks changes. No onTick or window is required.',
+  ],
+  'native:nimby:class:TrainEditorBuilder': [
+    'Utilisez trainEditor { maximumLength(...) } et enregistrez la même IntegerOption avec options(...). Les messages acceptent tr sans paramètres.',
+    'Use trainEditor { maximumLength(...) } and register the same IntegerOption with options(...). Messages accept tr without parameters.',
+  ],
+  'native:nimby:class:TrainLengthLimit': [
+    'Longueur totale en mètres, tous véhicules compris. Le mod choisit le défaut et le joueur peut le modifier dans Options → NRF Hub. Une baisse ne raccourcit pas les trains existants.',
+    'Total length in metres, including all vehicles. The mod chooses the default and the player can change it in Options → NRF Hub. Lowering it does not shorten existing trains.',
+  ],
   'jvm:fr.nimby.sdk:class:ConstructionResult': [
     'Résultat de construction expérimental. Le ticket appartient à une partie et à une session d’édition ; des commandes intermédiaires peuvent le rendre invalide. Après une réponse incertaine, consulter le ticket sans répéter la construction.',
     'Experimental construction result. A ticket belongs to a game and editing session; intervening commands can invalidate it. After an uncertain response, poll the ticket without repeating construction.',

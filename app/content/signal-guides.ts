@@ -115,13 +115,17 @@ export const signalGuides: Article[] = [
               'The main model decides locally. The distant model first checks its own block, then interprets the main model with next.of(mainSignal). These names and rules are fictional: the SDK supplies no national railway convention.',
             ),
           ),
-          note(
-            t(
-              'Ce fichier est un exemple de composition et de règles, pas un paquet installable à lui seul. Il ne déclare ni construction ni conduite. Pour en faire un mod jouable, déclarez les quatre SVG avec construction pour leurs modèles respectifs, ajoutez les fichiers à assets, définissez driving et assemblez les modèles depuis createMod avec modInfo.',
-              'This file demonstrates composition and rules; it is not an installable package on its own. It declares neither construction nor driving. To make a playable mod, declare the four SVGs through construction for their respective models, add the files to assets, define driving, and assemble the models from createMod using modInfo.',
-            ),
-            t('Portée de l’exemple', 'Example scope'),
-          ),
+          text(t(
+            'Ajoutez ce fichier à un projet Native préparé, puis créez assets/main-closed.svg, main-open.svg, distant-wait.svg et distant-proceed.svg. Chaque modèle déclare son catalogue et sa conduite. Le fichier suivant constitue l’unique point d’entrée du projet ; createNetworkMod assemble les mêmes instances que celles utilisées par next.of.',
+            'Add this file to a prepared Native project, then create assets/main-closed.svg, main-open.svg, distant-wait.svg and distant-proceed.svg. Each model declares its catalogue and driving policy. The following file is the project’s sole entry point; createNetworkMod assembles the same instances used by next.of.',
+          )),
+          code('package nimby.mod\n\n// Assembler le catalogue avec l’identité générée depuis mod.json.\nfun createMod() = wiki.models.createNetworkMod(modInfo)', literal('src/main/kotlin/Entry.kt')),
+          table([t('Situation observée', 'Observed situation'), t('Résultat de l’annonce', 'Distant result')], [
+            [t('Son propre canton est inconnu, occupé ou non frais.', 'Its own block is unknown, occupied or stale.'), literal('Wait / Unknown')],
+            [t('Canton local libre ; principal résolu et fermé.', 'Local block clear; resolved main signal closed.'), literal('Wait / MainClosed')],
+            [t('Canton local libre ; principal résolu et ouvert.', 'Local block clear; resolved main signal open.'), literal('Proceed / MainOpen')],
+            [t('Voisin d’un autre modèle ou impossible à résoudre.', 'Neighbour from another model or impossible to resolve.'), literal('Wait / Unknown')],
+          ]),
           table(
             [t('Identité', 'Identity'), t('Portée', 'Scope')],
             [
@@ -222,6 +226,10 @@ export const signalGuides: Article[] = [
               'next follows your mod’s observed network. It neither searches all nearby signals nor automatically reads other mods’ private decisions. evaluateNetwork tests the same mechanism outside the game; its 4096-signal limit per call is not a maximum map-size promise.',
             ),
           ),
+          text(t(
+            'Testez séparément une décision locale, un voisin reconnu fermé/ouvert, un modèle inconnu, un lien manquant et une boucle. Hors jeu, construisez les observations puis utilisez evaluateNetwork ; dans le jeu, vérifiez également que le sens du lien aval correspond aux signaux posés.',
+            'Test a local decision, a recognised closed/open neighbour, an unknown model, a missing link and a cycle separately. Outside the game, build observations and use evaluateNetwork; in the game, also verify that the downstream link direction matches the placed signals.',
+          )),
         ],
       },
       {
@@ -298,7 +306,7 @@ export const signalGuides: Article[] = [
             ),
           ),
           code(
-            'package nimby.mod\n\nimport nimby.*\nimport wiki.approach.approachSignal\n\nfun createMod() = signalMod(modInfo) {\n    metadata(author = "Your name", description = "Approach-controlled signal.")\n    signal(approachSignal)\n}',
+            'package nimby.mod\n\nimport nimby.*\nimport wiki.approach.approachSignal\n\nfun createMod() = signalMod(modInfo) {\n    metadata(author = "Your name", description = "Approach-controlled signal.")\n    // Enregistrer exactement le modèle dont le fichier déclare les règles et les images.\n    signal(approachSignal)\n}',
             literal('src/main/kotlin/Entry.kt'),
           ),
           text(
@@ -351,6 +359,11 @@ export const signalGuides: Article[] = [
               'This guide assumes a working signal project. Add an action to its signalModel and create a second Native project for the provider. The signal keeps its rules when the tool is not installed; whenMod does not add an installation dependency.',
             ),
           ),
+          table([t('Essai', 'Test'), t('Résultat attendu avec cet exemple', 'Expected result with this example')], [
+            [t('Train orienté vers le signal dans un des deux cantons amont ; canton local libre.', 'Train directed towards the signal in either upstream block; local block clear.'), literal('Open / TrainApproaching')],
+            [t('Train au-delà de la portée ou déjà passé devant le signal.', 'Train beyond the range or already past the signal.'), literal('Closed / Unknown')],
+            [t('Approche détectée mais canton local occupé, forcé à l’arrêt ou non frais.', 'Approach detected but local block occupied, forced to stop or stale.'), literal('Closed / Unknown')],
+          ]),
           code(
             'action("preview", "Preview markers",\n    whenMod = "preview-tool", service = "preview.v1")',
             t('Fragment dans votre signalModel', 'Fragment inside your signalModel'),
@@ -398,8 +411,8 @@ export const signalGuides: Article[] = [
         blocks: [
           text(
             t(
-              'toolMod déclare un outil sans modèle de signal fictif. Déclarez au moins un service ou une fenêtre. Un service traite les actions de signaux ; une fenêtre permet aussi un outil sans signal sélectionné. Les callbacks utilisent le ToolContext reçu pendant l’appel.',
-              'toolMod declares a tool without a fictitious signal model. Declare at least one service or window. A service handles signal actions; a window also supports tools without a selected signal. Callbacks use the ToolContext supplied for that call.',
+              'toolMod déclare un outil sans modèle de signal fictif. Choisissez au moins un service, une fenêtre ou une règle trainEditor. Un service traite les actions de signaux ; une fenêtre permet un outil sans signal sélectionné ; trainEditor agit directement dans la composition des trains, sans fenêtre ni callback de surveillance. Les callbacks de service et de fenêtre utilisent le ToolContext reçu pendant l’appel.',
+              'toolMod declares a tool without a fictitious signal model. Choose at least one service, window or trainEditor rule. A service handles signal actions; a window supports tools without a selected signal; trainEditor acts directly in train composition, without a window or monitoring callback. Service and window callbacks use the ToolContext supplied for that call.',
             ),
           ),
           table(
@@ -417,6 +430,13 @@ export const signalGuides: Article[] = [
                 t(
                   'Recevoir les événements d’une fenêtre autonome.',
                   'Receive standalone-window events.',
+                ),
+              ],
+              [
+                literal('trainEditor { maximumLength(...) }'),
+                t(
+                  'Déclarer une limite de composition, son option et ses messages. Aucun contexte de jeu à lire périodiquement.',
+                  'Declare a composition limit, its option and its messages. No game context needs periodic reading.',
                 ),
               ],
               [
@@ -442,7 +462,9 @@ export const signalGuides: Article[] = [
             ),
           ),
           links(
+            { label: t('Premier outil autonome : horloge', 'First standalone tool: clock'), to: '/mods/horloge' },
             { label: t('Fenêtres et formulaires', 'Windows and forms'), to: '/mods/interface' },
+            { label: t('Règle de composition sans fenêtre', 'Composition rule without a window'), to: '/mods/composition-trains' },
             { label: t('Cycle de vie des outils', 'Tool lifecycle'), to: '/mods/cycle-outils' },
           ),
         ],
@@ -527,7 +549,7 @@ export const signalGuides: Article[] = [
           ),
           code(previewTool, literal('src/main/kotlin/PreviewTool.kt')),
           code(
-            'package nimby.mod\n\nfun createMod() = wiki.preview.createPreviewTool()',
+            'package nimby.mod\n\n// Utiliser l’identité fournie par le manifeste de ce projet.\nfun createMod() = wiki.preview.createPreviewTool(modInfo)',
             t(
               'Point d’entrée du projet outil : src/main/kotlin/Entry.kt',
               'Tool project entry point: src/main/kotlin/Entry.kt',
@@ -1119,6 +1141,12 @@ export const signalGuides: Article[] = [
             'val speeds = wiki.driving.Speeds(passageKmh = 25.0, restrictedKmh = 12.0)\nval rule = wiki.driving.instruction(wiki.driving.Aspect.Warning, speeds)\ncheck(rule.signalsAhead == 1)\ncheck(rule.reopenedSpeedMps == 25.0 / 3.6)\ncheck(DrivingFlag.ApproachPassable in rule.flags)',
             t('Contrôles sur la consigne retournée', 'Checks on the returned rule'),
           ),
+          table([t('Argument ou résultat', 'Argument or result'), t('Valeur dans ce test', 'Value in this test'), t('Interprétation', 'Meaning')], [
+            [literal('passageKmh / restrictedKmh'), literal('25.0 / 12.0 km/h'), t('Paramètres métier de cette fonction, finis et strictement positifs.', 'Policy inputs of this function, finite and strictly positive.')],
+            [literal('signalsAhead'), literal('1'), t('Le prochain signal aval est la cible ; ce nombre n’est pas une distance.', 'The next downstream signal is the target; this number is not a distance.')],
+            [literal('reopenedSpeedMps'), literal('25.0 / 3.6 ≈ 6.94 m/s'), t('La fonction convertit la vitesse de passage en unités attendues par la conduite.', 'The function converts passage speed to the units expected by driving.')],
+            [literal('DrivingRule'), t('Objet retourné par instruction', 'Object returned by instruction'), t('Il n’agit sur un train que s’il est retourné par le callback driving du modèle.', 'It affects a train only when returned by the model’s driving callback.')],
+          ]),
           text(
             t(
               'Complétez les tests avec la cible fermée puis autorisée, le passage de la tête, le dégagement de la queue pour une restriction HoldToClear et une observation devenue inconnue. Vérifiez aussi qu’une permission au signal courant ne donne pas une permission à la cible.',

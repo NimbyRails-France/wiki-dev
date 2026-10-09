@@ -5,6 +5,7 @@ import nimby.*
 // Suit une opération ; ce n’est ni un planificateur ni un bouton Appliquer. Avant confirmCreate,
 // l’appelant prépare, relit et compare le plan explicitement approuvé.
 interface ConstructionPort {
+    // Cet adaptateur n'est utilisé que pendant le callback qui l'a créé.
     val worldId: String
     val generation: Long
     fun create(ticket: Long, source: Long, positions: List<SignalPosition>): ConstructionResult
@@ -13,6 +14,7 @@ interface ConstructionPort {
 }
 
 class ConstructionFollower {
+    // 1. Conserver le résultat et son ticket ; ne jamais conserver le contexte de jeu.
     var result: ConstructionResult? = null; private set
     var pending = false; private set
     var panelOpen = true; private set
@@ -21,11 +23,13 @@ class ConstructionFollower {
 
     fun confirmCreate(port: ConstructionPort, prepared: ConstructionResult,
                       source: Long, approvedPositions: List<SignalPosition>) {
+        // 2. ready et token non nul sont nécessaires, mais le plan doit aussi avoir été approuvé.
         require(!pending && prepared.state == ConstructionState.Ready && prepared.token != 0L)
         require(source != 0L && approvedPositions.size in 1..64)
         require(approvedPositions.all { it.fraction.isFinite() && it.fraction > 0 && it.fraction < 1 && (it.direction == 1 || it.direction == -1) })
         require(approvedPositions.map { it.trackId to it.fraction }.distinct().size == approvedPositions.size)
         check(result?.token != prepared.token) { "Ce ticket a déjà été envoyé." }
+        // La source et les positions appartiennent à cette session ; un rechargement les invalide.
         world = port.worldId to port.generation
         result = prepared
         undoIssued = false
@@ -34,6 +38,7 @@ class ConstructionFollower {
     }
 
     fun confirmUndo(port: ConstructionPort) {
+        // 3. canUndo est une disponibilité observée, à vérifier de nouveau avant la commande.
         check(world == (port.worldId to port.generation))
         val previous = requireNotNull(result)
         check(!pending && !undoIssued && previous.canUndo)
@@ -43,11 +48,13 @@ class ConstructionFollower {
     }
 
     fun tick(port: ConstructionPort) {
+        // 4. Une opération déjà envoyée est suivie par poll ; elle n'est jamais renvoyée par create.
         if (world != null && world != (port.worldId to port.generation)) { stop(); return }
         if (pending) accept(port.poll(requireNotNull(result).token))
     }
 
     private fun accept(next: ConstructionResult) {
+        // Applied, Partial ou Rejected sont des résultats à présenter, pas à convertir en succès.
         check(next.token == result?.token) { "Un résultat d’un autre ticket est refusé." }
         result = next
         pending = next.state == ConstructionState.Pending

@@ -20,5 +20,5 @@ kotlin.sourceSets.main {
             entry.relativePath.pathString !in currentSnippets
     }
 }
-dependencies { implementation("fr.nimbyrails:nimby-observation-client:0.9.0-alpha.1") }
+dependencies { implementation("fr.nimbyrails:nimby-observation-client:0.9.0-alpha.3") }
 application { mainClass = "wiki.jvmtests.Train_examplesKt" }

@@ -40,10 +40,12 @@ import nimby.*
 class SignalTests {
     @Test fun unknownBlockStaysClosed() {
         val mod = nimby.mod.createMod()
+        // Une observation fraîche peut avoir une occupation inconnue : conserver le repli.
         val decision = mod.evaluate(
             mapOf("active" to true),
             Observation(block = Occupancy.Unknown, fresh = true, routeKnown = true)
         )
+        // Retrouver les valeurs du modèle, sans comparer ses enums à un code numérique.
         val indication = assertNotNull(mod.indication(decision)?.of(nimby.mod.firstSignal))
         assertEquals(nimby.mod.Aspect.Closed, indication.aspect)
         assertEquals(nimby.mod.Reason.Unknown, indication.reason)
@@ -51,6 +53,7 @@ class SignalTests {
 
     @Test fun knownClearBlockOpens() {
         val mod = nimby.mod.createMod()
+        // Cas nominal : réglage actif, route connue et canton explicitement libre.
         val decision = mod.evaluate(
             mapOf("active" to true),
             Observation(block = Occupancy.Clear, fresh = true, routeKnown = true)
@@ -73,6 +76,13 @@ class SignalTests {
               'The first test checks fallback behaviour; the second checks the normal case. mod.indication(decision)?.of(firstSignal) retrieves the model’s enums: compare their typed values, never the Decision.aspect code to a local ordinal. The tests also check the reason. For multiple models or neighbour dependencies, use evaluateNetwork with prepared Signal values and check each indication against its model.',
             ),
           ),
+          table([t('Argument ou résultat', 'Argument or result'), t('Sens dans le test', 'Meaning in the test')], [
+            [literal('mapOf("active" to true)'), t('Valeur observée de la case du premier modèle. Ce dictionnaire ne modifie pas les réglages d’une partie.', 'Observed value of the first model’s checkbox. This map does not modify settings in a game.')],
+            [literal('Observation.block'), t('Unknown et Clear sont deux états distincts, même lorsque fresh vaut true.', 'Unknown and Clear are distinct states, even when fresh is true.')],
+            [literal('fresh / routeKnown'), t('Disponibilité de l’observation et connaissance de l’itinéraire. Modifiez-les séparément pour tester chaque repli.', 'Observation freshness and route knowledge. Change them separately to test each fallback.')],
+            [literal('mod.evaluate(...)'), t('Renvoie une Decision calculée sur ces seules données ; cet appel pur ne pose pas un signal.', 'Returns a Decision calculated from these inputs only; this pure call does not place a signal.')],
+            [literal('mod.indication(decision)?.of(firstSignal)'), t('Retrouve aspect et reason dans les types du modèle. assertNotNull vérifie d’abord que la décision correspond bien à ce modèle.', 'Retrieves aspect and reason in the model’s types. assertNotNull first checks that the decision really belongs to this model.')],
+          ]),
           table(
             [
               t('Situation à fournir au test', 'Test input'),
@@ -232,6 +242,11 @@ class SignalTests {
               'To measure a regression, retain comparable baseline, load and recovery phases. SDK request duration, frame rate and game acceleration factor are different measurements. A cumulative maximum alone does not date a slowdown.',
             ),
           ),
+          table([t('Exemple de scénario', 'Example scenario'), t('Action', 'Action'), t('Résultat attendu', 'Expected result')], [
+            [t('Premier signal', 'First signal'), t('Observer un canton libre, puis une occupation inconnue.', 'Observe a clear block, then an unknown occupancy.'), t('Ouvert dans le premier cas, repli dans le second ; comparer aussi le motif et la consigne.', 'Open in the first case, fallback in the second; also compare the reason and driving instruction.')],
+            [t('Outil d’aperçu', 'Preview tool'), t('Afficher, modifier la distance, puis fermer la fenêtre.', 'Show the preview, change the distance, then close the window.'), t('L’ancien aperçu est invalidé, le nouveau correspond aux arguments, et la fermeture enlève les repères.', 'The old preview is invalidated, the new one matches the arguments and closing removes the markers.')],
+            [t('Limite de longueur', 'Length limit'), t('Avec 850 m de limite, tenter un total de 800 m puis de 870 m.', 'With an 850 m limit, attempt a total of 800 m and then 870 m.'), t('La règle permet 800 m et refuse 870 m ; le refus conserve la composition précédente.', 'The rule permits 800 m and rejects 870 m; rejection preserves the previous composition.')],
+          ]),
           links(
             {
               label: t('Performance et isolation', 'Performance and isolation'),
@@ -299,6 +314,11 @@ log.write("Profile loaded")`,
               'ToolContext.log accepts a UTF-8 message of 1 to 4,096 bytes, without a null character, using Info, Warning or Error. Use the context only during its callback. Record a state change, requested action, result or actionable error; avoid one message per successful read.',
             ),
           ),
+          table([t('Argument', 'Argument'), t('Choix et résultat', 'Choice and result')], [
+            [literal('message: String'), t('Décrire l’action et son résultat : "Preview unavailable" indique un refus d’aperçu. Ajoutez l’identité de la source lorsqu’elle permet de retrouver le scénario.', 'Describe the action and its outcome: "Preview unavailable" identifies a refused preview. Add the source identity when it helps reproduce the scenario.')],
+            [literal('level: LogLevel'), t('Info pour une action normale, Warning pour un refus récupérable, Error pour un échec à analyser. Le niveau ne relance pas l’opération.', 'Info for a normal action, Warning for a recoverable refusal and Error for a failure to investigate. The level does not retry the operation.')],
+            [literal('Unit'), t('L’appel écrit un événement ; il ne renvoie ni une décision de signal ni un résultat de construction.', 'The call records an event; it returns neither a signal decision nor a construction result.')],
+          ]),
           text(
             t(
               'DiagnosticLog regroupe les répétitions identiques pendant une courte période. Gardez donc un message stable et ajoutez seulement les informations nécessaires : opération, identifiant concerné, résultat et contexte de session. Ne créez pas un texte unique à chaque tick pour contourner ce regroupement.',
@@ -505,6 +525,16 @@ log.write("Profile loaded")`,
               'For projects offered by the Hub, version discovery depends on the catalogue and selected channel. A visible version, its download and its activation are distinct steps. Check the stated compatibility and active profile before concluding that a mod has been replaced.',
             ),
           ),
+          text(t(
+            'Exemple avec le projet Long trains : son paquet 0.1.0 exige sdkMin=0.9.0-alpha.3 parce que trainEditor est utilisé. Après packageMod, vérifiez le ZIP exact, ses descripteurs et son fonctionnement dans une partie de test. Si vous modifiez ensuite le code ou les ressources, reconstruisez le paquet avant de comparer son empreinte.',
+            'Example using the Long trains project: its 0.1.0 package requires sdkMin=0.9.0-alpha.3 because it uses trainEditor. After packageMod, check the exact ZIP, its descriptors and its behaviour in a test game. If you subsequently change code or resources, rebuild the package before comparing its hash.',
+          )),
+          code('Get-FileHash -LiteralPath .\\build\\gradle\\distributions\\long-trains-0.1.0-windows-x64.zip -Algorithm SHA256', t('Vérifier l’empreinte du paquet Long trains', 'Check the Long trains package hash'), 'powershell'),
+          text(t(
+            'Cette commande lit le fichier et renvoie son SHA-256 ; elle ne le téléverse pas. Comparez cette valeur au champ sha256 du descripteur qui accompagnera ce même ZIP. Les noms du paquet viennent de modId et version, pas du titre traduit affiché au joueur.',
+            'This command reads the file and returns its SHA-256; it does not upload it. Compare this value to the sha256 field of the descriptor accompanying that same ZIP. Package names come from modId and version, not the translated title shown to the player.',
+          )),
+          links({ label: t('Reproduire le projet Long trains', 'Reproduce the Long trains project'), to: '/mods/composition-trains' }),
           links(
             {
               label: t('Contrat du manifeste', 'Manifest contract'),

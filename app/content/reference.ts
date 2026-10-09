@@ -3,6 +3,7 @@ import type { Article, Section } from './schema'
 import { text, code, note, links, table } from './schema'
 import existingEnglish from './en.json'
 import { reviewedApiContracts, reviewedContractGuides } from './api-contracts'
+import { reviewedCallableContracts } from './api-arguments'
 
 export const referenceEnglish: Record<string, string> = {}
 const t = (fr: string, en: string): string => {
@@ -17,7 +18,30 @@ function documentation(symbol: { id: string; documentation: string }): string {
 }
 
 const descriptions: Record<string, string> = {
-  ModOptions: t('Préférences globales du joueur et raccourcis configurables dans l’onglet NRF Hub des options du jeu.', 'Global player preferences and shortcuts configurable from the NRF Hub tab of the game options.'),
+  GameDateTime: t(
+    'Dates UTC civiles et conversions locales entre calendrier et secondes, sans lecture du jeu.',
+    'UTC calendar dates and local conversions between calendar and seconds, without game reads.',
+  ),
+  ModResources: t(
+    'Identité générée du paquet, présentation du mod et catalogue des signaux constructibles.',
+    'Generated package identity, mod presentation and constructible signal catalogue.',
+  ),
+  ToolWindow: t(
+    'Fenêtres, événements de formulaire et horloge copiée des outils natifs.',
+    'Windows, form events and copied clock values for native tools.',
+  ),
+  TrainEditor: t(
+    'Règles de composition appliquées par le SDK, sans fenêtre ni callback périodique dans le mod.',
+    'Composition rules applied by the SDK without a window or periodic callback in the mod.',
+  ),
+  TrainLengthLimit: t(
+    'Longueur totale liée à une préférence du joueur et aux messages de refus du mod.',
+    'Total length bound to a player preference and the mod’s refusal messages.',
+  ),
+  ModOptions: t(
+    'Préférences globales du joueur et raccourcis configurables dans l’onglet NRF Hub des options du jeu.',
+    'Global player preferences and shortcuts configurable from the NRF Hub tab of the game options.',
+  ),
   Nimby: 'Point d’entrée du client : connexion et fonctions regroupées par usage dans Game.',
   Mod: 'Observations, réglages, décisions et contrats de signalisation et de conduite.',
   SignalMod:
@@ -25,9 +49,14 @@ const descriptions: Record<string, string> = {
   SignalModel: 'Modèles indépendants : enums, règles, images, conduite et lecture typée du voisin.',
   SignalAnimation:
     'Images fixes et clignotantes déclarées par le mod, animées sur le temps du jeu.',
-  ModServices: 'Déclarer un outil ou une action disponible lorsqu’un autre mod est chargé.',
-  ToolContext:
-    'Lire le réseau, préparer une pose, publier des boutons et écrire dans le journal depuis un outil.',
+  ModServices: t(
+    'Assembler un mod outil : préférences, règles de composition, fenêtres, services et cycle de vie.',
+    'Assemble a tool mod: preferences, composition rules, windows, services and lifecycle.',
+  ),
+  ToolContext: t(
+    'Lectures et actions dans un callback : réseau, trains, horloge, construction, formulaires et diagnostics.',
+    'Reads and actions within a callback: network, trains, clock, construction, forms and diagnostics.',
+  ),
   NumberSetting: t(
     'Réglages entiers persistants et bornés dans les panneaux de signaux.',
     'Persistent bounded integer settings in signal panels.',
@@ -227,8 +256,8 @@ const trainContracts: Section[] = [
             literal('includeTimetables'),
             literal('false'),
             t(
-              'Informations d’horaires disponibles ; implique includeService.',
-              'Available timetable information; implies includeService.',
+              'Informations d’horaires disponibles ; implique includeService et les voies/gares nécessaires, même si includeLocations vaut false.',
+              'Available timetable information; implies includeService and required tracks/stations even when includeLocations is false.',
             ),
           ],
           [
@@ -405,6 +434,7 @@ export const referenceArticles: Article[] = snapshot.files.map((file) => {
   ]
   file.symbols.forEach((symbol) => {
     const comment = documentation(symbol)
+    const callable = reviewedCallableContracts[symbol.id]
     sections.push({
       id: symbol.anchor,
       title: literal(symbol.owner ? `${symbol.owner}.${symbol.name}` : symbol.name),
@@ -421,6 +451,54 @@ export const referenceArticles: Article[] = snapshot.files.map((file) => {
             ]
           : []),
         ...(comment ? [text(comment)] : []),
+        ...(callable?.shape.parameters.length
+          ? [
+              table(
+                [
+                  t('Argument', 'Argument'),
+                  t('Type Kotlin', 'Kotlin type'),
+                  t('Si omis', 'When omitted'),
+                  t('Rôle et contraintes', 'Purpose and constraints'),
+                ],
+                callable.shape.parameters.map((parameter) => [
+                  literal(parameter.vararg ? `${parameter.name} (vararg)` : parameter.name),
+                  literal(parameter.type),
+                  parameter.vararg
+                    ? t('Aucun élément', 'No elements')
+                    : parameter.defaultValue === undefined
+                      ? t('Obligatoire', 'Required')
+                      : parameter.defaultValue === '…'
+                        ? t('Titre du modèle', 'Model title')
+                        : literal(parameter.defaultValue),
+                  t(...callable.arguments[parameter.name]!),
+                ]),
+              ),
+            ]
+          : []),
+        ...(callable
+          ? [
+              table(
+                [
+                  t(
+                    callable.shape.constructor ? 'Objet créé' : 'Retour',
+                    callable.shape.constructor ? 'Created object' : 'Return',
+                  ),
+                  ...(callable.result[0] === comment
+                    ? []
+                    : [t('Interprétation', 'Interpretation')]),
+                ],
+                [
+                  [
+                    literal(callable.shape.returnType),
+                    ...(callable.result[0] === comment ? [] : [t(...callable.result)]),
+                  ],
+                ],
+              ),
+            ]
+          : []),
+        ...(callable?.failures
+          ? [note(t(...callable.failures), t('Refus et erreurs', 'Refusals and errors'))]
+          : []),
         ...(reviewedContractGuides[symbol.id]?.length
           ? [
               links(
@@ -486,7 +564,10 @@ export const referenceIndex: Article = {
     },
     {
       id: 'outil',
-      title: 'Créer un outil · Kotlin/JVM',
+      title: t(
+        'Créer une application externe · Kotlin/JVM',
+        'Create an external application · Kotlin/JVM',
+      ),
       blocks: [
         text(
           'Le module fr.nimby.sdk fournit les lectures et commandes utilisées par les outils externes. Ses connexions doivent être fermées.',
@@ -518,6 +599,12 @@ export const referenceIndex: Article = {
           t(
             'Cette référence décrit l’API publique disponible dans les sources synchronisées. Une signature ne prouve pas qu’une donnée sera disponible sur chaque train ou dans chaque partie. Respecter les valeurs null et les contrats de chaque lecture.',
             'This reference describes the public API in the synchronized sources. A signature does not prove that data is available for every train or game. Respect null values and the contracts of each read.',
+          ),
+        ),
+        text(
+          t(
+            'Pour chaque fonction, le tableau distingue les arguments obligatoires, les valeurs par défaut et les unités. Un type suivi de ? accepte ou retourne null selon son contrat ; null, zéro et une liste vide n’ont pas le même sens. vararg accepte plusieurs arguments. Les retours Unit n’offrent aucune valeur à stocker : lire les effets et les refus décrits pour cet appel.',
+            'For each function, the table distinguishes required arguments, default values and units. A type followed by ? accepts or returns null according to its contract; null, zero and an empty list do not mean the same thing. vararg accepts multiple arguments. A Unit return offers no value to store: read the effects and refusals described for the call.',
           ),
         ),
       ],

@@ -4,8 +4,10 @@ import nimby.*
 
 // Marqueurs graphiques seulement : ni planificateur de route, ni commande de pose.
 fun previewPositions(network: ToolNetwork, sourceId: Long, count: Int): List<SignalPosition> {
+    // 1. count est un nombre de marqueurs (1..64), pas un espacement en mètres.
     require(count in 1..64)
     val source = requireNotNull(network.topology().signal(sourceId)) { "Source ou voie indisponible." }
+    // Répartir les marqueurs dans la voie source, en excluant ses deux extrémités.
     return (1..count).map { source.placementAt(source.track, it.toDouble() / (count + 1)) }
 }
 
@@ -20,6 +22,7 @@ interface PreviewPort {
 }
 
 class PreviewSession {
+    // 2. Cet état peut survivre à un callback ; les objets PreviewPort et ToolContext ne le peuvent pas.
     private var request: SignalActionRequest? = null
     private var count = 3
     private var positions: List<SignalPosition>? = null
@@ -31,6 +34,7 @@ class PreviewSession {
     private var idleMessage = message
 
     fun event(port: PreviewPort, next: SignalActionRequest) {
+        // Une action ancienne ne doit pas modifier l'aperçu d'une autre partie.
         if (next.worldId != port.worldId || next.generation != port.generation) return
         request = next
         positions = null // Révoquer localement AVANT les appels qui peuvent être refusés.
@@ -46,6 +50,7 @@ class PreviewSession {
     }
 
     fun tick(port: PreviewPort) {
+        // 3. Avancer les étapes disponibles sans boucle d'attente ; le prochain tick peut reprendre.
         val current = request ?: return
         if (current.worldId != port.worldId || current.generation != port.generation) {
             stop()
@@ -57,6 +62,7 @@ class PreviewSession {
                 if (!calculationRequested) setMessage(idleMessage)
             }
             if (calculationRequested) {
+                // Capturer seulement pour un nouveau calcul, pas pour renouveler les mêmes marqueurs.
                 val snapshot = port.network()
                 check(snapshot.worldId == current.worldId && snapshot.generation == current.generation)
                 positions = previewPositions(snapshot, current.signalId, count)
@@ -67,10 +73,12 @@ class PreviewSession {
                 setMessage("Affichage de ${it.size} marqueurs temporaires.")
             }
         } catch (error: ToolOperationException) {
+            // Occupé : conserver la demande d'affichage. Autre erreur : exiger un nouvel aperçu.
             if (error.isBusy) setMessage("Service occupé ; affichage de l’aperçu en attente.")
             else abandon()
         } catch (error: Exception) { abandon() }
         if (panelDirty) {
+            // Republier seulement quand le contenu change ; un refus temporaire garde panelDirty.
             try {
                 port.panel(current, message, count, closed)
                 panelDirty = false
@@ -110,9 +118,12 @@ private fun ToolContext.previewPort() = object : PreviewPort {
     }
 }
 
-fun createPreviewTool(): ToolMod {
+// Le paramètre info permet au projet réel de fournir modInfo ; le défaut sert aux tests du guide.
+fun createPreviewTool(info: ModInfo = ModInfo("preview-tool", "Outil d’aperçu")): ToolMod {
+    // 4. Un clic démarre l'outil ; onTick renouvelle l'affichage ; onStop libère l'état local.
     val session = PreviewSession()
-    return toolMod("preview-tool", "Outil d’aperçu") {
+    return toolMod(info) {
+        metadata(author = "Votre nom", description = "Afficher des marqueurs temporaires sans construire de signal.")
         service("preview.v1") { request -> session.event(previewPort(), request) }
         onTick { session.tick(previewPort()) }
         onStop { session.stop() }

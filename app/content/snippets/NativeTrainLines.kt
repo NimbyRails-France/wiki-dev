@@ -9,11 +9,13 @@ data class LineTags(
 )
 
 fun readLineTags(context: ToolContext, id: LineId): LineTags? {
+    // id provient du catalogue de cette partie, pas d'un nom de ligne.
     val snapshot = context.trains(TrainQuery(
         includeService = false,
         includeLocations = false,
-        includeTags = true,
+        includeTags = true, // Inclut les lignes nécessaires à la résolution des parents.
     ))
+    // Une ligne non résolue reste absente ; ses tags ne deviennent pas une liste vide.
     val line = snapshot.line(id) ?: return null
     return LineTags(line, line.declaredTags, snapshot.tagsForLine(id))
 }

@@ -2,9 +2,11 @@ import { articles, groups } from './index'
 import messages from './en.json'
 import ui from './ui-en.json'
 import codeText from './code-en.json'
+import tutorialCode from './tutorial-code-en.json'
 import { authoringEnglish } from './authoring'
 import { toolAuthoringEnglish } from './tool-authoring'
 import { modOptionsEnglish } from './mod-options-guide'
+import { trainEditorEnglish } from './train-editor-guide'
 import { referenceEnglish } from './reference'
 import { trainGuidesEnglish, trainCodeEnglish } from './train-guides'
 import { capabilitiesEnglish } from './capabilities'
@@ -25,6 +27,7 @@ const english: Record<string, string> = {
   ...authoringEnglish,
   ...toolAuthoringEnglish,
   ...modOptionsEnglish,
+  ...trainEditorEnglish,
   ...referenceEnglish,
   ...trainGuidesEnglish,
   ...capabilitiesEnglish,
@@ -61,6 +64,7 @@ export function englishCode(code: string): string {
   // Translate complete comments before shorter phrases shared with older examples.
   const replacements = Object.entries({
     ...codeText,
+    ...tutorialCode,
     ...trainCodeEnglish,
     ...performanceCodeEnglish,
   }).sort(([a], [b]) => b.length - a.length)

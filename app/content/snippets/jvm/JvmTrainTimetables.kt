@@ -30,8 +30,10 @@ fun readTiming(game: Game, id: TrainId): TrainTiming? {
         selectedTrain = id,
         query = TrainQuery(includeTimetables = true),
     )
+    // id vient du lot ou de la sélection de cette partie ; null signifie train indisponible.
     val record = snapshot.train(id) ?: return null
     val service = record.service
+    // Les offsets restent relatifs au plan ; station null peut aussi désigner un point hors gare.
     val stops = snapshot.lineStops?.map { stop ->
         PlannedStop(
             stop.index, stop.station?.let(snapshot::station),
@@ -45,4 +47,10 @@ fun readTiming(game: Game, id: TrainId): TrainTiming? {
         service?.departure, service?.dispatchRetry,
         record.metadata?.predictedArrivalDelaySeconds, stops,
     )
+}
+
+// Seuil en secondes simulées, fini et positif ou nul ; null conserve une estimation absente.
+fun needsDelayReview(timing: TrainTiming, thresholdSeconds: Double): Boolean? {
+    require(thresholdSeconds.isFinite() && thresholdSeconds >= 0.0)
+    return timing.predictedArrivalDelaySeconds?.let { it >= thresholdSeconds }
 }

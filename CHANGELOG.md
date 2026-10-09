@@ -1,6 +1,24 @@
 # Changelog
 
-## [Unreleased]
+## Révision du manuel SDK 0.9 — 2026-10-09
+
+### Français
+
+- Reprend les guides de l’édition 0.9 en français et en anglais, avec des prérequis clairs et des parcours pour créer des signaux, des outils et des applications.
+- Enrichit les exemples avec des commentaires, des cas chiffrés et les résultats attendus ; explique aussi les données inconnues, les refus et les erreurs à traiter.
+- Détaille les arguments et les résultats des fonctions et constructeurs de la référence : types, unités, valeurs par défaut et limites d’utilisation.
+- Fournit un projet complet pour démarrer une application Kotlin/JVM et un guide pour créer un mod de limite de longueur des trains, avec ses réglages et ses messages traduits.
+- Actualise les guides des options, de la construction, des horaires, des performances, des tests et des journaux pour le SDK 0.9.0-alpha.3.
+- Vérifie les exemples en français et en anglais tout en conservant les adresses existantes et la documentation archivée de l’édition 0.8.
+
+### English
+
+- Revises edition 0.9 guides in French and English, with clear prerequisites and learning paths for signals, tools and applications.
+- Expands examples with comments, numerical cases and expected results, and explains unknown data, refusals and errors that authors need to handle.
+- Details reference function and constructor arguments and results: types, units, defaults and usage limits.
+- Provides a complete starter Kotlin/JVM application and a guide to creating a train length limit mod, including its settings and translated messages.
+- Updates options, construction, timetable, performance, testing and logging guides for SDK 0.9.0-alpha.3.
+- Checks French and English examples while preserving existing addresses and the archived edition 0.8 documentation.
 
 ## Édition SDK 0.9 — 2026-10-09
 

@@ -1,6 +1,7 @@
 import type { Article } from './schema'
 import { text, code, note, table, links } from './schema'
 import example from './snippets/ModOptions.kt?raw'
+import trainEditorExample from './snippets/TrainEditor.kt?raw'
 
 export const modOptionsEnglish: Record<string, string> = {}
 const t = (fr: string, en: string) => {
@@ -14,8 +15,8 @@ export const modOptionsGuides: Article[] = [{
   group: 'Créer un mod',
   title: t('Options du mod et raccourcis', 'Mod options and shortcuts'),
   description: t(
-    'Déclarer les préférences du joueur, lire leurs valeurs typées et laisser le SDK gérer les raccourcis des fenêtres.',
-    'Declare player preferences, read their typed values and let the SDK manage window shortcuts.',
+    'Ajoutez une case, une valeur numérique ou une liste de choix aux options du jeu, puis utilisez le choix actuel du joueur dans votre mod.',
+    'Add a checkbox, numeric value or choice list to the game options, then use the player’s current choice in your mod.',
   ),
   status: 'experimental',
   sections: [
@@ -41,7 +42,7 @@ export const modOptionsGuides: Article[] = [{
         )),
         code(JSON.stringify({
           id: 'clock-history', name: 'Clock tools', modId: 'ClockHistory', version: '0.1.0-alpha.1',
-          module: 'ClockHistoryMod', language: 'kotlin-native', sdkMin: '0.9.0-alpha.1', sdkMaxExclusive: '0.10.0',
+          module: 'ClockHistoryMod', language: 'kotlin-native', sdkMin: '0.9.0-alpha.3', sdkMaxExclusive: '0.10.0',
           gameSha256: ['fff49ac21720abfc824c2b4f68b862727630eb0db71cfe1f9ea8f685d0db10ae'],
         }, null, 2), literal('mod.json'), 'json'),
         code(example, literal('src/main/kotlin/Entry.kt')),
@@ -56,6 +57,24 @@ export const modOptionsGuides: Article[] = [{
         note(t(
           'Une option appartient au mod entier. Pour une valeur différente sur chaque signal, utilisez les réglages du signal ; pour une saisie temporaire dans un formulaire, utilisez ToolNumberInput. options(...) accepte au maximum 64 options, raccourcis de fenêtres compris.',
           'An option belongs to the entire mod. For a separate value on each signal, use signal settings; for temporary form input, use ToolNumberInput. options(...) supports at most 64 options, including window shortcuts.',
+        )),
+      ],
+    },
+    {
+      id: 'arguments',
+      title: t('Comprendre les arguments de l’exemple', 'Understand the example’s arguments'),
+      blocks: [
+        table([t('Déclaration', 'Declaration'), t('Arguments à choisir', 'Arguments to choose'), t('Valeur lue par le mod', 'Value read by the mod')], [
+          [literal('BooleanOption'), literal('id="showDate", label=tr("options.showDate"), defaultValue=true'), t('showDate.value renvoie true ou false. true affiche la date, false affiche les millisecondes simulées dans cet exemple.', 'showDate.value returns true or false. In this example true displays the date, while false displays simulated milliseconds.')],
+          [literal('IntegerOption'), literal('id="historySize", defaultValue=5, minimum=1, maximum=20'), t('historySize.value renvoie un Int entre 1 et 20 inclus. Le mod conserve au plus ce nombre de lectures.', 'historySize.value returns an Int from 1 through 20. The mod retains at most this many readings.')],
+          [literal('OptionChoice'), literal('id="newest" / "oldest", label=tr(...)'), t('L’id est enregistré ; le libellé est affiché et traduit. Changer une traduction ne change pas le choix sauvegardé.', 'The id is saved; the label is displayed and translated. Changing a translation does not change the saved choice.')],
+          [literal('ChoiceOption'), literal('choices=listOf(...), defaultValue="newest"'), t('order.value renvoie "newest" ou "oldest", jamais un index ni une traduction.', 'order.value returns "newest" or "oldest", never an index or translation.')],
+          [literal('options(showDate, historySize, order)'), t('Les trois objets déclarés plus haut', 'The three objects declared above'), t('Enregistre ces préférences pour le mod ; ne renvoie pas une capture du jeu.', 'Registers these preferences for the mod; it does not return a game snapshot.')],
+          [literal('window("history", ..., shortcut="F9")'), t('Identité de la fenêtre, titre traduit et combinaison initiale', 'Window identity, translated title and initial key combination'), t('Le SDK appelle le handler avec un événement. Le handler lit .value et renvoie l’affichage avec showWindow.', 'The SDK calls the handler with an event. The handler reads .value and publishes the display with showWindow.')],
+        ]),
+        text(t(
+          'Résultat attendu : avec historySize=2 et order="newest", trois clics sur Ajouter une lecture gardent les deux dernières lectures, la plus récente en tête. Avec showDate=false, chaque ligne indique elapsedMillis en millisecondes simulées. Le clic Actualiser relit ces trois options mais ne crée pas une quatrième lecture.',
+          'Expected result: with historySize=2 and order="newest", three clicks on Add a reading retain the last two readings with the newest first. With showDate=false, each row displays elapsedMillis in simulated milliseconds. Refresh reads these three options again but does not create a fourth reading.',
         )),
       ],
     },
@@ -114,6 +133,34 @@ export const modOptionsGuides: Article[] = [{
           'Cette API ne déclare pas de callback onChange. Une modification des préférences ne redessine pas automatiquement le formulaire de votre outil. Dans l’exemple, le prochain clic ou la prochaine ouverture lit les valeurs courantes et renvoie le formulaire avec showWindow. Une règle de signal les lit lors de son prochain calcul.',
           'This API does not declare an onChange callback. Changing preferences does not automatically redraw your tool’s form. In the example, the next click or opening reads current values and returns the form with showWindow. A signal rule reads them during its next calculation.',
         )),
+      ],
+    },
+    {
+      id: 'composition',
+      title: t('Déclarer une limite de longueur des trains', 'Declare a train length limit'),
+      blocks: [
+        text(t(
+          'À partir du SDK 0.9.0-alpha.3, un outil peut déclarer ses règles de composition avec trainEditor. Le SDK vérifie la longueur totale, locomotives et autres véhicules compris, avant d’accepter une modification. Aucun service, fenêtre ou onTick n’est nécessaire pour cette déclaration. Utilisez le kit et le SDK d’exécution de la même version compatible.',
+          'Starting with SDK 0.9.0-alpha.3, a tool can declare its composition rules with trainEditor. The SDK checks total length, including locomotives and other vehicles, before accepting a change. This declaration requires no service, window or onTick. Use a compilation kit and runtime SDK from the same compatible version.',
+        )),
+        text(t(
+          'Enregistrez le même objet IntegerOption avec options(...) et maximumLength(meters = ...). Sa valeur apparaît dans Options → NRF Hub, rubrique Interface, sous le nom du mod. Le défaut de 850 mètres ci-dessous est choisi par cet exemple ; le SDK n’impose pas ce défaut à tous les mods. Les bornes configurables sont de 1 à 10000 mètres.',
+          'Register the same IntegerOption object with options(...) and maximumLength(meters = ...). Its value appears under the mod’s name in the Interface section of Options → NRF Hub. The 850-metre default below is chosen by this example; the SDK does not impose that default on every mod. Configurable bounds range from 1 through 10000 metres.',
+        )),
+        code(trainEditorExample, literal('src/main/kotlin/Entry.kt')),
+        code(JSON.stringify({ fallback: 'en', languages: {
+          en: { 'options.maximumLength': 'Maximum train length (m)', 'train.exceeded': 'Cannot add this vehicle: the maximum train length would be exceeded.', 'train.lengthUnavailable': 'Cannot add this vehicle: its length is unavailable.', 'train.verificationUnavailable': 'Cannot change this composition: its length could not be verified.' },
+          fr: { 'options.maximumLength': 'Longueur maximale des trains (m)', 'train.exceeded': 'Impossible d’ajouter ce véhicule : la longueur maximale du train serait dépassée.', 'train.lengthUnavailable': 'Impossible d’ajouter ce véhicule : sa longueur est indisponible.', 'train.verificationUnavailable': 'Impossible de modifier cette composition : sa longueur ne peut pas être vérifiée.' },
+        } }, null, 2), literal('assets/translations.json'), 'json'),
+        text(t(
+          'Les trois messages sont obligatoires : dépassement de la limite, longueur d’un véhicule indisponible et vérification de la composition indisponible. Fournissez un texte fixe ou tr("clé") sans paramètres, limité à 1024 octets UTF-8 par message. Le SDK suit la langue du jeu et ajoute séparément la longueur calculée et le plafond au message de dépassement ; ne les insérez pas comme des paramètres fixes dans la traduction.',
+          'All three messages are required: limit exceeded, vehicle length unavailable and composition verification unavailable. Supply fixed text or tr("key") without parameters, limited to 1024 UTF-8 bytes per message. The SDK follows the game language and adds the calculated length and maximum separately to the limit-exceeded message; do not insert them as fixed translation parameters.',
+        )),
+        note(t(
+          'Un ajout refusé conserve la composition précédente. Baisser la préférence ne raccourcit pas les trains existants : le joueur peut réduire leur composition. Si plusieurs mods déclarent une limite, la plus petite limite active s’applique ; chacun conserve sa préférence. Il s’agit d’une règle de longueur, sans nombre de voitures choisi par le mod.',
+          'A refused addition preserves the previous composition. Lowering the preference does not shorten existing trains: the player can reduce their composition. When several mods declare a limit, the smallest active limit applies; each retains its preference. This is a length rule, with no car count chosen by the mod.',
+        )),
+        links({ label: t('Projet complet de contrôle de longueur et cas chiffrés', 'Complete length-control project and numerical cases'), to: '/mods/composition-trains' }, { label: t('Règles de composition', 'Composition rules'), to: '/reference/native/nimby/traineditor' }, { label: t('Règle de longueur', 'Length rule'), to: '/reference/native/nimby/trainlengthlimit' }),
       ],
     },
     {

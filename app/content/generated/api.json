@@ -1,5 +1,5 @@
 {
-  "sdkVersion": "0.9.0-alpha.2",
+  "sdkVersion": "0.9.0-alpha.3",
   "files": [
     {
       "file": "AutomaticDriving.kt",
@@ -2075,7 +2075,7 @@
       "runtime": "Kotlin/Native",
       "package": "nimby",
       "imports": [],
-      "sha256": "feadf3bd70f0ac076a98e2491e828cecf41de31ef1fcc7dd8a91d1b21fdf4bb9",
+      "sha256": "ec18c59133a92926bfe9c669f6d69a085c762fb20bc070f429bdbbd9aac2f3fe",
       "symbols": [
         {
           "name": "SignalAction",
@@ -2305,13 +2305,25 @@
           "anchor": "api-gamemod-options-671f4c4d74"
         },
         {
+          "name": "trainEditor",
+          "owner": "GameMod",
+          "kind": "val",
+          "signature": "open val trainEditor: TrainEditor?",
+          "defaultNotes": [],
+          "documentation": "Règles déclaratives de composition et messages du mod, appliqués par le SDK.",
+          "line": 27,
+          "id": "native:nimby:val:GameMod.trainEditor",
+          "key": "val:GameMod.trainEditor",
+          "anchor": "api-gamemod-traineditor-ea0289a4e1"
+        },
+        {
           "name": "windows",
           "owner": "GameMod",
           "kind": "val",
           "signature": "open val windows: List<ToolWindow>",
           "defaultNotes": [],
           "documentation": "",
-          "line": 26,
+          "line": 28,
           "id": "native:nimby:val:GameMod.windows",
           "key": "val:GameMod.windows",
           "anchor": "symbol-6"
@@ -2323,7 +2335,7 @@
           "signature": "open fun onWindowEvent(request: ToolWindowEvent, context: ToolContext): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 27,
+          "line": 29,
           "id": "native:nimby:fun:GameMod.onWindowEvent(ToolWindowEvent,ToolContext)",
           "key": "fun:GameMod.onWindowEvent(ToolWindowEvent,ToolContext)",
           "anchor": "symbol-7"
@@ -2335,7 +2347,7 @@
           "signature": "open val services: List<String>",
           "defaultNotes": [],
           "documentation": "",
-          "line": 28,
+          "line": 30,
           "id": "native:nimby:val:GameMod.services",
           "key": "val:GameMod.services",
           "anchor": "symbol-8"
@@ -2347,7 +2359,7 @@
           "signature": "open fun onSignalAction(request: SignalActionRequest, context: ToolContext): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 29,
+          "line": 31,
           "id": "native:nimby:fun:GameMod.onSignalAction(SignalActionRequest,ToolContext)",
           "key": "fun:GameMod.onSignalAction(SignalActionRequest,ToolContext)",
           "anchor": "symbol-9"
@@ -2359,7 +2371,7 @@
           "signature": "open fun onTick(context: ToolContext): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 30,
+          "line": 32,
           "id": "native:nimby:fun:GameMod.onTick(ToolContext)",
           "key": "fun:GameMod.onTick(ToolContext)",
           "anchor": "symbol-10"
@@ -2371,7 +2383,7 @@
           "signature": "open fun onStop(): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 31,
+          "line": 33,
           "id": "native:nimby:fun:GameMod.onStop()",
           "key": "fun:GameMod.onStop()",
           "anchor": "symbol-11"
@@ -2383,7 +2395,7 @@
           "signature": "class ToolMod : GameMod",
           "defaultNotes": [],
           "documentation": "Un mod outil reçoit des actions sans définir d'indication ni de vitesse.\nConstruction réservée au SDK : utilisez la fonction de création ou le contexte fourni.",
-          "line": 35,
+          "line": 37,
           "id": "native:nimby:class:ToolMod",
           "key": "class:ToolMod",
           "anchor": "symbol-12"
@@ -2394,7 +2406,7 @@
           "signature": "override val id: String",
           "documentation": "",
           "owner": "ToolMod",
-          "line": 35,
+          "line": 37,
           "id": "native:nimby:val:ToolMod.id",
           "key": "val:ToolMod.id",
           "anchor": "symbol-13"
@@ -2405,7 +2417,7 @@
           "signature": "override val title: String",
           "documentation": "",
           "owner": "ToolMod",
-          "line": 35,
+          "line": 37,
           "id": "native:nimby:val:ToolMod.title",
           "key": "val:ToolMod.title",
           "anchor": "symbol-14"
@@ -2416,7 +2428,7 @@
           "signature": "override val metadata: ModMetadata?",
           "documentation": "",
           "owner": "ToolMod",
-          "line": 35,
+          "line": 37,
           "id": "native:nimby:val:ToolMod.metadata",
           "key": "val:ToolMod.metadata",
           "anchor": "symbol-15"
@@ -2427,7 +2439,7 @@
           "signature": "override val windows: List<ToolWindow>",
           "documentation": "",
           "owner": "ToolMod",
-          "line": 35,
+          "line": 37,
           "id": "native:nimby:val:ToolMod.windows",
           "key": "val:ToolMod.windows",
           "anchor": "symbol-16"
@@ -2438,10 +2450,21 @@
           "signature": "override val options: List<ModOption<*>>",
           "documentation": "",
           "owner": "ToolMod",
-          "line": 35,
+          "line": 37,
           "id": "native:nimby:val:ToolMod.options",
           "key": "val:ToolMod.options",
           "anchor": "api-toolmod-options-9b71b647b3"
+        },
+        {
+          "name": "trainEditor",
+          "kind": "val",
+          "signature": "override val trainEditor: TrainEditor?",
+          "documentation": "",
+          "owner": "ToolMod",
+          "line": 37,
+          "id": "native:nimby:val:ToolMod.trainEditor",
+          "key": "val:ToolMod.trainEditor",
+          "anchor": "api-toolmod-traineditor-9e37c6a245"
         },
         {
           "name": "services",
@@ -2450,7 +2473,7 @@
           "signature": "override val services: List<String>",
           "defaultNotes": [],
           "documentation": "",
-          "line": 45,
+          "line": 49,
           "id": "native:nimby:val:ToolMod.services",
           "key": "val:ToolMod.services",
           "anchor": "symbol-17"
@@ -2462,7 +2485,7 @@
           "signature": "override fun onSignalAction(request: SignalActionRequest, context: ToolContext): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 46,
+          "line": 50,
           "id": "native:nimby:fun:ToolMod.onSignalAction(SignalActionRequest,ToolContext)",
           "key": "fun:ToolMod.onSignalAction(SignalActionRequest,ToolContext)",
           "anchor": "symbol-18"
@@ -2474,7 +2497,7 @@
           "signature": "override fun onTick(context: ToolContext): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 49,
+          "line": 53,
           "id": "native:nimby:fun:ToolMod.onTick(ToolContext)",
           "key": "fun:ToolMod.onTick(ToolContext)",
           "anchor": "symbol-19"
@@ -2486,7 +2509,7 @@
           "signature": "override fun onStop(): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 50,
+          "line": 54,
           "id": "native:nimby:fun:ToolMod.onStop()",
           "key": "fun:ToolMod.onStop()",
           "anchor": "symbol-20"
@@ -2498,7 +2521,7 @@
           "signature": "override fun onWindowEvent(request: ToolWindowEvent, context: ToolContext): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 51,
+          "line": 55,
           "id": "native:nimby:fun:ToolMod.onWindowEvent(ToolWindowEvent,ToolContext)",
           "key": "fun:ToolMod.onWindowEvent(ToolWindowEvent,ToolContext)",
           "anchor": "symbol-21"
@@ -2510,7 +2533,7 @@
           "signature": "class ToolModBuilder",
           "defaultNotes": [],
           "documentation": "Construction réservée au SDK : utilisez la fonction de création ou le contexte fourni.",
-          "line": 56,
+          "line": 60,
           "id": "native:nimby:class:ToolModBuilder",
           "key": "class:ToolModBuilder",
           "anchor": "symbol-22"
@@ -2522,10 +2545,22 @@
           "signature": "fun options(vararg values: ModOption<*>): Unit",
           "defaultNotes": [],
           "documentation": "Ajoute les préférences du mod, dans l'ordre d'affichage.",
-          "line": 59,
+          "line": 64,
           "id": "native:nimby:fun:ToolModBuilder.options(ModOption<*>)",
           "key": "fun:ToolModBuilder.options(ModOption<*>)",
           "anchor": "api-toolmodbuilder-options-ca3c3b0507"
+        },
+        {
+          "name": "trainEditor",
+          "owner": "ToolModBuilder",
+          "kind": "fun",
+          "signature": "fun trainEditor(block: TrainEditorBuilder.() -> Unit): Unit",
+          "defaultNotes": [],
+          "documentation": "Déclare les règles de composition et les messages traduisibles du mod.\nLa préférence de longueur doit aussi être enregistrée avec [options].\nLe bloc configure la déclaration une fois ; aucun callback de jeu n'est créé.",
+          "line": 71,
+          "id": "native:nimby:fun:ToolModBuilder.trainEditor(TrainEditorBuilder.()->Unit)",
+          "key": "fun:ToolModBuilder.trainEditor(TrainEditorBuilder.()->Unit)",
+          "anchor": "api-toolmodbuilder-traineditor-e192381ab0"
         },
         {
           "name": "window",
@@ -2534,7 +2569,7 @@
           "signature": "fun window(id: String, title: String, shortcut: String = \"F8\", handler: ToolContext.(ToolWindowEvent) -> Unit): Unit",
           "defaultNotes": [],
           "documentation": "Enregistre une fenêtre et son formulaire ; aucun signal requis.",
-          "line": 66,
+          "line": 78,
           "id": "native:nimby:fun:ToolModBuilder.window(String,String,String,ToolContext.(ToolWindowEvent)->Unit)",
           "key": "fun:ToolModBuilder.window(String,String,String,ToolContext.(ToolWindowEvent)->Unit)",
           "anchor": "symbol-23"
@@ -2546,7 +2581,7 @@
           "signature": "fun metadata(author: String, description: String, name: String? = null): Unit",
           "defaultNotes": [],
           "documentation": "Auteur et description affichés dans la liste des mods du jeu.",
-          "line": 77,
+          "line": 89,
           "id": "native:nimby:fun:ToolModBuilder.metadata(String,String,String?)",
           "key": "fun:ToolModBuilder.metadata(String,String,String?)",
           "anchor": "symbol-24"
@@ -2558,7 +2593,7 @@
           "signature": "fun service(id: String, handler: ToolContext.(SignalActionRequest) -> Unit): Unit",
           "defaultNotes": [],
           "documentation": "Callback sérialisé sur le worker du mod, jamais sur le thread de l'UI.",
-          "line": 82,
+          "line": 95,
           "id": "native:nimby:fun:ToolModBuilder.service(String,ToolContext.(SignalActionRequest)->Unit)",
           "key": "fun:ToolModBuilder.service(String,ToolContext.(SignalActionRequest)->Unit)",
           "anchor": "symbol-25"
@@ -2570,7 +2605,7 @@
           "signature": "fun onTick(block: ToolContext.() -> Unit): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 88,
+          "line": 101,
           "id": "native:nimby:fun:ToolModBuilder.onTick(ToolContext.()->Unit)",
           "key": "fun:ToolModBuilder.onTick(ToolContext.()->Unit)",
           "anchor": "symbol-26"
@@ -2582,7 +2617,7 @@
           "signature": "fun onStop(block: () -> Unit): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 89,
+          "line": 102,
           "id": "native:nimby:fun:ToolModBuilder.onStop(()->Unit)",
           "key": "fun:ToolModBuilder.onStop(()->Unit)",
           "anchor": "symbol-27"
@@ -2594,7 +2629,7 @@
           "signature": "fun toolMod(id: String, title: String, block: ToolModBuilder.() -> Unit): ToolMod",
           "defaultNotes": [],
           "documentation": "",
-          "line": 92,
+          "line": 105,
           "id": "native:nimby:fun:toolMod(String,String,ToolModBuilder.()->Unit)",
           "key": "fun:toolMod(String,String,ToolModBuilder.()->Unit)",
           "anchor": "symbol-28"
@@ -5495,6 +5530,170 @@
       ],
       "id": "native:nimby:ToolWindow",
       "slug": "reference/toolwindow"
+    },
+    {
+      "file": "TrainEditor.kt",
+      "path": "kotlin/src/nimby/TrainEditor.kt",
+      "runtime": "Kotlin/Native",
+      "package": "nimby",
+      "imports": [],
+      "sha256": "769a742b5c41b3407009edfea54689661e7ba1c10015e8c73356cff3a9ef1f26",
+      "symbols": [
+        {
+          "name": "TrainEditor",
+          "owner": "",
+          "kind": "class",
+          "signature": "class TrainEditor",
+          "defaultNotes": [],
+          "documentation": "Règles de composition appliquées par le SDK avant une modification du train.\n\nDéclarer avec [ToolModBuilder.trainEditor]. La déclaration est immuable :\nelle ne crée ni fenêtre, ni service, ni callback périodique. Les messages\nappartiennent au mod et suivent la langue du jeu via [tr]. Le SDK ajoute\nséparément les longueurs mesurées et la limite aux refus de dépassement.\nConstruction réservée au SDK : utilisez la fonction de création ou le contexte fourni.",
+          "line": 9,
+          "id": "native:nimby:class:TrainEditor",
+          "key": "class:TrainEditor",
+          "anchor": "api-traineditor-e1e846cab9"
+        },
+        {
+          "name": "maximumLength",
+          "kind": "val",
+          "signature": "val maximumLength: TrainLengthLimit",
+          "documentation": "",
+          "owner": "TrainEditor",
+          "line": 9,
+          "id": "native:nimby:val:TrainEditor.maximumLength",
+          "key": "val:TrainEditor.maximumLength",
+          "anchor": "api-traineditor-maximumlength-d735ec6d5b"
+        },
+        {
+          "name": "TrainEditorBuilder",
+          "owner": "",
+          "kind": "class",
+          "signature": "class TrainEditorBuilder",
+          "defaultNotes": [],
+          "documentation": "Configuration exécutée une seule fois lors de la création du mod.\nConstruction réservée au SDK : utilisez la fonction de création ou le contexte fourni.",
+          "line": 12,
+          "id": "native:nimby:class:TrainEditorBuilder",
+          "key": "class:TrainEditorBuilder",
+          "anchor": "api-traineditorbuilder-f874fbd420"
+        },
+        {
+          "name": "maximumLength",
+          "owner": "TrainEditorBuilder",
+          "kind": "fun",
+          "signature": "fun maximumLength(\n        meters: IntegerOption,\n        exceeded: String,\n        lengthUnavailable: String,\n        verificationUnavailable: String,\n    ): Unit",
+          "defaultNotes": [],
+          "documentation": "Limite la longueur totale, locomotives et autres véhicules compris.\n\n[meters] doit être la même [IntegerOption] que celle passée à\n[ToolModBuilder.options]. Le mod choisit la valeur par défaut.\nLes trois messages sont obligatoires : texte fixe ou [tr] sans paramètres.\nLes traductions sont résolues par le SDK à l'affichage, sans appeler le mod.\nUne baisse de la limite ne raccourcit pas les trains existants.",
+          "line": 22,
+          "id": "native:nimby:fun:TrainEditorBuilder.maximumLength(IntegerOption,String,String,String)",
+          "key": "fun:TrainEditorBuilder.maximumLength(IntegerOption,String,String,String)",
+          "anchor": "api-traineditorbuilder-maximumlength-8ad8b50aca"
+        }
+      ],
+      "id": "native:nimby:TrainEditor",
+      "slug": "reference/native/nimby/traineditor"
+    },
+    {
+      "file": "TrainLengthLimit.kt",
+      "path": "kotlin/src/nimby/TrainLengthLimit.kt",
+      "runtime": "Kotlin/Native",
+      "package": "nimby",
+      "imports": [],
+      "sha256": "8fa417aec3835e65a9d4cc741cabec98a423e797a5062b4270b2589977099812",
+      "symbols": [
+        {
+          "name": "minimumTrainLengthMeters",
+          "owner": "",
+          "kind": "val",
+          "signature": "const val minimumTrainLengthMeters: Int = 1",
+          "defaultNotes": [],
+          "documentation": "Plus petite longueur configurable, en mètres.",
+          "line": 4,
+          "id": "native:nimby:val:minimumTrainLengthMeters",
+          "key": "val:minimumTrainLengthMeters",
+          "anchor": "api-minimumtrainlengthmeters-6798f96c4a"
+        },
+        {
+          "name": "maximumTrainLengthMeters",
+          "owner": "",
+          "kind": "val",
+          "signature": "const val maximumTrainLengthMeters: Int = 10000",
+          "defaultNotes": [],
+          "documentation": "Borne de configuration du SDK, en mètres. Ce n'est pas un nombre de\nvéhicules ni une garantie de compatibilité du jeu : le SDK vérifie aussi\nla version native et ses limites techniques avant d'activer la fonction.",
+          "line": 9,
+          "id": "native:nimby:val:maximumTrainLengthMeters",
+          "key": "val:maximumTrainLengthMeters",
+          "anchor": "api-maximumtrainlengthmeters-3af51c69d0"
+        },
+        {
+          "name": "TrainLengthLimit",
+          "owner": "",
+          "kind": "class",
+          "signature": "class TrainLengthLimit",
+          "defaultNotes": [],
+          "documentation": "Limite de longueur totale d'une composition, liée à une préférence du mod.\nDéclarer avec [TrainEditorBuilder.maximumLength] et enregistrer la même\n[IntegerOption] avec [ToolModBuilder.options]. Locomotives et autres\nvéhicules font partie de la longueur totale ; aucun nombre de voitures\nn'est choisi par le mod.\n\nLe SDK applique la préférence au démarrage et à chaque changement validé.\nCette déclaration ne crée ni fenêtre, ni raccourci, ni callback périodique.\nElle ne raccourcit pas les trains existants lorsque la limite diminue.\nSi plusieurs mods déclarent une limite, le SDK applique la plus petite des\nlimites actives ; chaque mod conserve sa propre préférence.\n[maximumLengthMeters] lit uniquement le cache des options du SDK : conserver\ncette déclaration ne fournit aucun accès direct au jeu.\nConstruction réservée au SDK : utilisez la fonction de création ou le contexte fourni.",
+          "line": 24,
+          "id": "native:nimby:class:TrainLengthLimit",
+          "key": "class:TrainLengthLimit",
+          "anchor": "api-trainlengthlimit-c593ab997d"
+        },
+        {
+          "name": "exceeded",
+          "kind": "val",
+          "signature": "val exceeded: String",
+          "documentation": "Refus d'un ajout qui dépasserait la longueur maximale.",
+          "owner": "TrainLengthLimit",
+          "line": 24,
+          "id": "native:nimby:val:TrainLengthLimit.exceeded",
+          "key": "val:TrainLengthLimit.exceeded",
+          "anchor": "api-trainlengthlimit-exceeded-78891384ef"
+        },
+        {
+          "name": "lengthUnavailable",
+          "kind": "val",
+          "signature": "val lengthUnavailable: String",
+          "documentation": "Refus lorsque la longueur d'un véhicule est indisponible.",
+          "owner": "TrainLengthLimit",
+          "line": 24,
+          "id": "native:nimby:val:TrainLengthLimit.lengthUnavailable",
+          "key": "val:TrainLengthLimit.lengthUnavailable",
+          "anchor": "api-trainlengthlimit-lengthunavailable-891b69636b"
+        },
+        {
+          "name": "verificationUnavailable",
+          "kind": "val",
+          "signature": "val verificationUnavailable: String",
+          "documentation": "Refus lorsque le SDK ne peut pas vérifier la composition.",
+          "owner": "TrainLengthLimit",
+          "line": 24,
+          "id": "native:nimby:val:TrainLengthLimit.verificationUnavailable",
+          "key": "val:TrainLengthLimit.verificationUnavailable",
+          "anchor": "api-trainlengthlimit-verificationunavailable-371418fbfa"
+        },
+        {
+          "name": "maximumLengthMeters",
+          "owner": "TrainLengthLimit",
+          "kind": "val",
+          "signature": "val maximumLengthMeters: Int",
+          "defaultNotes": [],
+          "documentation": "Longueur totale maximale demandée par le joueur, en mètres.",
+          "line": 41,
+          "id": "native:nimby:val:TrainLengthLimit.maximumLengthMeters",
+          "key": "val:TrainLengthLimit.maximumLengthMeters",
+          "anchor": "api-trainlengthlimit-maximumlengthmeters-28a35ae3dc"
+        },
+        {
+          "name": "optionId",
+          "owner": "TrainLengthLimit",
+          "kind": "val",
+          "signature": "val optionId: String",
+          "defaultNotes": [],
+          "documentation": "Identifiant stable de la préférence liée à cette déclaration.",
+          "line": 44,
+          "id": "native:nimby:val:TrainLengthLimit.optionId",
+          "key": "val:TrainLengthLimit.optionId",
+          "anchor": "api-trainlengthlimit-optionid-75db90defe"
+        }
+      ],
+      "id": "native:nimby:TrainLengthLimit",
+      "slug": "reference/native/nimby/trainlengthlimit"
     },
     {
       "file": "TrainObservation.kt",
@@ -13247,6 +13446,46 @@
       "import": "nimby.ToolTimeChange",
       "symbolId": "native:nimby:class:ToolTimeChange",
       "to": "/reference/toolwindow#symbol-3"
+    },
+    {
+      "runtime": "Kotlin/Native",
+      "package": "nimby",
+      "name": "TrainEditor",
+      "import": "nimby.TrainEditor",
+      "symbolId": "native:nimby:class:TrainEditor",
+      "to": "/reference/native/nimby/traineditor#api-traineditor-e1e846cab9"
+    },
+    {
+      "runtime": "Kotlin/Native",
+      "package": "nimby",
+      "name": "TrainEditorBuilder",
+      "import": "nimby.TrainEditorBuilder",
+      "symbolId": "native:nimby:class:TrainEditorBuilder",
+      "to": "/reference/native/nimby/traineditor#api-traineditorbuilder-f874fbd420"
+    },
+    {
+      "runtime": "Kotlin/Native",
+      "package": "nimby",
+      "name": "minimumTrainLengthMeters",
+      "import": "nimby.minimumTrainLengthMeters",
+      "symbolId": "native:nimby:val:minimumTrainLengthMeters",
+      "to": "/reference/native/nimby/trainlengthlimit#api-minimumtrainlengthmeters-6798f96c4a"
+    },
+    {
+      "runtime": "Kotlin/Native",
+      "package": "nimby",
+      "name": "maximumTrainLengthMeters",
+      "import": "nimby.maximumTrainLengthMeters",
+      "symbolId": "native:nimby:val:maximumTrainLengthMeters",
+      "to": "/reference/native/nimby/trainlengthlimit#api-maximumtrainlengthmeters-3af51c69d0"
+    },
+    {
+      "runtime": "Kotlin/Native",
+      "package": "nimby",
+      "name": "TrainLengthLimit",
+      "import": "nimby.TrainLengthLimit",
+      "symbolId": "native:nimby:class:TrainLengthLimit",
+      "to": "/reference/native/nimby/trainlengthlimit#api-trainlengthlimit-c593ab997d"
     },
     {
       "runtime": "Kotlin/Native",

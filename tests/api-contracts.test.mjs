@@ -54,3 +54,26 @@ test('related guides belong to real public declarations', () => {
     assert(routes.every((route) => route.startsWith('/') && !route.startsWith('//')), id)
   }
 })
+
+test('train editor declarations explain the mod-owned preference and refusal messages in both languages', () => {
+  const rule = reviewedApiContracts['native:nimby:fun:TrainEditorBuilder.maximumLength(IntegerOption,String,String,String)']
+  assert(rule)
+  for (const text of rule) {
+    assert.match(text, /IntegerOption/)
+    assert.match(text, /options\(\.\.\.\)/)
+    assert.match(text, /1024/)
+    assert.match(text, /tr\(/)
+    assert.doesNotMatch(text, /850/, 'The SDK must not impose BC’s example default')
+  }
+  for (const id of ['TrainEditor', 'TrainEditorBuilder', 'TrainLengthLimit']) {
+    assert(reviewedApiContracts[`native:nimby:class:${id}`])
+  }
+  const { modOptionsGuides, modOptionsEnglish } = loadContent('app/content/mod-options-guide.ts')
+  const guide = modOptionsGuides.find((article) => article.slug === 'mods/options')
+  const section = guide.sections.find((entry) => entry.id === 'composition')
+  assert(section)
+  assert(section.blocks.some((block) => block.kind === 'code' && /trainEditor\s*\{/.test(block.code)))
+  for (const block of section.blocks.filter((entry) => entry.kind === 'text')) {
+    assert.equal(typeof modOptionsEnglish[block.text], 'string')
+  }
+})

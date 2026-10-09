@@ -55,13 +55,16 @@ Ouvrir l'adresse locale affichée. Aucun service distant n'est nécessaire.
 | `capabilities.ts`                                                          | Recherche par besoin et extraits commentés d’AB Signalisation lumineuse           |
 | `signal-guides.ts`, `authoring.ts`, `tool-authoring.ts`, `translations.ts` | Modèles, réglages, conduite, ressources, outils et localisation                   |
 | `mod-options-guide.ts`                                                    | Préférences globales, raccourcis des fenêtres et choix des libellés FR/EN          |
+| `train-editor-guide.ts`                                                   | Projet de contrôle de longueur : fichiers complets, arguments, messages et cas chiffrés |
 | `observation-guides.ts`, `train-guides.ts`                                 | Connexion JVM, observations, trains, lignes, horaires et matériel                 |
 | `performance-guides.ts`, `performance-code.ts`                             | Travail borné, lectures ciblées, isolation et exemples associés                   |
 | `reference.ts`, `api-comments.ts` et modules de contrats                   | Présentation des types et explications de leurs membres                           |
+| `api-callable-shape.ts`, `api-arguments.ts`                                 | Arguments et résultats revus FR/EN des fonctions et constructeurs publics         |
 | `generated/api.json`                                                       | Instantané versionné des déclarations publiques Kotlin                            |
 | `snippets/`                                                                | Exemples Native et JVM utilisés directement par les articles et les vérifications |
 | `index.ts`, `localization.ts`                                              | Assemblage des articles et sélection de la langue                                 |
 | `en.json`, `ui-en.json`, `code-en.json`                                    | Traductions partagées, interface et textes des exemples                           |
+| `tutorial-code-en.json`                                                   | Traductions des commentaires des exemples d’options, de composition et de tests |
 | `guides.ts`, `details.ts`                                                  | Anciens fichiers conservés, hors du manuel actif et non importés par l’index      |
 
 `scripts/api-catalogue.mjs` et `api-legacy.json` gèrent les identités des
@@ -108,7 +111,7 @@ référence reconstruite depuis le tag SDK `v0.8.0-alpha.8`, commit
 les 22 fichiers publics et leurs hashes, ainsi que les 673 déclarations. Les
 anciennes adresses et ancres sont conservées. Le bandeau distingue les sources
 du SDK de la base documentaire historique. L’édition actuelle 0.9 suit
-**0.9.0-alpha.2**. La disponibilité des paquets se vérifie dans le Hub et dans
+**0.9.0-alpha.3**. La disponibilité des paquets se vérifie dans le Hub et dans
 les releases du SDK.
 
 À la demande explicite du propriétaire, la page historique
@@ -193,6 +196,10 @@ and review the generated diff. None of these commands publishes the site.
   une note de validation interne, jamais une garantie dans le manuel.
 - Utiliser un fichier compilable dans `snippets/` pour un exemple complet.
   Étiqueter les fragments et préciser le callback ou le contexte attendu.
+- Commenter les étapes qui expliquent un choix ou une contrainte, puis donner
+  un cas concret et son résultat attendu. Documenter les arguments avec leur
+  type, unité, valeur par défaut, bornes et comportement en cas de donnée
+  inconnue. Un retour `null`, un refus et une exception ne sont pas interchangeables.
 - Préserver les titres de blocs du tutoriel : `settings.gradle.kts`,
   `build.gradle.kts`, `mod.json`, `gradle.properties`, `src/main/kotlin/Entry.kt`,
   `assets/closed.svg`, `assets/open.svg`, `src/test/kotlin/SignalTests.kt`. Les essais navigateur extraient ces
@@ -217,6 +224,11 @@ L’extracteur couvre les formes de déclaration du SDK, pas toute la grammaire
 Kotlin. Vérifier les nouveaux cas de syntaxe, le diff, les contrats et les exemples
 après une évolution de l’API.
 Le build du wiki reste autonome : il utilise l'instantané versionné.
+Les tables de paramètres sont construites depuis les signatures du catalogue,
+avec des explications FR/EN revues dans `api-arguments.ts`. Une fonction ou un
+constructeur ajouté sans contrat d’argument ou de résultat bloque les contrôles.
+L’extraction conserve les valeurs par défaut et les types imbriqués ; elle ne
+déduit pas les unités, les limites ou les effets à partir du nom d’un paramètre.
 
 ## Vérification
 
@@ -252,8 +264,11 @@ les deux langues et les deux environnements sont vérifiés.
 Cette commande compile les exemples Native FR/EN contre une bibliothèque créée
 à partir des sources actuelles, puis exécute leurs scénarios purs. Les exemples
 JVM sont compilés séparément par `verification/jvm-examples` : un build composite
-consomme le vrai module client du SDK, avec sa visibilité publique et JNA. Aucun
-exemple de cette vérification ne se connecte à une partie. Les sources extraites
+consomme une copie fraîche du vrai module client du SDK, avec sa visibilité publique
+et JNA. `check-jvm-examples.ps1` compile aussi les trois fichiers du premier projet
+JVM, dont ses fichiers Gradle traduits, sans exécuter son programme. Les sorties et
+le rapport restent dans `.validation/` ; ce contrôle n’écrit pas dans le SDK.
+Aucun exemple de cette vérification ne se connecte à une partie. Les sources extraites
 par le navigateur dans `.validation/tutorial-generated-project[-en]` doivent
 aussi être assemblées avec le kit testé avant une livraison des tutoriels.
 Conserver les commandes, les versions du kit et les résultats de chaque couche.

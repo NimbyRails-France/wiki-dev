@@ -14,8 +14,10 @@ data class TrainCard(
 
 // Appeler depuis un callback d'outil ; ne pas conserver son ToolContext.
 fun readTrainCards(context: ToolContext): List<TrainCard> {
-    val snapshot = context.trains(TrainQuery())
+    // Le tableau utilise l'état du service et les gares : demander ces deux groupes ensemble.
+    val snapshot = context.trains(TrainQuery(includeService = true, includeLocations = true))
     return snapshot.trains.map { train ->
+        // Les objets joints viennent de ce lot ; aucune autre lecture par fiche.
         TrainCard(
             train.trainId, train.name, train.speedKmh,
             train.service?.state, train.service?.alert,

@@ -7,6 +7,7 @@ import wiki.jvmtrainmaterial.orderedModelIds
 import wiki.jvmtrainqueries.TrainCard
 import wiki.jvmtraintimetables.PlannedStop
 import wiki.jvmtraintimetables.TrainTiming
+import wiki.jvmtraintimetables.needsDelayReview
 import java.time.Instant
 
 // Pure tests: no SDK library is loaded and no game connection is opened.
@@ -67,5 +68,17 @@ fun main() {
     expect(timing.predictedArrivalDelaySeconds == -30.5, "Predicted early arrival keeps its sign")
     expect(timing.shift != TimetableShiftId(TimetableId(4), 3), "Shift identity is scoped to a timetable")
     expect(timing.stops?.first()?.station == null, "An unresolved station is not replaced")
-    println("Train guide pure JVM contracts: $checks passed")
+
+    // The dashboard threshold uses signed simulation seconds and preserves an
+    // unavailable estimate. Invalid thresholds are input errors, not missing data.
+    expect(needsDelayReview(timing.copy(predictedArrivalDelaySeconds = 180.0), 120.0) == true, "Three minutes crosses a two-minute review threshold")
+    expect(needsDelayReview(timing.copy(predictedArrivalDelaySeconds = 120.0), 120.0) == true, "The review threshold is inclusive")
+    expect(needsDelayReview(timing.copy(predictedArrivalDelaySeconds = 119.9), 120.0) == false, "An estimate below the threshold is not rounded up")
+    expect(needsDelayReview(timing, 120.0) == false, "Predicted early arrival does not become late through absolute value")
+    expect(needsDelayReview(timing.copy(predictedArrivalDelaySeconds = null), 120.0) == null, "An unknown delay is not classified as on-time")
+    expect(runCatching { needsDelayReview(timing, -1.0) }.exceptionOrNull() is IllegalArgumentException, "A negative threshold is rejected")
+    expect(runCatching { needsDelayReview(timing, Double.NaN) }.exceptionOrNull() is IllegalArgumentException, "A NaN threshold is rejected")
+    expect(runCatching { needsDelayReview(timing, Double.POSITIVE_INFINITY) }.exceptionOrNull() is IllegalArgumentException, "An infinite threshold is rejected")
+    verifyConstructionPlans(::expect)
+    println("Train and construction guide pure JVM contracts: $checks passed")
 }

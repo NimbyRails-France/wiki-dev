@@ -76,6 +76,14 @@ export const capabilities: Article[] = [
                 ),
               ],
               [
+                t('Limiter la longueur d’une composition', 'Limit consist length'),
+                literal('trainEditor · maximumLength · IntegerOption'),
+                t(
+                  'Plafond choisi par le mod, préférence du joueur et messages de refus traduits ; aucune fenêtre ni lecture périodique à créer.',
+                  'Mod-chosen maximum, player preference and translated refusal messages; no window or periodic read to create.',
+                ),
+              ],
+              [
                 t('Raccourci personnalisable pour une fenêtre', 'Customizable window shortcut'),
                 literal('window · ToolWindow.title · ToolWindow.shortcut'),
                 t(
@@ -166,6 +174,7 @@ export const capabilities: Article[] = [
             { label: t('Modèles et réseau', 'Models and network'), to: '/mods/signaux' },
             { label: t('Réglages', 'Settings'), to: '/mods/reglages' },
             { label: t('Options du mod et raccourcis', 'Mod options and shortcuts'), to: '/mods/options' },
+            { label: t('Composition des trains', 'Train composition'), to: '/mods/composition-trains' },
             { label: t('Apparence', 'Appearance'), to: '/mods/images' },
             { label: t('Conduite', 'Driving'), to: '/mods/conduite' },
             { label: t('Interface des outils', 'Tool interface'), to: '/mods/interface' },
@@ -354,16 +363,16 @@ export const capabilities: Article[] = [
         blocks: [
           text(
             t(
-              'Prérequis : connaître signalModel et rules. Ces fragments proviennent d’AB Signalisation lumineuse ; CarreAspect, CarreReason et CarreDecision appartiennent à ce mod. Ils expliquent un mécanisme sans constituer un projet autonome.',
-              'Prerequisite: familiarity with signalModel and rules. These fragments come from AB Signalisation lumineuse; CarreAspect, CarreReason and CarreDecision belong to that mod. They explain a mechanism without constituting a standalone project.',
+              'Prérequis : connaître signalModel et rules. Ces fragments illustrent AB Signalisation lumineuse dans son organisation actuelle : le modèle T_C 101000000 possède ses propres Aspect, Reason et Decision dans sfr.signals.t_c.c.b.v.101000000 ; les modèles T_A et les règles BAL communes ont d’autres types. Les extraits expliquent un mécanisme sans constituer un projet autonome.',
+              'Prerequisite: familiarity with signalModel and rules. These fragments illustrate the current AB Signalisation lumineuse organisation: model T_C 101000000 owns its Aspect, Reason and Decision in sfr.signals.t_c.c.b.v.101000000; T_A models and shared BAL rules have different types. The fragments explain a mechanism without forming a standalone project.',
             ),
           ),
           code(
             'observeApproach(blocks = 2)',
-            t('Déclaration du modèle Carré Avertissement', 'Carré Avertissement model declaration'),
+            t('Déclaration du modèle T_C 101000000', 'T_C 101000000 model declaration'),
           ),
           code(
-            'if (!context.trainApproaching)\n    return closed(CarreReason.AwaitingApproach)\nreturn CarreDecision(CarreAspect.Warning, CarreReason.ApproachConfirmed)',
+            '// Dans Rules.decide du modèle T_C 101000000, après les autres refus.\nif (!context.trainApproaching)\n    return closed(Reason.AwaitingApproach)\nreturn Decision(Aspect.Warning, Reason.ApproachConfirmed)',
             t(
               'Fin de la règle, après ses autres vérifications',
               'End of the rule, after its other checks',
@@ -386,11 +395,11 @@ export const capabilities: Article[] = [
         title: t('Préparer une animation réutilisable', 'Prepare a reusable animation'),
         blocks: [
           code(
-            'private val redFlash = blink(\n    on = "imgs/ca/sem_bal/tex09.svg",\n    off = "imgs/ca/sem_bal/tex10.svg",\n    everyMs = 500\n)',
-            t('Description d’animation dans BalTextures', 'Animation description in BalTextures'),
+            'private const val folder = "imgs/t_a/s/c/v/011100000/"\nprivate val redFlash = blink(\n    // Ces deux images sont déclarées dans le catalogue de ce modèle.\n    on = folder + "tex09.svg",\n    off = folder + "tex10.svg",\n    // 500 ms simulées par phase : 1 seconde pour un cycle complet.\n    everyMs = 500\n)',
+            t('Description d’animation dans Textures.kt du modèle T_A 011100000', 'Animation description in model T_A 011100000 Textures.kt'),
           ),
           code(
-            'appearance { BalTextures.forAspect(it.aspect) }',
+            'appearance { Textures.forAspect(it.aspect) }',
             t('Sélection de l’animation par le modèle', 'Model animation selection'),
           ),
           text(

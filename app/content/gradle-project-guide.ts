@@ -104,6 +104,10 @@ licenses/`,
               ],
             ],
           ),
+          text(t(
+            'Entry.kt assemble les objets ; les autres fichiers déclarent les objets et les fonctions qu’il utilise. Le chemin du fichier et son package Kotlin sont deux choses distinctes : un fichier tools/PlacementTool.kt peut déclarer package monmod.tools, puis être importé par Entry.kt. Seul le point d’entrée createMod doit être dans nimby.mod. Déplacer un fichier sans changer les identifiants du mod ou des modèles ne change pas leur identité dans les sauvegardes.',
+            'Entry.kt assembles objects; other files declare the objects and functions it uses. A file path and its Kotlin package are distinct: tools/PlacementTool.kt may declare package monmod.tools and be imported by Entry.kt. Only the createMod entry point must be in nimby.mod. Moving a file without changing mod or model identifiers does not change their identity in saves.',
+          )),
         ],
       },
       {
@@ -195,6 +199,10 @@ licenses/`,
               'Choose a complete, consistent kit. Changing only sdkMin or copying a library from another kit does not create compatibility. The recommended setup is JDK 21 and Gradle 8.14.3; the kit described here uses Kotlin 2.2.20.',
             ),
           ),
+          text(t(
+            'Résultat attendu : Gradle reconnaît le plugin, les imports nimby sont disponibles et windowsTest apparaît dans les tâches. Si la configuration échoue, corrigez la première erreur avant de chercher une erreur dans vos règles. Le dossier du kit contient sdk.json ; ce n’est ni le dossier du jeu, ni le ZIP encore compressé, ni le dossier bin seul.',
+            'Expected result: Gradle recognizes the plugin, nimby imports are available and windowsTest appears among the tasks. If configuration fails, fix its first error before looking for a rule error. The kit directory contains sdk.json; it is neither the game directory, the still-compressed ZIP, nor the bin directory alone.',
+          )),
           links(
             {
               label: t('Fichiers Gradle complets à copier', 'Complete Gradle files to copy'),
@@ -303,7 +311,7 @@ licenses/`,
         title: t('createMod et l’identité générée', 'createMod and generated identity'),
         blocks: [
           code(
-            'package nimby.mod\n\n// createMod() assembles your signalMod or toolMod declaration.\n// modInfo is supplied by the plugin from mod.json.',
+            'package nimby.mod\n\n// createMod() assemble la déclaration signalMod ou toolMod de ce projet.\n// Le plugin fournit modInfo depuis mod.json ; ne le redéclarez pas.',
             t(
               'Contrat du point d’entrée, commentaire de repérage',
               'Entry-point contract, orientation comment',
@@ -321,6 +329,11 @@ licenses/`,
               'Catalogue generation evaluates the declaration outside the game. createMod and its initialisers must therefore describe the mod without accessing a game or printing to standard output. Put game interactions in the designated callbacks and diagnostics in logging functions.',
             ),
           ),
+          table([t('Entrée', 'Input'), t('Utilisation', 'Use'), t('Résultat', 'Result')], [
+            [literal('modInfo'), t('Identité générée depuis le manifeste, passée à signalMod ou toolMod.', 'Identity generated from the manifest, passed to signalMod or toolMod.'), t('Le même id pour le projet, son paquet et ses services.', 'The same id for the project, package and services.')],
+            [literal('signal(model)'), t('Enregistre la même instance de modèle que celle utilisée par les règles.', 'Registers the same model instance used by the rules.'), t('Un modèle du paquet avec ses réglages, images et conduite.', 'A package model with its settings, images and driving rules.')],
+            [literal('window(...) / service(...) / trainEditor { ... }'), t('Choisissez les fonctions correspondant à votre outil ; elles ne sont pas toutes obligatoires.', 'Choose the functions needed by your tool; they are not all mandatory.'), t('Un outil peut avoir une interface, un service ou seulement une règle de composition.', 'A tool may have an interface, a service or only a composition rule.')],
+          ]),
           links(
             {
               label: t(
@@ -493,6 +506,10 @@ licenses/`,
               'Dependent tasks may be UP-TO-DATE when inputs have not changed. The ZIP is in build/gradle/distributions, is named <modId>-<version>-windows-x64.zip and contains a <modId>-<version> root directory.',
             ),
           ),
+          text(t(
+            'Ces commandes s’exécutent à la racine du projet, avec son wrapper Gradle. windowsTest vérifie vos cas de test ; verifyNativeMod vérifie le chargement du paquet ; packageMod produit le ZIP à transmettre. Aucun de ces résultats ne prouve à lui seul le comportement visuel ou la conduite dans une partie : terminez par la recette du paquet exact, puis activez le profil depuis le Hub.',
+            'Run these commands at the project root using its Gradle wrapper. windowsTest checks your test cases; verifyNativeMod checks package loading; packageMod produces the ZIP to distribute. None alone proves appearance or driving behaviour in a game: finish by testing the exact package, then activate the profile from the Hub.',
+          )),
         ],
       },
       {

@@ -16,6 +16,7 @@ $compiler = Join-Path $KotlinHome 'bin/konanc.bat'
 # each one in its own consumer module instead of changing the code readers copy.
 $standalone = @{
     'ModOptions.kt' = @{ Name = 'options'; Entry = 'wiki.optiontests.main'; Test = 'mod-options-example.kt'; Id = 'clock-history'; Title = 'Clock tools' }
+    'TrainEditor.kt' = @{ Name = 'train-editor'; Entry = 'wiki.traineditortests.main'; Test = 'train-editor-example.kt'; Id = 'long-trains'; Title = 'Long trains' }
 }
 if ($Runtime -ne 'jvm') {
     $sources = @(Get-ChildItem -LiteralPath "$SdkRoot/kotlin/src" -Recurse -Filter *.kt | ForEach-Object FullName)
@@ -60,11 +61,9 @@ foreach ($locale in $Locales) {
             if ($LASTEXITCODE) { throw "Wiki $locale $($example.Name) example checks failed" }
         }
     }
-
-    # JVM snippets use the actual SDK project dependency, with its public API
-    # visibility and transitive JNA dependency, rather than native API stubs.
-    if ($Runtime -ne 'native') {
-        & "$SdkRoot/kotlin-client/gradlew.bat" --console=plain -p "$wikiRoot/verification/jvm-examples" "-PnrfSdkSources=$SdkRoot" "-PwikiLocale=$locale" run
-        if ($LASTEXITCODE) { throw "Wiki $locale JVM example checks failed" }
-    }
+}
+if ($Runtime -ne 'native') {
+    # Compile against a copy of the real SDK, never write Gradle state into SDK.
+    # The helper runs only pure contracts; the actual tutorial main is not run.
+    & "$PSScriptRoot/check-jvm-examples.ps1" -SdkRoot $SdkRoot -Locales $Locales
 }

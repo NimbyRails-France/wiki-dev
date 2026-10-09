@@ -191,7 +191,7 @@ export const toolAuthoring: Article[] = [
         title: t('Traduire chaque modèle de signal', 'Translate each signal model'),
         blocks: [
           code(
-            'construction(\n    states = listOf("imgs/closed.png", "imgs/open.png"),\n    name = tr("signal.construction"),\n    catalogueName = tr("signal.catalogue")\n)',
+            'construction(\n    // Chemins réels dans le paquet, gardés identiques dans les deux langues.\n    states = listOf("imgs/closed.png", "imgs/open.png"),\n    // Deux textes visibles : le modèle dans le menu, puis son catalogue de textures.\n    name = tr("signal.construction"),\n    catalogueName = tr("signal.catalogue")\n)',
             t('Dans la déclaration de votre signalModel', 'Inside your signalModel declaration'),
           ),
           code(
@@ -246,7 +246,7 @@ export const toolAuthoring: Article[] = [
         title: t('Ouvrir un outil indépendant des signaux', 'Open a tool independently of signals'),
         blocks: [
           code(
-            'package nimby.mod\n\nimport nimby.*\n\nfun createMod() = toolMod(modInfo) {\n    metadata(author = "Your name", description = "Read the game clock.")\n    window("clock", "Clock", shortcut = "F9") { event ->\n        showWindow(event, clock().dateTime().toString(),\n            listOf(ToolButton("refresh", "Refresh")))\n    }\n}',
+            'package nimby.mod\n\nimport nimby.*\n\nfun createMod() = toolMod(modInfo) {\n    metadata(author = "Votre nom", description = "Lire l’horloge du jeu.")\n    // Identifiant stable ; F9 propose un défaut modifiable dans Options → NRF Hub.\n    window("clock", "Horloge", shortcut = "F9") { event ->\n        // Lecture au clic : date UTC simulée, pas l’heure du PC ni une capture du réseau.\n        val message = try {\n            clock().dateTime().toString()\n        } catch (error: ToolOperationException) {\n            // Une lecture refusée reste inconnue ; le joueur peut demander une nouvelle lecture.\n            if (error.isBusy) "Horloge occupée ; actualisez." else "Horloge indisponible."\n        }\n        // Répondre à cet événement ; le prochain clic refresh effectue une nouvelle lecture.\n        showWindow(event, message,\n            listOf(ToolButton("refresh", "Actualiser")))\n    }\n}',
             t('Outil complet en lecture seule', 'Complete read-only tool'),
           ),
           text(
@@ -297,6 +297,10 @@ export const toolAuthoring: Article[] = [
           text(t(
             'L’exemple propose F9 à la première utilisation. La valeur déclarée dans le code ne remplace pas une préférence compatible déjà choisie par le joueur, y compris un raccourci désactivé. Ne changez pas l’identifiant "clock" pour renommer la fenêtre ou proposer un autre raccourci par défaut.',
             'The example proposes F9 on first use. The value declared in code does not replace an existing compatible player preference, including a disabled shortcut. Do not change the "clock" identifier to rename the window or propose another default shortcut.',
+          )),
+          text(t(
+            'Résultat attendu : F9 ouvre une fenêtre avec la date simulée en UTC et un bouton Actualiser. Le bouton relit seulement l’horloge ; sans clic, la date affichée reste la copie de la dernière lecture. Testez l’ouverture, deux actualisations pendant que le jeu avance, puis la fermeture et la réouverture. Aucun onTick ni minuteur n’est nécessaire pour cet outil.',
+            'Expected result: F9 opens a window with the simulation date in UTC and a Refresh button. The button rereads only the clock; without a click, the displayed date remains the last read value. Test opening, two refreshes while the game advances, then closing and reopening. This tool needs neither onTick nor a timer.',
           )),
           links(
             { label: t('Options du mod et raccourcis', 'Mod options and shortcuts'), to: '/mods/options' },
@@ -355,7 +359,7 @@ export const toolAuthoring: Article[] = [
             ],
           ),
           code(
-            'val target = GameDateTime(2026, 9, 28, 12, 0, 0)\n// Call only after your own confirmation step.\nval result = changeTime(target, recalculateTrains = false)\nlog("Applied UTC=${result.clock.dateTime()}; interventions=${result.interventions}")',
+            '// Les six champs sont en UTC ; le constructeur refuse une date ou une heure impossible.\nval target = GameDateTime(year = 2026, month = 9, day = 28, hour = 12, minute = 0, second = 0)\n// Appeler une seule fois après confirmation explicite du joueur dans cette partie.\nval result = changeTime(target, recalculateTrains = false)\n// Le résultat contient l’horloge après application et le nombre d’interventions.\nlog("Applied UTC=${result.clock.dateTime()}; interventions=${result.interventions}")',
             t('Dans le callback de confirmation', 'Inside the confirmation callback'),
           ),
           text(
@@ -407,6 +411,10 @@ toolAuthoring.push(
               'Prerequisites: a tool service and a known source signal. The goal is to find a position a given distance ahead of that signal, or refuse when data cannot support a result. In the callback, read network(), then call topology() once. Reuse this copy during calculation and preview renewals; it does not guarantee the game remains unchanged.',
             ),
           ),
+          note(t(
+            'Les observations actuelles ne garantissent pas de décrire toutes les aiguilles. Arrêter un parcours sur les branches connues ne prouve pas l’absence d’une branche omise. Un plan obtenu avec cet exemple n’est donc pas une preuve qu’une pose est valide. La construction expérimentale se qualifie dans une partie solo d’essai, pas en multijoueur ni sur une partie de production.',
+            'Current observations do not guarantee that every junction is described. Stopping at known branches does not prove that an omitted branch is absent. A plan obtained with this example therefore does not prove that placement is valid. Qualify experimental construction in a solo test game, not in multiplayer or a production game.',
+          )),
           table(
             [t('Élément public', 'Public element'), t('Interprétation', 'Meaning')],
             [
@@ -464,6 +472,12 @@ toolAuthoring.push(
             topologyExample,
             t('ToolTopology.kt — fonction pure', 'ToolTopology.kt — pure function'),
           ),
+          table([t('Argument ou retour', 'Argument or return'), t('Valeur attendue', 'Expected value'), t('Usage', 'Use')], [
+            [literal('network'), t('La copie retournée par network() dans le callback courant.', 'The copy returned by network() in the current callback.'), t('Réutiliser pour le calcul ; ne pas confondre sa validité avec celle de la partie actuelle.', 'Reuse it for computation; do not confuse its validity with the current game’s state.')],
+            [literal('sourceId'), t('L’identifiant du signal source de la même copie.', 'The identity of the source signal in the same copy.'), t('Détermine la voie, le modèle et le sens ; un id absent donne null.', 'Determines track, model and direction; an absent ID yields null.')],
+            [literal('distanceM'), t('Un Double fini et strictement positif, en mètres.', 'A finite, strictly positive Double in metres.'), t('Distance parcourue à partir de la source dans son sens de circulation.', 'Distance travelled from the source in its travel direction.')],
+            [literal('SignalPosition?'), t('Position ou null', 'Position or null'), t('Position calculée pour l’aperçu ; null refuse un parcours ambigu ou incomplet.', 'Calculated position for preview; null rejects an ambiguous or incomplete traversal.')],
+          ]),
           text(
             t(
               'L’exemple cherche une position à une distance donnée devant la source. Il suit seulement les raccords simples, refuse les extrémités exactes, s’arrête à toute aiguille ou donnée inconnue et limite le nombre de voies visitées. Il retourne null si cette politique ne permet pas de conclure. Il ne vérifie ni occupation, ni espacement avec d’autres signaux, ni validité d’une commande de construction ; ajoutez ces règles à votre planificateur.',
@@ -476,6 +490,10 @@ toolAuthoring.push(
               'Before building: prepareConstruction, then a fresh capture, then recalculate and compare against the approved plan. If positions, source or session have changed, show the new plan and request another confirmation. A stored plan never replaces this validation.',
             ),
           ),
+          text(t(
+            'Cas chiffré : sur une voie de 1 000 m, une source à fraction 0.25 dirigée vers B et distanceM = 100.0 donne fraction 0.35 sur la même voie. Dirigée vers A, elle donne 0.15. Avec une aiguille à 300 m depuis A, le parcours vers B est refusé et retourne null. Testez aussi une longueur inconnue, un raccord A/B, une extrémité exacte et une boucle.',
+            'Worked example: on a 1,000 m track, a source at fraction 0.25 facing B and distanceM = 100.0 produces fraction 0.35 on the same track. Facing A, it produces 0.15. With a junction at 300 m from A, traversal towards B is refused and returns null. Also test unknown length, an A/B connection, an exact endpoint and a cycle.',
+          )),
           links(
             {
               label: t('Cycle complet de l’outil', 'Complete tool lifecycle'),
@@ -618,6 +636,10 @@ toolAuthoring.push(
           'Submit once, then track the ticket',
         ),
         blocks: [
+          text(t(
+            'Prérequis pour une pose : jeu et SDK compatibles, fonctionnalité de construction expérimentale disponible, éditeur des voies actif et partie solo d’essai. Après prepareConstruction, relisez le réseau, recalculez le plan et comparez-le au plan approuvé avant confirmCreate. Une copie obtenue avant la préparation ne convient pas à cette revalidation. L’exemple ci-dessous suit l’opération ; il ne réalise pas ces étapes à votre place.',
+            'Placement prerequisites: compatible game and SDK, available experimental construction feature, active track editor and a solo test game. After prepareConstruction, reread the network, recalculate the plan and compare it with the approved plan before confirmCreate. A copy obtained before preparation is unsuitable for this revalidation. The example below tracks the operation; it does not perform these steps for you.',
+          )),
           code(
             constructionExample,
             t(
@@ -625,6 +647,12 @@ toolAuthoring.push(
               'ConstructionFollower.kt — state separate from the interface',
             ),
           ),
+          table([t('Entrée de confirmCreate', 'confirmCreate input'), t('Contrat avant l’appel', 'Contract before the call')], [
+            [literal('port'), t('Adaptateur du ToolContext courant ; aucune réutilisation entre callbacks.', 'Adapter for the current ToolContext; never reuse it across callbacks.')],
+            [literal('prepared'), t('Résultat Ready de prepareConstruction(), avec son token non nul.', 'Ready result from prepareConstruction(), with its nonzero token.')],
+            [literal('source'), t('Signal source de la partie courante, vérifié avec le plan approuvé.', 'Source signal in the current game, checked against the approved plan.')],
+            [literal('approvedPositions'), t('1 à 64 positions distinctes, fractions strictement entre 0 et 1 et direction +1 ou −1. Le plan vient d’être recalculé et comparé.', '1 through 64 distinct positions, fractions strictly between 0 and 1, and direction +1 or −1. The plan has just been recalculated and compared.')],
+          ]),
           text(
             t(
               'Le helper est volontairement incomplet du côté interface : le bouton de votre outil doit vérifier le panneau, l’aperçu, la session et la comparaison fraîche du plan avant confirmCreate. Il marque pending avant l’appel et conserve le ticket même si cet appel lève une exception. Le callback peut afficher « résultat en cours de vérification » puis utiliser tick avec le nouveau contexte. Aucune fermeture, réouverture ou récupération de panneau ne rappelle create ou undo.',
@@ -670,6 +698,10 @@ toolAuthoring.push(
               'Keep polling even with the panel closed. An unread shared result is protected for two seconds after completion; another tool may replace it afterwards. An unavailable ticket never proves nothing was built. Inspect the game before a new explicit action. A new preparation may also invalidate the previous tool’s SDK undo; canUndo is necessary, and the call may still reject if history has changed.',
             ),
           ),
+          text(t(
+            'Testez avec un faux ConstructionPort : Ready puis Pending puis Applied ; Pending puis Partial ; exception pendant create puis résultat retrouvé par poll ; fermeture pendant Pending ; changement de generation ; et deuxième clic sur le même ticket. L’attendu est toujours une seule soumission, le résultat réel conservé et aucun bouton qui transforme une incertitude en nouvelle pose.',
+            'Test with a fake ConstructionPort: Ready then Pending then Applied; Pending then Partial; an exception during create followed by a result recovered by poll; closing while Pending; a generation change; and a second click on the same ticket. Every case must produce one submission, retain the actual result and avoid a button turning uncertainty into another placement.',
+          )),
           links(
             { label: t('Préparer la géométrie', 'Prepare geometry'), to: '/mods/parcours-voies' },
             {

@@ -81,10 +81,30 @@ export const performanceGuides: Article[] = [
           ),
           text(
             t(
-              'Pour un paquet chargeable, ajoutez closed.svg et open.svg dans assets et utilisez ce modèle depuis votre point d’entrée signalMod(modInfo), avec metadata. Les identifiants et chemins du snippet sont des exemples : choisissez les vôtres et gardez-les stables après distribution.',
-              'For a loadable package, add closed.svg and open.svg under assets and use this model from your signalMod(modInfo) entry point, with metadata. The snippet’s IDs and paths are examples: choose your own and keep them stable after distribution.',
+              'Dans le projet du premier signal, placez ce fichier dans src/main/kotlin/wiki/prepared/PreparedNetwork.kt et conservez assets/closed.svg et assets/open.svg. Remplacez Entry.kt par le point d’entrée ci-dessous : modInfo conserve l’identité du manifeste et createPreparedMod fournit les métadonnées du paquet. Adaptez les anciens tests à model et createPreparedMod. Les identifiants et chemins du modèle sont des exemples ; gardez les vôtres stables après distribution.',
+              'In the first-signal project, place this file at src/main/kotlin/wiki/prepared/PreparedNetwork.kt and keep assets/closed.svg and assets/open.svg. Replace Entry.kt with the entry point below: modInfo preserves the manifest identity and createPreparedMod supplies package metadata. Adapt the previous tests to model and createPreparedMod. Model IDs and paths are examples; keep your own stable after distribution.',
             ),
           ),
+          code('package nimby.mod\n\nimport wiki.prepared.createPreparedMod\n\nfun createMod() = createPreparedMod(modInfo)', literal('src/main/kotlin/Entry.kt')),
+        ],
+      },
+      {
+        id: 'arguments',
+        title: t('Entrée, résultat et exemple à trois signaux', 'Input, result and a three-signal example'),
+        blocks: [
+          table([t('Élément', 'Element'), t('Contrat de l’exemple', 'Example contract')], [
+            [literal('signals: List<Signal>'), t('Liste observée du mod. Chaque entrée apporte id, type, nextSignal, settings et la fraîcheur de l’observation.', 'The mod’s observed list. Each entry supplies id, type, nextSignal, settings and observation freshness.')],
+            [literal('workBlocks.read(source.settings)'), t('Nombre entier de liens suivants, entre 0 et 64 ; zéro signifie la source seule.', 'Integer number of following links, from 0 through 64; zero means the source only.')],
+            [literal('List<Signal>'), t('Nouvelle liste de même taille et ordre ; seuls les réglages effectifs concernés changent. Les données d’entrée ne sont pas modifiées.', 'A new list with the same size and order; only the affected effective settings change. Input data is not modified.')],
+          ]),
+          text(t(
+            'Supposons A → B → C, trois signaux de ce modèle, avec des observations fraîches et des réglages disponibles. A active work avec workBlocks=1 ; B et C n’activent pas work. Le résultat effectif active work sur A et B, mais pas sur C. Mettre workBlocks=0 conserve seulement A. Retirer work sur A lors de la lecture suivante arrête cette propagation : les valeurs dérivées du résultat précédent ne sont pas réutilisées comme entrée.',
+            'Assume A → B → C, three signals of this model with fresh observations and available settings. A enables work with workBlocks=1; B and C do not enable work. The effective result enables work on A and B, but not C. Setting workBlocks=0 retains A only. Removing work from A in the next read stops that propagation: derived values from the previous result are not reused as input.',
+          )),
+          text(t(
+            'Si B est absent, appartient à un autre modèle ou possède une observation indisponible, l’exemple arrête la propagation avant de traverser cette frontière. Il ne cherche pas un autre itinéraire. Cette politique est choisie par cet exemple et peut être remplacée par votre règle métier en conservant les limites de parcours.',
+            'If B is absent, belongs to another model or has an unavailable observation, the example stops propagation before crossing that boundary. It does not look for another route. This example chooses that policy; you can replace it with your domain rule while keeping traversal bounded.',
+          )),
         ],
       },
       {
@@ -184,6 +204,12 @@ export const performanceGuides: Article[] = [
               'An observation interval is a target cadence, not a frequency guarantee. If a calculation exceeds that interval, do not launch a catch-up burst. At high speed, simulated time advances faster than callbacks and visible frames: an animation cannot promise to display every phase.',
             ),
           ),
+          table([t('Fonction à créer', 'Feature to build'), t('Organisation concrète', 'Concrete structure')], [
+            [t('Limite de longueur configurable', 'Configurable length limit'), t('Déclarer une IntegerOption et trainEditor une fois. Aucun onTick ni lecture de trains par le mod.', 'Declare an IntegerOption and trainEditor once. No onTick or train reads in the mod.')],
+            [t('Fenêtre de date et heure', 'Date and time window'), t('Lire clock() à l’ouverture ou sur Actualiser. Valider la saisie, puis appeler le changement d’heure une seule fois sur confirmation.', 'Read clock() on opening or Refresh. Validate input, then call the time change once on confirmation.')],
+            [t('Aperçu de signaux', 'Signal preview'), t('Calculer les positions quand les arguments changent ; renouveler le même aperçu pendant son affichage et l’effacer à sa fermeture.', 'Compute positions when arguments change; renew the same preview while displayed and clear it when closed.')],
+            [t('Construction de signaux', 'Signal construction'), t('Envoyer une demande confirmée une fois, conserver son ticket, puis consulter son résultat. Un délai ne signifie pas que la construction a échoué.', 'Submit a confirmed request once, keep its ticket and then query its result. A delay does not mean construction failed.')],
+          ]),
         ],
       },
       {

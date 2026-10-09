@@ -3,6 +3,7 @@ package wiki.prepared
 import nimby.*
 
 val work = Checkbox("work", "Zone de travaux", "Appliquer la règle de travaux de ce modèle.")
+// 0 = source seule ; 1 = source et prochain signal ; 64 = au plus 65 signaux avec la source.
 val workBlocks = NumberSetting("workBlocks", "Cantons suivants", maximum = 64,
     defaultValue = 0, visibleWhen = work.name)
 enum class Aspect { Closed, Open }
@@ -26,6 +27,7 @@ val model = signalModel(
 // Règle d’exemple : propagation par nextSignal, pas par distance physique.
 // Zéro signifie la source seule. Aucun réglage dérivé n’est enregistré.
 fun effectiveWorkSettings(signals: List<Signal>): List<Signal> {
+    // Un index par lot, plutôt qu’une recherche complète pour chaque voisin.
     val byId = signals.associateBy { it.id }
     val affected = HashSet<Long>()
     for (source in signals) {
@@ -33,8 +35,10 @@ fun effectiveWorkSettings(signals: List<Signal>): List<Signal> {
             !source.observation.fresh || source.settings[work.name] != true) continue
         var current: Signal? = source
         val seen = HashSet<Long>()
+        // Lire une valeur bornée ; le +1 inclut la source, les liens suivants restent limités.
         repeat(workBlocks.read(source.settings) + 1) {
             val signal = current ?: return@repeat
+            // Un cycle, un autre modèle ou une observation indisponible arrête cette source.
             if (!seen.add(signal.id) || signal.type != model.type.id ||
                 signal.settingsStatus != SettingsStatus.Present || !signal.observation.fresh) {
                 current = null
@@ -44,6 +48,8 @@ fun effectiveWorkSettings(signals: List<Signal>): List<Signal> {
             current = byId[signal.nextSignal]
         }
     }
+    // Même nombre et ordre d’entrées ; copier uniquement les réglages concernés.
+    // Les identités, observations et liens de la capture restent inchangés.
     return signals.map { signal ->
         if (signal.id in affected && signal.settings[work.name] != true)
             signal.copy(settings = signal.settings + (work.name to true))
@@ -51,7 +57,8 @@ fun effectiveWorkSettings(signals: List<Signal>): List<Signal> {
     }
 }
 
-fun createPreparedMod() = signalMod("prepared-example", "Réglages préparés") {
+fun createPreparedMod(info: ModInfo = ModInfo("prepared-example", "Réglages préparés")) = signalMod(info) {
+    metadata(author = "Votre nom", description = "Préparer les réglages de travaux d’un réseau de signaux.")
     signal(model)
     prepareNetwork(::effectiveWorkSettings)
 }
