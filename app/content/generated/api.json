@@ -1,5 +1,5 @@
 {
-  "sdkVersion": "0.9.0-alpha.1",
+  "sdkVersion": "0.9.0-alpha.2",
   "files": [
     {
       "file": "AutomaticDriving.kt",
@@ -1670,6 +1670,190 @@
       "slug": "reference/mod"
     },
     {
+      "file": "ModOptions.kt",
+      "path": "kotlin/src/nimby/ModOptions.kt",
+      "runtime": "Kotlin/Native",
+      "package": "nimby",
+      "imports": [],
+      "sha256": "f618034533a598692f5bd3991594f7c1f4fe631e697791085b676e01ae98cd6d",
+      "symbols": [
+        {
+          "name": "ModOption",
+          "owner": "",
+          "kind": "class",
+          "signature": "sealed class ModOption<T>",
+          "defaultNotes": [],
+          "documentation": "Préférence du joueur, commune à toutes ses parties et propre à ce mod.\nDéclarer l'option avec `options(...)`, puis lire [value] dans les callbacks\ndu mod. Cette lecture utilise le cache du SDK : aucun accès au jeu ni au disque.\nLe SDK applique les changements entre deux callbacks sur le worker du mod.\n[id] reste stable entre versions ; [label] et [description] acceptent [tr].\nConstruction réservée au SDK : utilisez la fonction de création ou le contexte fourni.",
+          "line": 8,
+          "id": "native:nimby:class:ModOption",
+          "key": "class:ModOption",
+          "anchor": "api-modoption-7e91dc2322"
+        },
+        {
+          "name": "id",
+          "kind": "val",
+          "signature": "val id: String",
+          "documentation": "",
+          "owner": "ModOption",
+          "line": 8,
+          "id": "native:nimby:val:ModOption.id",
+          "key": "val:ModOption.id",
+          "anchor": "api-modoption-id-830eb826d3"
+        },
+        {
+          "name": "label",
+          "kind": "val",
+          "signature": "val label: String",
+          "documentation": "",
+          "owner": "ModOption",
+          "line": 8,
+          "id": "native:nimby:val:ModOption.label",
+          "key": "val:ModOption.label",
+          "anchor": "api-modoption-label-decda9bb8f"
+        },
+        {
+          "name": "defaultValue",
+          "kind": "val",
+          "signature": "val defaultValue: T",
+          "documentation": "",
+          "owner": "ModOption",
+          "line": 8,
+          "id": "native:nimby:val:ModOption.defaultValue",
+          "key": "val:ModOption.defaultValue",
+          "anchor": "api-modoption-defaultvalue-1f680b04d6"
+        },
+        {
+          "name": "description",
+          "kind": "val",
+          "signature": "val description: String",
+          "documentation": "",
+          "owner": "ModOption",
+          "line": 8,
+          "id": "native:nimby:val:ModOption.description",
+          "key": "val:ModOption.description",
+          "anchor": "api-modoption-description-00fe184b30"
+        },
+        {
+          "name": "value",
+          "owner": "ModOption",
+          "kind": "val",
+          "signature": "val value: T",
+          "defaultNotes": [],
+          "documentation": "",
+          "line": 22,
+          "id": "native:nimby:val:ModOption.value",
+          "key": "val:ModOption.value",
+          "anchor": "api-modoption-value-b8ebeb90ea"
+        },
+        {
+          "name": "BooleanOption",
+          "owner": "",
+          "kind": "class",
+          "signature": "class BooleanOption(\n    id: String, label: String, defaultValue: Boolean = false, description: String = \"\",\n) : ModOption<Boolean>",
+          "defaultNotes": [],
+          "documentation": "",
+          "line": 36,
+          "id": "native:nimby:class:BooleanOption",
+          "key": "class:BooleanOption",
+          "anchor": "api-booleanoption-d36ec55a7b"
+        },
+        {
+          "name": "IntegerOption",
+          "owner": "",
+          "kind": "class",
+          "signature": "class IntegerOption(\n    id: String, label: String, defaultValue: Int, val minimum: Int, val maximum: Int,\n    description: String = \"\",\n) : ModOption<Int>",
+          "defaultNotes": [],
+          "documentation": "Nombre entier inclus entre [minimum] et [maximum].",
+          "line": 49,
+          "id": "native:nimby:class:IntegerOption",
+          "key": "class:IntegerOption",
+          "anchor": "api-integeroption-8755f2570c"
+        },
+        {
+          "name": "minimum",
+          "kind": "val",
+          "signature": "val minimum: Int",
+          "documentation": "",
+          "owner": "IntegerOption",
+          "line": 49,
+          "id": "native:nimby:val:IntegerOption.minimum",
+          "key": "val:IntegerOption.minimum",
+          "anchor": "api-integeroption-minimum-a5931e8079"
+        },
+        {
+          "name": "maximum",
+          "kind": "val",
+          "signature": "val maximum: Int",
+          "documentation": "",
+          "owner": "IntegerOption",
+          "line": 49,
+          "id": "native:nimby:val:IntegerOption.maximum",
+          "key": "val:IntegerOption.maximum",
+          "anchor": "api-integeroption-maximum-15a0b46d59"
+        },
+        {
+          "name": "OptionChoice",
+          "owner": "",
+          "kind": "class",
+          "signature": "data class OptionChoice(val id: String, val label: String)",
+          "defaultNotes": [],
+          "documentation": "[id] est enregistré ; seul [label], éventuellement fourni par [tr], est affiché.",
+          "line": 64,
+          "id": "native:nimby:class:OptionChoice",
+          "key": "class:OptionChoice",
+          "anchor": "api-optionchoice-744f73f3fb"
+        },
+        {
+          "name": "id",
+          "kind": "val",
+          "signature": "val id: String",
+          "documentation": "",
+          "owner": "OptionChoice",
+          "line": 64,
+          "id": "native:nimby:val:OptionChoice.id",
+          "key": "val:OptionChoice.id",
+          "anchor": "api-optionchoice-id-171aed903b"
+        },
+        {
+          "name": "label",
+          "kind": "val",
+          "signature": "val label: String",
+          "documentation": "",
+          "owner": "OptionChoice",
+          "line": 64,
+          "id": "native:nimby:val:OptionChoice.label",
+          "key": "val:OptionChoice.label",
+          "anchor": "api-optionchoice-label-701afdc5eb"
+        },
+        {
+          "name": "ChoiceOption",
+          "owner": "",
+          "kind": "class",
+          "signature": "class ChoiceOption(\n    id: String, label: String, choices: List<OptionChoice>, defaultValue: String,\n    description: String = \"\",\n) : ModOption<String>",
+          "defaultNotes": [],
+          "documentation": "Choix parmi deux à seize valeurs. [value] fournit l'identifiant du choix.",
+          "line": 69,
+          "id": "native:nimby:class:ChoiceOption",
+          "key": "class:ChoiceOption",
+          "anchor": "api-choiceoption-6bc5eabc47"
+        },
+        {
+          "name": "choices",
+          "owner": "ChoiceOption",
+          "kind": "val",
+          "signature": "val choices: List<OptionChoice>",
+          "defaultNotes": [],
+          "documentation": "",
+          "line": 73,
+          "id": "native:nimby:val:ChoiceOption.choices",
+          "key": "val:ChoiceOption.choices",
+          "anchor": "api-choiceoption-choices-37b81ae667"
+        }
+      ],
+      "id": "native:nimby:ModOptions",
+      "slug": "reference/native/nimby/modoptions"
+    },
+    {
       "file": "ModResources.kt",
       "path": "kotlin/src/nimby/ModResources.kt",
       "runtime": "Kotlin/Native",
@@ -1891,7 +2075,7 @@
       "runtime": "Kotlin/Native",
       "package": "nimby",
       "imports": [],
-      "sha256": "ab394101cb83bf3455fa0f5cd36dfe71b490b675827616748befa1f8a82f0b42",
+      "sha256": "feadf3bd70f0ac076a98e2491e828cecf41de31ef1fcc7dd8a91d1b21fdf4bb9",
       "symbols": [
         {
           "name": "SignalAction",
@@ -2109,13 +2293,25 @@
           "anchor": "symbol-5"
         },
         {
+          "name": "options",
+          "owner": "GameMod",
+          "kind": "val",
+          "signature": "open val options: List<ModOption<*>>",
+          "defaultNotes": [],
+          "documentation": "Préférences globales du joueur, affichées et enregistrées par le SDK.",
+          "line": 25,
+          "id": "native:nimby:val:GameMod.options",
+          "key": "val:GameMod.options",
+          "anchor": "api-gamemod-options-671f4c4d74"
+        },
+        {
           "name": "windows",
           "owner": "GameMod",
           "kind": "val",
           "signature": "open val windows: List<ToolWindow>",
           "defaultNotes": [],
           "documentation": "",
-          "line": 24,
+          "line": 26,
           "id": "native:nimby:val:GameMod.windows",
           "key": "val:GameMod.windows",
           "anchor": "symbol-6"
@@ -2127,7 +2323,7 @@
           "signature": "open fun onWindowEvent(request: ToolWindowEvent, context: ToolContext): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 25,
+          "line": 27,
           "id": "native:nimby:fun:GameMod.onWindowEvent(ToolWindowEvent,ToolContext)",
           "key": "fun:GameMod.onWindowEvent(ToolWindowEvent,ToolContext)",
           "anchor": "symbol-7"
@@ -2139,7 +2335,7 @@
           "signature": "open val services: List<String>",
           "defaultNotes": [],
           "documentation": "",
-          "line": 26,
+          "line": 28,
           "id": "native:nimby:val:GameMod.services",
           "key": "val:GameMod.services",
           "anchor": "symbol-8"
@@ -2151,7 +2347,7 @@
           "signature": "open fun onSignalAction(request: SignalActionRequest, context: ToolContext): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 27,
+          "line": 29,
           "id": "native:nimby:fun:GameMod.onSignalAction(SignalActionRequest,ToolContext)",
           "key": "fun:GameMod.onSignalAction(SignalActionRequest,ToolContext)",
           "anchor": "symbol-9"
@@ -2163,7 +2359,7 @@
           "signature": "open fun onTick(context: ToolContext): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 28,
+          "line": 30,
           "id": "native:nimby:fun:GameMod.onTick(ToolContext)",
           "key": "fun:GameMod.onTick(ToolContext)",
           "anchor": "symbol-10"
@@ -2175,7 +2371,7 @@
           "signature": "open fun onStop(): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 29,
+          "line": 31,
           "id": "native:nimby:fun:GameMod.onStop()",
           "key": "fun:GameMod.onStop()",
           "anchor": "symbol-11"
@@ -2187,7 +2383,7 @@
           "signature": "class ToolMod : GameMod",
           "defaultNotes": [],
           "documentation": "Un mod outil reçoit des actions sans définir d'indication ni de vitesse.\nConstruction réservée au SDK : utilisez la fonction de création ou le contexte fourni.",
-          "line": 33,
+          "line": 35,
           "id": "native:nimby:class:ToolMod",
           "key": "class:ToolMod",
           "anchor": "symbol-12"
@@ -2198,7 +2394,7 @@
           "signature": "override val id: String",
           "documentation": "",
           "owner": "ToolMod",
-          "line": 33,
+          "line": 35,
           "id": "native:nimby:val:ToolMod.id",
           "key": "val:ToolMod.id",
           "anchor": "symbol-13"
@@ -2209,7 +2405,7 @@
           "signature": "override val title: String",
           "documentation": "",
           "owner": "ToolMod",
-          "line": 33,
+          "line": 35,
           "id": "native:nimby:val:ToolMod.title",
           "key": "val:ToolMod.title",
           "anchor": "symbol-14"
@@ -2220,7 +2416,7 @@
           "signature": "override val metadata: ModMetadata?",
           "documentation": "",
           "owner": "ToolMod",
-          "line": 33,
+          "line": 35,
           "id": "native:nimby:val:ToolMod.metadata",
           "key": "val:ToolMod.metadata",
           "anchor": "symbol-15"
@@ -2231,10 +2427,21 @@
           "signature": "override val windows: List<ToolWindow>",
           "documentation": "",
           "owner": "ToolMod",
-          "line": 33,
+          "line": 35,
           "id": "native:nimby:val:ToolMod.windows",
           "key": "val:ToolMod.windows",
           "anchor": "symbol-16"
+        },
+        {
+          "name": "options",
+          "kind": "val",
+          "signature": "override val options: List<ModOption<*>>",
+          "documentation": "",
+          "owner": "ToolMod",
+          "line": 35,
+          "id": "native:nimby:val:ToolMod.options",
+          "key": "val:ToolMod.options",
+          "anchor": "api-toolmod-options-9b71b647b3"
         },
         {
           "name": "services",
@@ -2243,7 +2450,7 @@
           "signature": "override val services: List<String>",
           "defaultNotes": [],
           "documentation": "",
-          "line": 42,
+          "line": 45,
           "id": "native:nimby:val:ToolMod.services",
           "key": "val:ToolMod.services",
           "anchor": "symbol-17"
@@ -2255,7 +2462,7 @@
           "signature": "override fun onSignalAction(request: SignalActionRequest, context: ToolContext): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 43,
+          "line": 46,
           "id": "native:nimby:fun:ToolMod.onSignalAction(SignalActionRequest,ToolContext)",
           "key": "fun:ToolMod.onSignalAction(SignalActionRequest,ToolContext)",
           "anchor": "symbol-18"
@@ -2267,7 +2474,7 @@
           "signature": "override fun onTick(context: ToolContext): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 46,
+          "line": 49,
           "id": "native:nimby:fun:ToolMod.onTick(ToolContext)",
           "key": "fun:ToolMod.onTick(ToolContext)",
           "anchor": "symbol-19"
@@ -2279,7 +2486,7 @@
           "signature": "override fun onStop(): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 47,
+          "line": 50,
           "id": "native:nimby:fun:ToolMod.onStop()",
           "key": "fun:ToolMod.onStop()",
           "anchor": "symbol-20"
@@ -2291,7 +2498,7 @@
           "signature": "override fun onWindowEvent(request: ToolWindowEvent, context: ToolContext): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 48,
+          "line": 51,
           "id": "native:nimby:fun:ToolMod.onWindowEvent(ToolWindowEvent,ToolContext)",
           "key": "fun:ToolMod.onWindowEvent(ToolWindowEvent,ToolContext)",
           "anchor": "symbol-21"
@@ -2303,10 +2510,22 @@
           "signature": "class ToolModBuilder",
           "defaultNotes": [],
           "documentation": "Construction réservée au SDK : utilisez la fonction de création ou le contexte fourni.",
-          "line": 53,
+          "line": 56,
           "id": "native:nimby:class:ToolModBuilder",
           "key": "class:ToolModBuilder",
           "anchor": "symbol-22"
+        },
+        {
+          "name": "options",
+          "owner": "ToolModBuilder",
+          "kind": "fun",
+          "signature": "fun options(vararg values: ModOption<*>): Unit",
+          "defaultNotes": [],
+          "documentation": "Ajoute les préférences du mod, dans l'ordre d'affichage.",
+          "line": 59,
+          "id": "native:nimby:fun:ToolModBuilder.options(ModOption<*>)",
+          "key": "fun:ToolModBuilder.options(ModOption<*>)",
+          "anchor": "api-toolmodbuilder-options-ca3c3b0507"
         },
         {
           "name": "window",
@@ -2315,7 +2534,7 @@
           "signature": "fun window(id: String, title: String, shortcut: String = \"F8\", handler: ToolContext.(ToolWindowEvent) -> Unit): Unit",
           "defaultNotes": [],
           "documentation": "Enregistre une fenêtre et son formulaire ; aucun signal requis.",
-          "line": 57,
+          "line": 66,
           "id": "native:nimby:fun:ToolModBuilder.window(String,String,String,ToolContext.(ToolWindowEvent)->Unit)",
           "key": "fun:ToolModBuilder.window(String,String,String,ToolContext.(ToolWindowEvent)->Unit)",
           "anchor": "symbol-23"
@@ -2327,7 +2546,7 @@
           "signature": "fun metadata(author: String, description: String, name: String? = null): Unit",
           "defaultNotes": [],
           "documentation": "Auteur et description affichés dans la liste des mods du jeu.",
-          "line": 67,
+          "line": 77,
           "id": "native:nimby:fun:ToolModBuilder.metadata(String,String,String?)",
           "key": "fun:ToolModBuilder.metadata(String,String,String?)",
           "anchor": "symbol-24"
@@ -2339,7 +2558,7 @@
           "signature": "fun service(id: String, handler: ToolContext.(SignalActionRequest) -> Unit): Unit",
           "defaultNotes": [],
           "documentation": "Callback sérialisé sur le worker du mod, jamais sur le thread de l'UI.",
-          "line": 72,
+          "line": 82,
           "id": "native:nimby:fun:ToolModBuilder.service(String,ToolContext.(SignalActionRequest)->Unit)",
           "key": "fun:ToolModBuilder.service(String,ToolContext.(SignalActionRequest)->Unit)",
           "anchor": "symbol-25"
@@ -2351,7 +2570,7 @@
           "signature": "fun onTick(block: ToolContext.() -> Unit): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 78,
+          "line": 88,
           "id": "native:nimby:fun:ToolModBuilder.onTick(ToolContext.()->Unit)",
           "key": "fun:ToolModBuilder.onTick(ToolContext.()->Unit)",
           "anchor": "symbol-26"
@@ -2363,7 +2582,7 @@
           "signature": "fun onStop(block: () -> Unit): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 79,
+          "line": 89,
           "id": "native:nimby:fun:ToolModBuilder.onStop(()->Unit)",
           "key": "fun:ToolModBuilder.onStop(()->Unit)",
           "anchor": "symbol-27"
@@ -2375,7 +2594,7 @@
           "signature": "fun toolMod(id: String, title: String, block: ToolModBuilder.() -> Unit): ToolMod",
           "defaultNotes": [],
           "documentation": "",
-          "line": 82,
+          "line": 92,
           "id": "native:nimby:fun:toolMod(String,String,ToolModBuilder.()->Unit)",
           "key": "fun:toolMod(String,String,ToolModBuilder.()->Unit)",
           "anchor": "symbol-28"
@@ -2586,7 +2805,7 @@
       "runtime": "Kotlin/Native",
       "package": "nimby",
       "imports": [],
-      "sha256": "3279ec0fd7ef34a443ed4b9e6bb8b55f947655f2dd355037ecb4f534dc2f5cbf",
+      "sha256": "f706422f510b298f66482e81790c747f90b499125e3492d08335ae2c2b221421",
       "symbols": [
         {
           "name": "Indication",
@@ -2910,13 +3129,25 @@
           "anchor": "symbol-24"
         },
         {
+          "name": "options",
+          "owner": "SignalModBuilder",
+          "kind": "fun",
+          "signature": "fun options(vararg values: ModOption<*>): Unit",
+          "defaultNotes": [],
+          "documentation": "Préférences globales du joueur ; les cases d'un signal restent séparées.",
+          "line": 96,
+          "id": "native:nimby:fun:SignalModBuilder.options(ModOption<*>)",
+          "key": "fun:SignalModBuilder.options(ModOption<*>)",
+          "anchor": "api-signalmodbuilder-options-5d38f46823"
+        },
+        {
           "name": "maximumLineSpeed",
           "owner": "SignalModBuilder",
           "kind": "var",
           "signature": "var maximumLineSpeed: Boolean = false",
           "defaultNotes": [],
           "documentation": "",
-          "line": 94,
+          "line": 100,
           "id": "native:nimby:var:SignalModBuilder.maximumLineSpeed",
           "key": "var:SignalModBuilder.maximumLineSpeed",
           "anchor": "symbol-25"
@@ -2928,7 +3159,7 @@
           "signature": "var diagnosticFile: String = \"nimby-kotlin-faults.jsonl\"",
           "defaultNotes": [],
           "documentation": "",
-          "line": 95,
+          "line": 101,
           "id": "native:nimby:var:SignalModBuilder.diagnosticFile",
           "key": "var:SignalModBuilder.diagnosticFile",
           "anchor": "symbol-26"
@@ -2940,7 +3171,7 @@
           "signature": "fun signal(id: String, title: String, textures: String, block: SignalDefinition<A, R>.() -> Unit): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 106,
+          "line": 112,
           "id": "native:nimby:fun:SignalModBuilder.signal(String,String,String,SignalDefinition<A,R>.()->Unit)",
           "key": "fun:SignalModBuilder.signal(String,String,String,SignalDefinition<A,R>.()->Unit)",
           "anchor": "symbol-27"
@@ -2952,7 +3183,7 @@
           "signature": "fun signal(type: SignalType, block: SignalDefinition<A, R>.() -> Unit): Unit",
           "defaultNotes": [],
           "documentation": "Permet de conserver une déclaration partagée avec des tests ou un éditeur.",
-          "line": 110,
+          "line": 116,
           "id": "native:nimby:fun:SignalModBuilder.signal(SignalType,SignalDefinition<A,R>.()->Unit)",
           "key": "fun:SignalModBuilder.signal(SignalType,SignalDefinition<A,R>.()->Unit)",
           "anchor": "symbol-28"
@@ -2964,7 +3195,7 @@
           "signature": "fun images(block: (Indication<A, R>) -> String): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 113,
+          "line": 119,
           "id": "native:nimby:fun:SignalModBuilder.images((Indication<A,R>)->String)",
           "key": "fun:SignalModBuilder.images((Indication<A,R>)->String)",
           "anchor": "symbol-29"
@@ -2976,7 +3207,7 @@
           "signature": "fun animatedImages(block: (Indication<A, R>, Long, Long) -> String): Unit",
           "defaultNotes": [],
           "documentation": "Temps simulé et demi-période en millisecondes, jamais l'heure du PC.",
-          "line": 115,
+          "line": 121,
           "id": "native:nimby:fun:SignalModBuilder.animatedImages((Indication<A,R>,Long,Long)->String)",
           "key": "fun:SignalModBuilder.animatedImages((Indication<A,R>,Long,Long)->String)",
           "anchor": "symbol-30"
@@ -2988,7 +3219,7 @@
           "signature": "fun appearance(block: (Indication<A, R>) -> SignalAnimation): Unit",
           "defaultNotes": [],
           "documentation": "Affichage déclaratif avec steady ou blink, synchronisé sur le jeu.",
-          "line": 117,
+          "line": 123,
           "id": "native:nimby:fun:SignalModBuilder.appearance((Indication<A,R>)->SignalAnimation)",
           "key": "fun:SignalModBuilder.appearance((Indication<A,R>)->SignalAnimation)",
           "anchor": "symbol-31"
@@ -3000,7 +3231,7 @@
           "signature": "fun driving(block: (Indication<A, R>) -> DrivingRule?): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 120,
+          "line": 126,
           "id": "native:nimby:fun:SignalModBuilder.driving((Indication<A,R>)->DrivingRule?)",
           "key": "fun:SignalModBuilder.driving((Indication<A,R>)->DrivingRule?)",
           "anchor": "symbol-32"
@@ -3012,7 +3243,7 @@
           "signature": "fun faults(block: (Indication<A, R>) -> Boolean): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 121,
+          "line": 127,
           "id": "native:nimby:fun:SignalModBuilder.faults((Indication<A,R>)->Boolean)",
           "key": "fun:SignalModBuilder.faults((Indication<A,R>)->Boolean)",
           "anchor": "symbol-33"
@@ -3024,7 +3255,7 @@
           "signature": "fun activeWhen(block: (Indication<A, R>) -> Boolean): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 122,
+          "line": 128,
           "id": "native:nimby:fun:SignalModBuilder.activeWhen((Indication<A,R>)->Boolean)",
           "key": "fun:SignalModBuilder.activeWhen((Indication<A,R>)->Boolean)",
           "anchor": "symbol-34"
@@ -3036,7 +3267,7 @@
           "signature": "fun aspectNames(block: (A) -> String): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 123,
+          "line": 129,
           "id": "native:nimby:fun:SignalModBuilder.aspectNames((A)->String)",
           "key": "fun:SignalModBuilder.aspectNames((A)->String)",
           "anchor": "symbol-35"
@@ -3048,7 +3279,7 @@
           "signature": "fun reasonNames(block: (R) -> String): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 124,
+          "line": 130,
           "id": "native:nimby:fun:SignalModBuilder.reasonNames((R)->String)",
           "key": "fun:SignalModBuilder.reasonNames((R)->String)",
           "anchor": "symbol-36"
@@ -3060,7 +3291,7 @@
           "signature": "fun drivingPlan(block: (Vehicle, DrivingSettings, DrivingInput, List<Constraint>) -> DrivingPlan): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 125,
+          "line": 131,
           "id": "native:nimby:fun:SignalModBuilder.drivingPlan((Vehicle,DrivingSettings,DrivingInput,List<Constraint>)->DrivingPlan)",
           "key": "fun:SignalModBuilder.drivingPlan((Vehicle,DrivingSettings,DrivingInput,List<Constraint>)->DrivingPlan)",
           "anchor": "symbol-37"
@@ -3072,7 +3303,7 @@
           "signature": "inline fun <reified A : Enum<A>, reified R : Enum<R>> signalMod(\n    id: String, title: String, fallback: Indication<A, R>,\n    invalidNetwork: Indication<A, R> = fallback,\n    noinline block: SignalModBuilder<A, R>.() -> Unit\n): SignallingMod",
           "defaultNotes": [],
           "documentation": "Ancienne déclaration à vocabulaire commun. Pour des modèles indépendants,\npréférer [signalModel] et la surcharge signalMod(id, title) { signal(model) }.\n[fallback] couvre les observations inconnues ;\n[invalidNetwork] couvre les liens absents et les cycles sans décision locale.",
-          "line": 132,
+          "line": 138,
           "id": "native:nimby:fun:signalMod(String,String,Indication<A,R>,Indication<A,R>,SignalModBuilder<A,R>.()->Unit)",
           "key": "fun:signalMod(String,String,Indication<A,R>,Indication<A,R>,SignalModBuilder<A,R>.()->Unit)",
           "anchor": "symbol-38"
@@ -3087,7 +3318,7 @@
       "runtime": "Kotlin/Native",
       "package": "nimby",
       "imports": [],
-      "sha256": "4face6af6171b7c1bc62e91dd9a0bb2a840d8a594959115cf04482185cf118fa",
+      "sha256": "e7cfde58a0862e120518b25303b5e0cb55c978b04af80c21e697809b0b163800",
       "symbols": [
         {
           "name": "SignalIndication",
@@ -3724,13 +3955,25 @@
           "anchor": "symbol-51"
         },
         {
+          "name": "options",
+          "owner": "SignalModelsBuilder",
+          "kind": "fun",
+          "signature": "fun options(vararg values: ModOption<*>): Unit",
+          "defaultNotes": [],
+          "documentation": "Préférences globales du joueur ; les cases d'un signal restent séparées.",
+          "line": 221,
+          "id": "native:nimby:fun:SignalModelsBuilder.options(ModOption<*>)",
+          "key": "fun:SignalModelsBuilder.options(ModOption<*>)",
+          "anchor": "api-signalmodelsbuilder-options-157d880a62"
+        },
+        {
           "name": "prepareNetwork",
           "owner": "SignalModelsBuilder",
           "kind": "fun",
           "signature": "fun prepareNetwork(block: (List<Signal>) -> List<Signal>): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 220,
+          "line": 226,
           "id": "native:nimby:fun:SignalModelsBuilder.prepareNetwork((List<Signal>)->List<Signal>)",
           "key": "fun:SignalModelsBuilder.prepareNetwork((List<Signal>)->List<Signal>)",
           "anchor": "api-signalmodelsbuilder-preparenetwork-f32e127b2d"
@@ -3742,7 +3985,7 @@
           "signature": "fun metadata(author: String, description: String, name: String? = null): Unit",
           "defaultNotes": [],
           "documentation": "Auteur et description affichés dans la liste des mods du jeu.",
-          "line": 223,
+          "line": 229,
           "id": "native:nimby:fun:SignalModelsBuilder.metadata(String,String,String?)",
           "key": "fun:SignalModelsBuilder.metadata(String,String,String?)",
           "anchor": "symbol-52"
@@ -3754,7 +3997,7 @@
           "signature": "var maximumLineSpeed: Boolean = false",
           "defaultNotes": [],
           "documentation": "",
-          "line": 224,
+          "line": 230,
           "id": "native:nimby:var:SignalModelsBuilder.maximumLineSpeed",
           "key": "var:SignalModelsBuilder.maximumLineSpeed",
           "anchor": "symbol-53"
@@ -3766,7 +4009,7 @@
           "signature": "var diagnosticFile: String = \"nimby-kotlin-faults.jsonl\"",
           "defaultNotes": [],
           "documentation": "",
-          "line": 225,
+          "line": 231,
           "id": "native:nimby:var:SignalModelsBuilder.diagnosticFile",
           "key": "var:SignalModelsBuilder.diagnosticFile",
           "anchor": "symbol-54"
@@ -3778,7 +4021,7 @@
           "signature": "fun signal(model: SignalModel<*, *>): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 228,
+          "line": 234,
           "id": "native:nimby:fun:SignalModelsBuilder.signal(SignalModel<*,*>)",
           "key": "fun:SignalModelsBuilder.signal(SignalModel<*,*>)",
           "anchor": "symbol-55"
@@ -3790,7 +4033,7 @@
           "signature": "fun drivingPlan(block: (Vehicle, DrivingSettings, DrivingInput, List<Constraint>) -> DrivingPlan): Unit",
           "defaultNotes": [],
           "documentation": "",
-          "line": 229,
+          "line": 235,
           "id": "native:nimby:fun:SignalModelsBuilder.drivingPlan((Vehicle,DrivingSettings,DrivingInput,List<Constraint>)->DrivingPlan)",
           "key": "fun:SignalModelsBuilder.drivingPlan((Vehicle,DrivingSettings,DrivingInput,List<Constraint>)->DrivingPlan)",
           "anchor": "symbol-56"
@@ -3802,7 +4045,7 @@
           "signature": "fun signalMod(id: String, title: String, block: SignalModelsBuilder.() -> Unit): SignallingMod",
           "defaultNotes": [],
           "documentation": "Assemble des modèles indépendants. Le SDK transporte leur identité, mais\nn'invente aucune correspondance entre leurs états et aucune règle de conduite.",
-          "line": 234,
+          "line": 240,
           "id": "native:nimby:fun:signalMod(String,String,SignalModelsBuilder.()->Unit)",
           "key": "fun:signalMod(String,String,SignalModelsBuilder.()->Unit)",
           "anchor": "symbol-57"
@@ -5056,7 +5299,7 @@
       "runtime": "Kotlin/Native",
       "package": "nimby",
       "imports": [],
-      "sha256": "de1ed1477456916ffd2272913870e48244af4649fb9d0e25999b70bcd45c09e6",
+      "sha256": "be9628ccd2457a9043303c940438b7821e5a324674ca4ea9d84f7f108eccc8dc",
       "symbols": [
         {
           "name": "ToolWindow",
@@ -5064,8 +5307,8 @@
           "kind": "class",
           "signature": "data class ToolWindow(val id: String, val title: String, val shortcut: String)",
           "defaultNotes": [],
-          "documentation": "Fenêtre de l'outil, indépendante d'un signal. Sous Windows, le raccourci\nouvre un panneau appartenant à la fenêtre du jeu, uniquement au premier plan.\nCe n'est pas un bouton injecté dans la barre native du jeu.\nshortcut accepte Ctrl+Shift+lettre ou une touche F1 à F12.",
-          "line": 7,
+          "documentation": "Fenêtre de l'outil, indépendante d'un signal. Sous Windows, le raccourci\nouvre un panneau appartenant à la fenêtre du jeu, uniquement au premier plan.\nCe n'est pas un bouton injecté dans la barre native du jeu.\nshortcut : Ctrl+, Alt+, Shift+ facultatifs dans cet ordre, puis une touche\n(A–Z, 0–9, F1–F24, Enter, Space, Tab, Escape, Backspace, Delete, Insert,\nHome, End, PageUp, PageDown, Left, Right, Up ou Down). Vide le désactive.\nLe joueur peut le modifier dans les options des mods, gérées par le SDK.",
+          "line": 10,
           "id": "native:nimby:class:ToolWindow",
           "key": "class:ToolWindow",
           "anchor": "symbol-0"
@@ -5076,7 +5319,7 @@
           "signature": "val id: String",
           "documentation": "",
           "owner": "ToolWindow",
-          "line": 7,
+          "line": 10,
           "id": "native:nimby:val:ToolWindow.id",
           "key": "val:ToolWindow.id",
           "anchor": "api-toolwindow-id-617928a83b"
@@ -5087,7 +5330,7 @@
           "signature": "val title: String",
           "documentation": "",
           "owner": "ToolWindow",
-          "line": 7,
+          "line": 10,
           "id": "native:nimby:val:ToolWindow.title",
           "key": "val:ToolWindow.title",
           "anchor": "api-toolwindow-title-2a279349b2"
@@ -5098,7 +5341,7 @@
           "signature": "val shortcut: String",
           "documentation": "",
           "owner": "ToolWindow",
-          "line": 7,
+          "line": 10,
           "id": "native:nimby:val:ToolWindow.shortcut",
           "key": "val:ToolWindow.shortcut",
           "anchor": "api-toolwindow-shortcut-082b1020a2"
@@ -5110,7 +5353,7 @@
           "signature": "data class ToolWindowEvent(\n    val window: String, val action: String, val values: Map<String, Int>,\n    val sequence: Long, val worldId: String, val generation: Long,\n)",
           "defaultNotes": [],
           "documentation": "Action d'une fenêtre : open à l'ouverture, sinon l'id du bouton cliqué.\nvalues contient tous les entiers validés du formulaire à cet instant.\nLe SDK fournit cette requête : ne pas en fabriquer ni la réutiliser après\nun changement de partie. sequence associe la réponse au formulaire courant.",
-          "line": 13,
+          "line": 16,
           "id": "native:nimby:class:ToolWindowEvent",
           "key": "class:ToolWindowEvent",
           "anchor": "symbol-1"
@@ -5121,7 +5364,7 @@
           "signature": "val window: String",
           "documentation": "",
           "owner": "ToolWindowEvent",
-          "line": 13,
+          "line": 16,
           "id": "native:nimby:val:ToolWindowEvent.window",
           "key": "val:ToolWindowEvent.window",
           "anchor": "api-toolwindowevent-window-4650c5601f"
@@ -5132,7 +5375,7 @@
           "signature": "val action: String",
           "documentation": "",
           "owner": "ToolWindowEvent",
-          "line": 13,
+          "line": 16,
           "id": "native:nimby:val:ToolWindowEvent.action",
           "key": "val:ToolWindowEvent.action",
           "anchor": "api-toolwindowevent-action-1549eaca5a"
@@ -5143,7 +5386,7 @@
           "signature": "val values: Map<String, Int>",
           "documentation": "",
           "owner": "ToolWindowEvent",
-          "line": 13,
+          "line": 16,
           "id": "native:nimby:val:ToolWindowEvent.values",
           "key": "val:ToolWindowEvent.values",
           "anchor": "api-toolwindowevent-values-30775c4a9f"
@@ -5154,7 +5397,7 @@
           "signature": "val sequence: Long",
           "documentation": "",
           "owner": "ToolWindowEvent",
-          "line": 13,
+          "line": 16,
           "id": "native:nimby:val:ToolWindowEvent.sequence",
           "key": "val:ToolWindowEvent.sequence",
           "anchor": "api-toolwindowevent-sequence-5a43f56289"
@@ -5165,7 +5408,7 @@
           "signature": "val worldId: String",
           "documentation": "",
           "owner": "ToolWindowEvent",
-          "line": 13,
+          "line": 16,
           "id": "native:nimby:val:ToolWindowEvent.worldId",
           "key": "val:ToolWindowEvent.worldId",
           "anchor": "api-toolwindowevent-worldid-79226f9f0d"
@@ -5176,7 +5419,7 @@
           "signature": "val generation: Long",
           "documentation": "",
           "owner": "ToolWindowEvent",
-          "line": 13,
+          "line": 16,
           "id": "native:nimby:val:ToolWindowEvent.generation",
           "key": "val:ToolWindowEvent.generation",
           "anchor": "api-toolwindowevent-generation-09e3288f6a"
@@ -5188,7 +5431,7 @@
           "signature": "data class ToolClock(val utcSeconds: Long, val elapsedMillis: Long)",
           "defaultNotes": [],
           "documentation": "Horloge UTC observée. elapsedMillis est le temps simulé écoulé ; modifier\nla date ne simule pas les journées intermédiaires.",
-          "line": 20,
+          "line": 23,
           "id": "native:nimby:class:ToolClock",
           "key": "class:ToolClock",
           "anchor": "symbol-2"
@@ -5199,7 +5442,7 @@
           "signature": "val utcSeconds: Long",
           "documentation": "",
           "owner": "ToolClock",
-          "line": 20,
+          "line": 23,
           "id": "native:nimby:val:ToolClock.utcSeconds",
           "key": "val:ToolClock.utcSeconds",
           "anchor": "api-toolclock-utcseconds-f06568bcab"
@@ -5210,7 +5453,7 @@
           "signature": "val elapsedMillis: Long",
           "documentation": "",
           "owner": "ToolClock",
-          "line": 20,
+          "line": 23,
           "id": "native:nimby:val:ToolClock.elapsedMillis",
           "key": "val:ToolClock.elapsedMillis",
           "anchor": "api-toolclock-elapsedmillis-ddd724521b"
@@ -5222,7 +5465,7 @@
           "signature": "data class ToolTimeChange(val clock: ToolClock, val interventions: Long)",
           "defaultNotes": [],
           "documentation": "Résultat d'un changement explicite. interventions vaut zéro en mode\ntranslation ; le recalcul optionnel peut déplacer les trains et coûter de\nl'argent comme les interventions natives. Ne pas rejouer après une erreur.",
-          "line": 25,
+          "line": 28,
           "id": "native:nimby:class:ToolTimeChange",
           "key": "class:ToolTimeChange",
           "anchor": "symbol-3"
@@ -5233,7 +5476,7 @@
           "signature": "val clock: ToolClock",
           "documentation": "",
           "owner": "ToolTimeChange",
-          "line": 25,
+          "line": 28,
           "id": "native:nimby:val:ToolTimeChange.clock",
           "key": "val:ToolTimeChange.clock",
           "anchor": "api-tooltimechange-clock-e8759388d2"
@@ -5244,7 +5487,7 @@
           "signature": "val interventions: Long",
           "documentation": "",
           "owner": "ToolTimeChange",
-          "line": 25,
+          "line": 28,
           "id": "native:nimby:val:ToolTimeChange.interventions",
           "key": "val:ToolTimeChange.interventions",
           "anchor": "api-tooltimechange-interventions-95a714f728"
@@ -9030,7 +9273,7 @@
       "imports": [
         "java.nio.file.Path"
       ],
-      "sha256": "d58241246fc8388b4a02d0e20178e77ad7c0605b9c0b1330b7a3213696058e74",
+      "sha256": "a6d28c45260cfbf53697b16e6297bd19bfff7751b01dfc33c9995ca7f30e21a3",
       "symbols": [
         {
           "name": "NimbyClient",
@@ -12548,6 +12791,46 @@
       "import": "nimby.evaluateNetwork",
       "symbolId": "native:nimby:fun:SignallingMod.evaluateNetwork(List<Signal>)",
       "to": "/reference/mod#symbol-41"
+    },
+    {
+      "runtime": "Kotlin/Native",
+      "package": "nimby",
+      "name": "ModOption",
+      "import": "nimby.ModOption",
+      "symbolId": "native:nimby:class:ModOption",
+      "to": "/reference/native/nimby/modoptions#api-modoption-7e91dc2322"
+    },
+    {
+      "runtime": "Kotlin/Native",
+      "package": "nimby",
+      "name": "BooleanOption",
+      "import": "nimby.BooleanOption",
+      "symbolId": "native:nimby:class:BooleanOption",
+      "to": "/reference/native/nimby/modoptions#api-booleanoption-d36ec55a7b"
+    },
+    {
+      "runtime": "Kotlin/Native",
+      "package": "nimby",
+      "name": "IntegerOption",
+      "import": "nimby.IntegerOption",
+      "symbolId": "native:nimby:class:IntegerOption",
+      "to": "/reference/native/nimby/modoptions#api-integeroption-8755f2570c"
+    },
+    {
+      "runtime": "Kotlin/Native",
+      "package": "nimby",
+      "name": "OptionChoice",
+      "import": "nimby.OptionChoice",
+      "symbolId": "native:nimby:class:OptionChoice",
+      "to": "/reference/native/nimby/modoptions#api-optionchoice-744f73f3fb"
+    },
+    {
+      "runtime": "Kotlin/Native",
+      "package": "nimby",
+      "name": "ChoiceOption",
+      "import": "nimby.ChoiceOption",
+      "symbolId": "native:nimby:class:ChoiceOption",
+      "to": "/reference/native/nimby/modoptions#api-choiceoption-6bc5eabc47"
     },
     {
       "runtime": "Kotlin/Native",

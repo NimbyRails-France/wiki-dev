@@ -17,8 +17,8 @@ export const toolAuthoring: Article[] = [
     group: 'Créer un mod',
     title: t('Traduire le nom et la description du mod', 'Translate the mod name and description'),
     description: t(
-      'Présenter le mod et ses signaux dans la langue du jeu avec un catalogue de textes commun.',
-      'Present the mod and its signals in the game language through a shared text catalogue.',
+      'Nommer le mod, ses fenêtres et ses signaux dans la langue du jeu, avec des identifiants stables.',
+      'Name the mod, its windows and its signals in the game language while keeping identifiers stable.',
     ),
     status: 'experimental',
     sections: [
@@ -60,9 +60,48 @@ export const toolAuthoring: Article[] = [
           ),
           note(
             t(
-              'Ne traduisez jamais id, modId, module, textureSet, les identifiants de modèle, de service ou de case. Ces valeurs relient les paquets, réglages et sauvegardes ; elles ne sont pas des textes pour les joueurs.',
-              'Never translate id, modId, module, textureSet, or model, service and checkbox identifiers. These values connect packages, settings and saves; they are not player-facing text.',
+              'Ne traduisez jamais id, modId, module, textureSet, les identifiants de modèle, de service, de fenêtre ou de réglage. Ces valeurs relient les paquets, préférences et sauvegardes ; elles ne sont pas des textes pour les joueurs.',
+              'Never translate id, modId, module, textureSet, or model, service, window and setting identifiers. These values connect packages, preferences and saves; they are not player-facing text.',
             ),
+          ),
+        ],
+      },
+      {
+        id: 'noms-outil',
+        title: t('Distinguer le mod, le groupe et la fenêtre', 'Distinguish the mod, group and window'),
+        blocks: [
+          text(t(
+            'Un outil possède plusieurs textes visibles. Choisissez le nom du produit pour le mod et un titre court décrivant la fonction de chaque fenêtre. Par exemple, le groupe BB Timechange contient une ligne Date et heure ; répéter BB Timechange dans cette ligne n’ajoute aucune information.',
+            'A tool has several visible names. Use the product name for the mod and a short title describing each window’s purpose. For example, the BB Timechange group contains a Date and time row; repeating BB Timechange in that row adds no information.',
+          )),
+          table([t('Texte affiché', 'Displayed text'), t('Déclaration à utiliser', 'Declaration to use')], [
+            [t('Nom dans les listes et fiches de mods du jeu', 'Name in the game’s mod lists and details'), literal('metadata(name = tr("mod.name"), ...)')],
+            [t('Groupe dans Options → NRF Hub', 'Group in Options → NRF Hub'), t('title de toolMod ou signalMod. Avec toolMod(modInfo), modInfo.title reprend name dans mod.json.', 'The title of toolMod or signalMod. With toolMod(modInfo), modInfo.title comes from name in mod.json.')],
+            [t('Titre de fenêtre et ligne dans Raccourcis', 'Window title and row under Shortcuts'), literal('window("clock", tr("window.clock"), ...)')],
+          ]),
+          text(t(
+            'metadata.name ne remplace pas le titre du groupe. Dans cet exemple, le projet fournit name: "BB Timechange" dans mod.json ; le catalogue donne le même nom à la fiche du mod et traduit séparément le titre de sa fenêtre.',
+            'metadata.name does not replace the group title. In this example, the project sets name: "BB Timechange" in mod.json; the catalogue gives the mod details the same name and translates the window title separately.',
+          )),
+          code(
+            'fun createMod() = toolMod(modInfo) {\n    metadata(\n        author = "Your name",\n        name = tr("mod.name"),\n        description = tr("mod.description")\n    )\n    window("clock", tr("window.clock"), shortcut = "F9") { event ->\n        showWindow(event, clock().dateTime().toString(), emptyList())\n    }\n}',
+            t('Dans nimby.mod, avec import nimby.*', 'Inside nimby.mod, with import nimby.*'),
+          ),
+          code(JSON.stringify({ fallback: 'en', languages: {
+            fr: { 'mod.name': 'BB Timechange', 'mod.description': 'Consulter la date et l’heure du jeu.', 'window.clock': 'Date et heure' },
+            en: { 'mod.name': 'BB Timechange', 'mod.description': 'View the game date and time.', 'window.clock': 'Date and time' },
+          } }, null, 2), literal('assets/translations.json'), 'json'),
+          text(t(
+            'Les clés mod.name et window.clock sont libres : vous pouvez les nommer autrement en adaptant les appels tr correspondants. C’est l’emplacement de l’appel Kotlin qui détermine où le texte apparaît. En revanche, "clock" est l’identifiant de fenêtre : gardez-le stable, sans tr, pour conserver le raccourci du joueur.',
+            'The keys mod.name and window.clock are your choice: you can rename them by updating the corresponding tr calls. The position of the Kotlin call determines where the text appears. However, "clock" is the window identifier: keep it stable, without tr, to preserve the player’s shortcut.',
+          )),
+          text(t(
+            'F9 est seulement le raccourci par défaut de cet exemple. Le joueur peut le modifier ou le désactiver dans Options → NRF Hub, rubrique Raccourcis. Une préférence compatible déjà enregistrée est conservée, même si vous changez le titre traduit ou la valeur par défaut dans une mise à jour.',
+            'F9 is only this example’s default shortcut. The player can change or disable it in Options → NRF Hub, under Shortcuts. An existing compatible preference is preserved even if you change the translated title or default value in an update.',
+          )),
+          links(
+            { label: t('Options du mod et raccourcis', 'Mod options and shortcuts'), to: '/mods/options' },
+            { label: t('Créer la fenêtre et son formulaire', 'Create the window and its form'), to: '/mods/horloge' },
           ),
         ],
       },
@@ -207,7 +246,7 @@ export const toolAuthoring: Article[] = [
         title: t('Ouvrir un outil indépendant des signaux', 'Open a tool independently of signals'),
         blocks: [
           code(
-            'package nimby.mod\n\nimport nimby.*\n\nfun createMod() = toolMod(modInfo) {\n    metadata(author = "Your name", description = "Read the game clock.")\n    window("clock", "Clock", shortcut = "Ctrl+Shift+T") { event ->\n        showWindow(event, clock().dateTime().toString(),\n            listOf(ToolButton("refresh", "Refresh")))\n    }\n}',
+            'package nimby.mod\n\nimport nimby.*\n\nfun createMod() = toolMod(modInfo) {\n    metadata(author = "Your name", description = "Read the game clock.")\n    window("clock", "Clock", shortcut = "F9") { event ->\n        showWindow(event, clock().dateTime().toString(),\n            listOf(ToolButton("refresh", "Refresh")))\n    }\n}',
             t('Outil complet en lecture seule', 'Complete read-only tool'),
           ),
           text(
@@ -222,15 +261,15 @@ export const toolAuthoring: Article[] = [
               [
                 literal('window(id, title, shortcut, handler)'),
                 t(
-                  'id identifie la fenêtre ; title est son titre visible et accepte tr ; shortcut vaut F8 par défaut. Jusqu’à 8 fenêtres, identifiants et raccourcis distincts.',
-                  'id identifies the window; title is its visible caption and accepts tr; shortcut defaults to F8. Up to 8 windows, with distinct IDs and shortcuts.',
+                  'id identifie la fenêtre et reste stable ; title nomme la fenêtre et sa ligne de raccourci, et accepte tr ; shortcut vaut F8 s’il est omis. Jusqu’à 8 fenêtres, identifiants et raccourcis non vides distincts. Le joueur peut modifier chaque raccourci dans Options → NRF Hub, rubrique Raccourcis.',
+                  'id identifies the window and stays stable; title names the window and its shortcut row, and accepts tr; shortcut defaults to F8 when omitted. Up to 8 windows, with distinct IDs and nonempty shortcuts. The player can change each shortcut in Options → NRF Hub, under Shortcuts.',
                 ),
               ],
               [
-                literal('Ctrl+Shift+A … Ctrl+Shift+Z · F1 … F12'),
+                literal('Ctrl / Alt / Shift · A–Z · 0–9 · F1–F24'),
                 t(
-                  'Raccourcis Windows disponibles. Le SDK ouvre l’outil seulement quand le jeu est au premier plan. Un conflit de raccourci est signalé dans le journal.',
-                  'Supported Windows shortcuts. The SDK opens the tool only while the game is in the foreground. Shortcut conflicts are reported in the log.',
+                  'Modificateurs facultatifs dans cet ordre, puis une touche ; les touches nommées comme Enter et PageUp sont aussi disponibles. Vide désactive le raccourci. Le SDK vérifie les conflits avec le jeu et les autres mods, et ouvre l’outil seulement dans un contexte de jeu actif hors saisie de texte.',
+                  'Optional modifiers in this order, followed by one key; named keys such as Enter and PageUp are also available. Empty disables the shortcut. The SDK checks conflicts with the game and other mods and opens the tool only in an active game context outside text entry.',
                 ),
               ],
               [
@@ -254,6 +293,14 @@ export const toolAuthoring: Article[] = [
               'Les champs numériques acceptent la saisie, l’effacement et le collage. Au clic, toutes les valeurs doivent respecter leurs bornes ; un événement unique transmet le formulaire complet. Il n’y a pas d’événement par touche. Le callback doit rendre la main rapidement ; une perte de partie masque les fenêtres et invalide les événements.',
               'Integer fields support typing, deletion and pasting. On a button click, every value must satisfy its bounds; one event carries the complete form. There is no event per keystroke. The callback should return promptly; losing the game session hides windows and invalidates events.',
             ),
+          ),
+          text(t(
+            'L’exemple propose F9 à la première utilisation. La valeur déclarée dans le code ne remplace pas une préférence compatible déjà choisie par le joueur, y compris un raccourci désactivé. Ne changez pas l’identifiant "clock" pour renommer la fenêtre ou proposer un autre raccourci par défaut.',
+            'The example proposes F9 on first use. The value declared in code does not replace an existing compatible player preference, including a disabled shortcut. Do not change the "clock" identifier to rename the window or propose another default shortcut.',
+          )),
+          links(
+            { label: t('Options du mod et raccourcis', 'Mod options and shortcuts'), to: '/mods/options' },
+            { label: t('Nommer le mod et sa fenêtre', 'Name the mod and its window'), to: '/mods/metadonnees-traduites#noms-outil' },
           ),
           text(
             t(

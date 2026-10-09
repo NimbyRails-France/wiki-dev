@@ -12,6 +12,11 @@ New-Item -ItemType Directory -Path $output -Force | Out-Null
 $compiler = Join-Path $KotlinHome 'bin/konanc.bat'
 # Same identity the Gradle plugin supplies to a consumer of the guide.
 'package nimby.mod; internal val modInfo = nimby.ModInfo("mon-premier-mod", "Mon premier mod")' | Set-Content -LiteralPath "$output/ModInfo.kt" -Encoding UTF8
+# Standalone Entry.kt examples deliberately share nimby.mod.createMod(). Compile
+# each one in its own consumer module instead of changing the code readers copy.
+$standalone = @{
+    'ModOptions.kt' = @{ Name = 'options'; Entry = 'wiki.optiontests.main'; Test = 'mod-options-example.kt'; Id = 'clock-history'; Title = 'Clock tools' }
+}
 if ($Runtime -ne 'jvm') {
     $sources = @(Get-ChildItem -LiteralPath "$SdkRoot/kotlin/src" -Recurse -Filter *.kt | ForEach-Object FullName)
     & $compiler -target mingw_x64 -produce library -o "$output/nimby-mod-api" @sources
@@ -26,7 +31,13 @@ foreach ($locale in $Locales) {
         $sourceDirectory = if($locale -eq 'fr'){"$wikiRoot/app/content/snippets"}else{"$output/en"}
         # Select the current source inventory, so removed examples cannot survive in
         # the translated output and accidentally participate in a later validation.
-        $snippets = @(Get-ChildItem -LiteralPath "$wikiRoot/app/content/snippets" -Filter *.kt | ForEach-Object { Join-Path $sourceDirectory $_.Name })
+        $inventory = @(Get-ChildItem -LiteralPath "$wikiRoot/app/content/snippets" -Filter *.kt | Select-Object -ExpandProperty Name)
+        foreach ($name in $inventory) {
+            if (-not (Test-Path -LiteralPath (Join-Path $sourceDirectory $name) -PathType Leaf)) {
+                throw "Missing $locale example: $name"
+            }
+        }
+        $snippets = @($inventory | Where-Object { -not $standalone.ContainsKey($_) } | ForEach-Object { Join-Path $sourceDirectory $_ })
         & $compiler -target mingw_x64 -library "$output/nimby-mod-api.klib" -entry wiki.tests.main -o "$output/wiki-example-$locale" @snippets "$wikiRoot/tests/mod-example.kt" "$output/ModInfo.kt"
         if ($LASTEXITCODE) { throw "Wiki $locale example compilation failed" }
         & "$output/wiki-example-$locale.exe"
@@ -35,6 +46,19 @@ foreach ($locale in $Locales) {
         if ($LASTEXITCODE) { throw "Wiki $locale tool example compilation failed" }
         & "$output/wiki-tool-example-$locale.exe"
         if ($LASTEXITCODE) { throw "Wiki $locale tool example checks failed" }
+        foreach ($name in $standalone.Keys) {
+            if ($inventory -notcontains $name) { throw "Standalone example is missing from the source inventory: $name" }
+            $example = $standalone[$name]
+            $identity = Join-Path $output "ModInfo-$($example.Name).kt"
+            $idLiteral = ConvertTo-Json -InputObject $example.Id -Compress
+            $titleLiteral = ConvertTo-Json -InputObject $example.Title -Compress
+            "package nimby.mod; internal val modInfo = nimby.ModInfo($idLiteral, $titleLiteral)" | Set-Content -LiteralPath $identity -Encoding UTF8
+            $binary = Join-Path $output "wiki-$($example.Name)-example-$locale"
+            & $compiler -target mingw_x64 -library "$output/nimby-mod-api.klib" -entry $example.Entry -o $binary (Join-Path $sourceDirectory $name) (Join-Path "$wikiRoot/tests" $example.Test) $identity
+            if ($LASTEXITCODE) { throw "Wiki $locale $($example.Name) example compilation failed" }
+            & "$binary.exe"
+            if ($LASTEXITCODE) { throw "Wiki $locale $($example.Name) example checks failed" }
+        }
     }
 
     # JVM snippets use the actual SDK project dependency, with its public API

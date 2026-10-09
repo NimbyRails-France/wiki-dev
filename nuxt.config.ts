@@ -22,7 +22,7 @@ export default defineNuxtConfig({
   app: {
     head: {
       htmlAttrs: { lang: 'fr' },
-      title: 'Wiki — NimbyRails France',
+      title: 'Wiki développeurs — NimbyRails France',
       meta: [{ name: 'theme-color', content: '#111216' }],
       script: [{ src: '/theme.js' }],
       link: [{ rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' }],

@@ -64,7 +64,7 @@ export function useWikiHead() {
   useHead(() => {
     const location = resolveWikiRoute(route.path)
     const target = (locale: Locale) =>
-      'https://wiki.nimbyrails-france.fr' +
+      'https://wiki-dev.nimbyrails-france.fr' +
       editionPath('/' + location.slug, locale, location.edition || currentEdition)
     return {
       htmlAttrs: { lang: wikiRoute(route.path).locale },

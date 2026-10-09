@@ -1,9 +1,23 @@
-# Wiki NimbyRails France
+# Wiki développeurs NimbyRails France
 
 Manuel des développeurs de mods et d’outils, en français et en anglais,
-destiné à **https://wiki.nimbyrails-france.fr**. Il couvre les API publiques
+destiné à **https://wiki-dev.nimbyrails-france.fr**. Il couvre les API publiques
 Kotlin/Native et Kotlin/JVM du SDK, les projets de mods, leurs essais et leurs
-paquets. Dépôt : https://github.com/NimbyRails-France/wiki.
+paquets. Dépôt : https://github.com/NimbyRails-France/wiki-dev.
+
+Les deux sites ont des publics distincts :
+
+| Adresse | Public et contenu | Projet |
+| --- | --- | --- |
+| `wiki-dev.nimbyrails-france.fr` | Développeurs de mods et d’outils : SDK, guides, exemples et référence | Ce dépôt Nuxt statique, en français et en anglais |
+| `wiki.nimbyrails-france.fr` | Joueurs et utilisateurs des mods : documentation des mods et de leur utilisation | Dépôt `wiki`, avec Wiki.js et PostgreSQL |
+
+Le dépôt et le dossier de ce manuel portent le nom `wiki-dev`. Wiki.js possède
+son propre dépôt, sa base de données et sa procédure de déploiement.
+Les routes et les éditions du manuel développeurs restent identiques sur le
+nouveau domaine. Les textes archivés de l’édition 0.8 gardent leurs références
+historiques ; les liens canoniques et les liens de langue de toutes les éditions
+utilisent le domaine développeurs actuel.
 
 Les guides se consultent sur le site. Ce README concerne la contribution et
 l’exploitation du wiki ; ses procédures de serveur ne font pas partie du manuel
@@ -14,6 +28,11 @@ The public manual is equally available in French and English. Examples keep
 the same identifiers, file names and API contracts in both languages. This
 README documents the website workflow; implementation and deployment details
 do not belong in the public mod-author guides.
+
+This `wiki-dev` repository contains the developer documentation for
+`wiki-dev.nimbyrails-france.fr`. The separate `wiki.nimbyrails-france.fr` address
+hosts the separate `wiki` project, using Wiki.js to document mods and their use
+by players. Pushing this repository does not deploy either website.
 
 ## Développement local
 
@@ -35,6 +54,7 @@ Ouvrir l'adresse locale affichée. Aucun service distant n'est nécessaire.
 | `gradle-project-guide.ts`                                                  | Organisation du projet et contrat public du plugin, du manifeste et des tâches    |
 | `capabilities.ts`                                                          | Recherche par besoin et extraits commentés d’AB Signalisation lumineuse           |
 | `signal-guides.ts`, `authoring.ts`, `tool-authoring.ts`, `translations.ts` | Modèles, réglages, conduite, ressources, outils et localisation                   |
+| `mod-options-guide.ts`                                                    | Préférences globales, raccourcis des fenêtres et choix des libellés FR/EN          |
 | `observation-guides.ts`, `train-guides.ts`                                 | Connexion JVM, observations, trains, lignes, horaires et matériel                 |
 | `performance-guides.ts`, `performance-code.ts`                             | Travail borné, lectures ciblées, isolation et exemples associés                   |
 | `reference.ts`, `api-comments.ts` et modules de contrats                   | Présentation des types et explications de leurs membres                           |
@@ -88,7 +108,8 @@ référence reconstruite depuis le tag SDK `v0.8.0-alpha.8`, commit
 les 22 fichiers publics et leurs hashes, ainsi que les 673 déclarations. Les
 anciennes adresses et ancres sont conservées. Le bandeau distingue les sources
 du SDK de la base documentaire historique. L’édition actuelle 0.9 suit
-**0.9.0-alpha.1 en développement** ; cela n’annonce aucune distribution.
+**0.9.0-alpha.2**. La disponibilité des paquets se vérifie dans le Hub et dans
+les releases du SDK.
 
 À la demande explicite du propriétaire, la page historique
 `maintenance/distribution` a été retirée de l’édition 0.8 dans les deux langues.
@@ -254,15 +275,22 @@ internes ; les instructions de contribution et de production du site restent ici
 Publier uniquement le contenu généré de `.output/public`. Caddy peut le servir
 directement : ni serveur Node, ni base de données ne sont nécessaires en production.
 `deploy/compose.yaml` et `deploy/Caddyfile` définissent un serveur statique interne,
-sur le réseau Docker `proxy`. `deploy/gateway.caddy` ajoute uniquement le domaine
-du wiki au Caddy public, qui gère le certificat HTTPS automatiquement.
+sur le réseau Docker `proxy`. `deploy/gateway.caddy` déclare uniquement
+`wiki-dev.nimbyrails-france.fr` au Caddy public, qui gère le certificat HTTPS
+automatiquement lors d’un déploiement. Ce modèle ne configure pas Wiki.js.
+
+Le projet Docker et l’alias réseau portent le nom `nrf-wiki-dev`, dans
+`/opt/docker/nimbyrailsfrance-wiki-dev`. Le projet `nrf-wikijs` et l’ancien dossier
+`/opt/docker/nimbyrailsfrance-wiki` appartiennent désormais au projet Wiki.js.
+La séparation initiale conserve une copie de l’ancien déploiement pour retour
+arrière. Les déploiements suivants ne modifient que le manuel développeurs.
 
 Après validation locale, transférer une archive tar.gz de `.output/public` avec
 ces trois fichiers et `deploy/install.sh` dans un dossier de staging. Exécuter
 `sudo bash install.sh <staging> <identifiant-release> <sha256-archive>`.
 Le script vérifie l’archive, conserve la version précédente, bascule le lien
 `storage/current`, valide puis recharge Caddy sans arrêter les autres sites.
-Les fichiers se trouvent sous `/opt/docker/nimbyrailsfrance-wiki`.
+Les fichiers se trouvent sous `/opt/docker/nimbyrailsfrance-wiki-dev`.
 Pour revenir en arrière, faire pointer `storage/current` vers la cible de
 `storage/previous` avec un remplacement atomique du lien. Aucun rebuild nécessaire.
 Les journaux HTTP sont accessibles avec `docker compose logs wiki` dans ce dossier,

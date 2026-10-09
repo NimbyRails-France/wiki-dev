@@ -44,7 +44,7 @@ for (const [file, html] of documents) {
       .replace(/(?:\/)?index\.html$/, '')
   const location = resolveWikiRoute(route)
   assert(location.exists, `Generated route absent from edition registry: ${route}`)
-  const canonical = 'https://wiki.nimbyrails-france.fr' + location.canonical
+  const canonical = 'https://wiki-dev.nimbyrails-france.fr' + location.canonical
   assert(
     html.includes(`rel="canonical" href="${canonical}"`),
     `Incorrect canonical: ${route} → ${canonical}`,

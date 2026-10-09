@@ -103,7 +103,7 @@ useSeoMeta({
           <ArticleBlocks :blocks="section.blocks" />
         </section>
         <div class="article-meta">
-          <a href="https://github.com/NimbyRails-France/wiki/issues/new">{{
+          <a href="https://github.com/NimbyRails-France/wiki-dev/issues/new">{{
             t('Signaler une erreur dans cette page ↗')
           }}</a
           ><span>Windows · SDK {{ edition.sdkVersion }}</span>

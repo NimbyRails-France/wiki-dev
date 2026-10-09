@@ -4,6 +4,7 @@ import ui from './ui-en.json'
 import codeText from './code-en.json'
 import { authoringEnglish } from './authoring'
 import { toolAuthoringEnglish } from './tool-authoring'
+import { modOptionsEnglish } from './mod-options-guide'
 import { referenceEnglish } from './reference'
 import { trainGuidesEnglish, trainCodeEnglish } from './train-guides'
 import { capabilitiesEnglish } from './capabilities'
@@ -23,6 +24,7 @@ const english: Record<string, string> = {
   ...ui,
   ...authoringEnglish,
   ...toolAuthoringEnglish,
+  ...modOptionsEnglish,
   ...referenceEnglish,
   ...trainGuidesEnglish,
   ...capabilitiesEnglish,

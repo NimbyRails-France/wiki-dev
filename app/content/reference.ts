@@ -17,6 +17,7 @@ function documentation(symbol: { id: string; documentation: string }): string {
 }
 
 const descriptions: Record<string, string> = {
+  ModOptions: t('Préférences globales du joueur et raccourcis configurables dans l’onglet NRF Hub des options du jeu.', 'Global player preferences and shortcuts configurable from the NRF Hub tab of the game options.'),
   Nimby: 'Point d’entrée du client : connexion et fonctions regroupées par usage dans Game.',
   Mod: 'Observations, réglages, décisions et contrats de signalisation et de conduite.',
   SignalMod:

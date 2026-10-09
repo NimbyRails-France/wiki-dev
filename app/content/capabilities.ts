@@ -68,6 +68,22 @@ export const capabilities: Article[] = [
                 ),
               ],
               [
+                t('Préférences communes aux parties du joueur', 'Player preferences shared across games'),
+                literal('options · BooleanOption · IntegerOption · ChoiceOption · value'),
+                t(
+                  'Identifiants stables, valeurs par défaut, bornes et lecture dans les callbacks.',
+                  'Stable IDs, defaults, bounds and reading values in callbacks.',
+                ),
+              ],
+              [
+                t('Raccourci personnalisable pour une fenêtre', 'Customizable window shortcut'),
+                literal('window · ToolWindow.title · ToolWindow.shortcut'),
+                t(
+                  'Titre de l’action et raccourci initial ; le SDK gère l’affectation du joueur et les conflits.',
+                  'Action title and initial shortcut; the SDK manages the player’s binding and conflicts.',
+                ),
+              ],
+              [
                 t('Apparence fixe ou animée', 'Static or animated appearance'),
                 literal('construction · images · appearance · steady · blink'),
                 t(
@@ -149,6 +165,7 @@ export const capabilities: Article[] = [
           links(
             { label: t('Modèles et réseau', 'Models and network'), to: '/mods/signaux' },
             { label: t('Réglages', 'Settings'), to: '/mods/reglages' },
+            { label: t('Options du mod et raccourcis', 'Mod options and shortcuts'), to: '/mods/options' },
             { label: t('Apparence', 'Appearance'), to: '/mods/images' },
             { label: t('Conduite', 'Driving'), to: '/mods/conduite' },
             { label: t('Interface des outils', 'Tool interface'), to: '/mods/interface' },

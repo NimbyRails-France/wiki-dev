@@ -1,4 +1,4 @@
-name: nrf-wiki
+name: nrf-wiki-dev
 services:
   wiki:
     image: caddy@sha256:df7f1c2fb114453b951de51a98efc010db1655a92c2e86be6706714e2417a78d
@@ -13,7 +13,7 @@ services:
     tmpfs: [/config, /data, /tmp]
     networks:
       proxy:
-        aliases: [nrf-wiki]
+        aliases: [nrf-wiki-dev]
     healthcheck:
       test: [CMD, wget, -q, -O, /dev/null, 'http://127.0.0.1:8080/healthz']
       interval: 15s

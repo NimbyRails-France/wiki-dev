@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deploy only prebuilt static files. No compiler or test runner on production.
+# Deploy only prebuilt developer-wiki files. No compiler or test runner on production.
 # Usage: sudo bash install.sh <upload-directory> <release-id> <archive-sha256>
 set -euo pipefail
 upload=$(realpath "$1")
@@ -7,7 +7,7 @@ release=$2
 expected=$3
 [[ "$release" =~ ^[a-zA-Z0-9-]+$ && "$expected" =~ ^[a-f0-9]{64}$ ]]
 printf '%s  %s\n' "$expected" "$upload/wiki.tar.gz" | sha256sum -c -
-base=/opt/docker/nimbyrailsfrance-wiki
+base=/opt/docker/nimbyrailsfrance-wiki-dev
 gateway=/opt/docker/infrastructure/caddy/Caddyfile
 mkdir -p "$base/storage/releases"
 exec 9>"$base/.deploy.lock"
@@ -37,15 +37,17 @@ if ! docker compose up -d --no-build --pull never; then
   exit 1
 fi
 
-# Append the single site block, preserving every existing domain. Validate before
+# Append the developer site block, preserving every existing domain. Wiki.js and
+# reassignment of the old public wiki hostname are outside this installer.
+# Validate before
 # replacing the bound file, whose inode must remain stable for Docker's mount.
-if ! grep -Fq 'wiki.nimbyrails-france.fr' "$gateway"; then
+if ! grep -Fq 'wiki-dev.nimbyrails-france.fr' "$gateway"; then
   before=$(sha256sum "$gateway" | cut -d ' ' -f 1)
-  backup="$gateway.before-wiki-$release"
+  backup="$gateway.before-wiki-dev-$release"
   cp -p "$gateway" "$backup"
   { cat "$backup"; printf '\n'; cat "$upload/gateway.caddy"; } > "$base/gateway.candidate"
-  docker cp "$base/gateway.candidate" caddy:/tmp/nrf-wiki-candidate.caddy
-  docker exec caddy caddy validate --config /tmp/nrf-wiki-candidate.caddy --adapter caddyfile
+  docker cp "$base/gateway.candidate" caddy:/tmp/nrf-wiki-dev-candidate.caddy
+  docker exec caddy caddy validate --config /tmp/nrf-wiki-dev-candidate.caddy --adapter caddyfile
   [[ "$(sha256sum "$gateway" | cut -d ' ' -f 1)" == "$before" ]]
   cat "$base/gateway.candidate" > "$gateway"
   if ! docker exec caddy caddy reload --config /etc/caddy/Caddyfile --adapter caddyfile; then

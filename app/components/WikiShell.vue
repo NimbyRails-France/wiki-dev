@@ -186,7 +186,7 @@ const results = computed(() => {
         >
           {{ locale === 'en' ? 'Français' : 'English' }}
         </NuxtLink>
-        <a href="https://github.com/NimbyRails-France/wiki" class="github-link"
+        <a href="https://github.com/NimbyRails-France/wiki-dev" class="github-link"
           >GitHub <span aria-hidden="true">↗</span></a
         >
         <div class="theme-switch" role="group" :aria-label="t('Apparence')">
@@ -249,7 +249,7 @@ const results = computed(() => {
           <a
             v-if="snapshot.provenance.baseWikiCommit"
             :href="
-              'https://github.com/NimbyRails-France/wiki/tree/' + snapshot.provenance.baseWikiCommit
+              'https://github.com/NimbyRails-France/wiki-dev/tree/' + snapshot.provenance.baseWikiCommit
             "
             >{{ t('Base documentaire historique') }} ·
             {{ snapshot.provenance.baseWikiCommit.slice(0, 8) }} ↗</a
@@ -257,7 +257,7 @@ const results = computed(() => {
           <a
             v-if="snapshot.provenance.wikiCommit"
             :href="
-              'https://github.com/NimbyRails-France/wiki/tree/' + snapshot.provenance.wikiCommit
+              'https://github.com/NimbyRails-France/wiki-dev/tree/' + snapshot.provenance.wikiCommit
             "
             >{{ t('Source historique') }} · {{ snapshot.provenance.wikiCommit.slice(0, 8) }} ↗</a
           >

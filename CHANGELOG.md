@@ -2,6 +2,20 @@
 
 ## [Unreleased]
 
+## Édition SDK 0.9 — 2026-10-09
+
+- Ajoute un guide complet en français et en anglais sur les préférences des mods et les raccourcis personnalisables, avec un exemple d’outil.
+- Précise comment nommer et traduire les mods, leurs fenêtres et leurs réglages, et conserver les choix du joueur lors des mises à jour.
+- Corrige un affichage qui pouvait répéter le contenu ou la structure d’une page lors de l’ouverture de certaines adresses.
+- Sépare le wiki développeurs à l’adresse **wiki-dev.nimbyrails-france.fr**, avec un dépôt dédié `wiki-dev`. Le wiki destiné aux joueurs utilise désormais Wiki.js sur **wiki.nimbyrails-france.fr**.
+
+English:
+
+- Adds a complete French and English guide to mod preferences and customizable shortcuts, with a tool example.
+- Clarifies how to name and translate mods, windows and settings, and preserve player choices across updates.
+- Fixes an issue that could duplicate page content or structure when opening certain addresses.
+- Moves the developer wiki to **wiki-dev.nimbyrails-france.fr**, in the dedicated `wiki-dev` repository. Player documentation now uses Wiki.js at **wiki.nimbyrails-france.fr**.
+
 ### Éditions SDK 0.9 et 0.8 — 2026-10-08
 
 - Propose un manuel entièrement repensé en français et en anglais, pour accompagner la création de mods de signaux et d'outils, des premiers pas aux usages avancés.

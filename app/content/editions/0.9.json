@@ -1,10 +1,10 @@
 {
   "schema": 1,
   "id": "0.9",
-  "sdkVersion": "0.9.0-alpha.1",
+  "sdkVersion": "0.9.0-alpha.2",
   "provenance": {
     "source": "authoring modules in this repository",
-    "catalogueSha256": "f4daf9b7a4c6db0c97e8dc8f3a41eaf4b4c1777d124ac659322f69c048ab97e3",
+    "catalogueSha256": "3d6ba85b18737898a8a8fac874314bf0c3b3d2912d41ab0535d8d5103a387b23",
     "files": [
       {
         "path": "kotlin/src/nimby/AutomaticDriving.kt",
@@ -23,12 +23,16 @@
         "sha256": "62a8d8ac52b930e03a520c5d99b150d3414b33a84ba8b47111a7c2ccc681ac2e"
       },
       {
+        "path": "kotlin/src/nimby/ModOptions.kt",
+        "sha256": "f618034533a598692f5bd3991594f7c1f4fe631e697791085b676e01ae98cd6d"
+      },
+      {
         "path": "kotlin/src/nimby/ModResources.kt",
         "sha256": "8e6dc5f0bd745002551ec0633ba389109ba1933cbe5f87592d93b0980552e276"
       },
       {
         "path": "kotlin/src/nimby/ModServices.kt",
-        "sha256": "ab394101cb83bf3455fa0f5cd36dfe71b490b675827616748befa1f8a82f0b42"
+        "sha256": "feadf3bd70f0ac076a98e2491e828cecf41de31ef1fcc7dd8a91d1b21fdf4bb9"
       },
       {
         "path": "kotlin/src/nimby/NumberSetting.kt",
@@ -40,11 +44,11 @@
       },
       {
         "path": "kotlin/src/nimby/SignalMod.kt",
-        "sha256": "3279ec0fd7ef34a443ed4b9e6bb8b55f947655f2dd355037ecb4f534dc2f5cbf"
+        "sha256": "f706422f510b298f66482e81790c747f90b499125e3492d08335ae2c2b221421"
       },
       {
         "path": "kotlin/src/nimby/SignalModel.kt",
-        "sha256": "4face6af6171b7c1bc62e91dd9a0bb2a840d8a594959115cf04482185cf118fa"
+        "sha256": "e7cfde58a0862e120518b25303b5e0cb55c978b04af80c21e697809b0b163800"
       },
       {
         "path": "kotlin/src/nimby/SignalTypes.kt",
@@ -64,7 +68,7 @@
       },
       {
         "path": "kotlin/src/nimby/ToolWindow.kt",
-        "sha256": "de1ed1477456916ffd2272913870e48244af4649fb9d0e25999b70bcd45c09e6"
+        "sha256": "be9628ccd2457a9043303c940438b7821e5a324674ca4ea9d84f7f108eccc8dc"
       },
       {
         "path": "kotlin/src/nimby/TrainObservation.kt",
@@ -100,7 +104,7 @@
       },
       {
         "path": "kotlin-client/src/main/kotlin/fr/nimby/sdk/NimbyClient.kt",
-        "sha256": "d58241246fc8388b4a02d0e20178e77ad7c0605b9c0b1330b7a3213696058e74"
+        "sha256": "a6d28c45260cfbf53697b16e6297bd19bfff7751b01dfc33c9995ca7f30e21a3"
       },
       {
         "path": "kotlin-client/src/main/kotlin/fr/nimby/sdk/Observation.kt",
@@ -961,6 +965,16 @@
                       "Identifiants stables, défauts, bornes, ordre et visibilité."
                     ],
                     [
+                      "Préférences communes aux parties du joueur",
+                      "options · BooleanOption · IntegerOption · ChoiceOption · value",
+                      "Identifiants stables, valeurs par défaut, bornes et lecture dans les callbacks."
+                    ],
+                    [
+                      "Raccourci personnalisable pour une fenêtre",
+                      "window · ToolWindow.title · ToolWindow.shortcut",
+                      "Titre de l’action et raccourci initial ; le SDK gère l’affectation du joueur et les conflits."
+                    ],
+                    [
                       "Apparence fixe ou animée",
                       "construction · images · appearance · steady · blink",
                       "Ressources, ordre du catalogue et cadence en temps simulé."
@@ -1022,6 +1036,10 @@
                     {
                       "label": "Réglages",
                       "to": "/mods/reglages"
+                    },
+                    {
+                      "label": "Options du mod et raccourcis",
+                      "to": "/mods/options"
                     },
                     {
                       "label": "Apparence",
@@ -2713,7 +2731,7 @@
           "slug": "mods/metadonnees-traduites",
           "group": "Créer un mod",
           "title": "Traduire le nom et la description du mod",
-          "description": "Présenter le mod et ses signaux dans la langue du jeu avec un catalogue de textes commun.",
+          "description": "Nommer le mod, ses fenêtres et ses signaux dans la langue du jeu, avec des identifiants stables.",
           "status": "experimental",
           "sections": [
             {
@@ -2742,8 +2760,76 @@
                 },
                 {
                   "kind": "note",
-                  "text": "Ne traduisez jamais id, modId, module, textureSet, les identifiants de modèle, de service ou de case. Ces valeurs relient les paquets, réglages et sauvegardes ; elles ne sont pas des textes pour les joueurs.",
+                  "text": "Ne traduisez jamais id, modId, module, textureSet, les identifiants de modèle, de service, de fenêtre ou de réglage. Ces valeurs relient les paquets, préférences et sauvegardes ; elles ne sont pas des textes pour les joueurs.",
                   "title": "À retenir"
+                }
+              ]
+            },
+            {
+              "id": "noms-outil",
+              "title": "Distinguer le mod, le groupe et la fenêtre",
+              "blocks": [
+                {
+                  "kind": "text",
+                  "text": "Un outil possède plusieurs textes visibles. Choisissez le nom du produit pour le mod et un titre court décrivant la fonction de chaque fenêtre. Par exemple, le groupe BB Timechange contient une ligne Date et heure ; répéter BB Timechange dans cette ligne n’ajoute aucune information."
+                },
+                {
+                  "kind": "table",
+                  "columns": [
+                    "Texte affiché",
+                    "Déclaration à utiliser"
+                  ],
+                  "rows": [
+                    [
+                      "Nom dans les listes et fiches de mods du jeu",
+                      "metadata(name = tr(\"mod.name\"), ...)"
+                    ],
+                    [
+                      "Groupe dans Options → NRF Hub",
+                      "title de toolMod ou signalMod. Avec toolMod(modInfo), modInfo.title reprend name dans mod.json."
+                    ],
+                    [
+                      "Titre de fenêtre et ligne dans Raccourcis",
+                      "window(\"clock\", tr(\"window.clock\"), ...)"
+                    ]
+                  ]
+                },
+                {
+                  "kind": "text",
+                  "text": "metadata.name ne remplace pas le titre du groupe. Dans cet exemple, le projet fournit name: \"BB Timechange\" dans mod.json ; le catalogue donne le même nom à la fiche du mod et traduit séparément le titre de sa fenêtre."
+                },
+                {
+                  "kind": "code",
+                  "code": "fun createMod() = toolMod(modInfo) {\n    metadata(\n        author = \"Your name\",\n        name = tr(\"mod.name\"),\n        description = tr(\"mod.description\")\n    )\n    window(\"clock\", tr(\"window.clock\"), shortcut = \"F9\") { event ->\n        showWindow(event, clock().dateTime().toString(), emptyList())\n    }\n}",
+                  "title": "Dans nimby.mod, avec import nimby.*",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "code",
+                  "code": "{\n  \"fallback\": \"en\",\n  \"languages\": {\n    \"fr\": {\n      \"mod.name\": \"BB Timechange\",\n      \"mod.description\": \"Consulter la date et l’heure du jeu.\",\n      \"window.clock\": \"Date et heure\"\n    },\n    \"en\": {\n      \"mod.name\": \"BB Timechange\",\n      \"mod.description\": \"View the game date and time.\",\n      \"window.clock\": \"Date and time\"\n    }\n  }\n}",
+                  "title": "assets/translations.json",
+                  "language": "json"
+                },
+                {
+                  "kind": "text",
+                  "text": "Les clés mod.name et window.clock sont libres : vous pouvez les nommer autrement en adaptant les appels tr correspondants. C’est l’emplacement de l’appel Kotlin qui détermine où le texte apparaît. En revanche, \"clock\" est l’identifiant de fenêtre : gardez-le stable, sans tr, pour conserver le raccourci du joueur."
+                },
+                {
+                  "kind": "text",
+                  "text": "F9 est seulement le raccourci par défaut de cet exemple. Le joueur peut le modifier ou le désactiver dans Options → NRF Hub, rubrique Raccourcis. Une préférence compatible déjà enregistrée est conservée, même si vous changez le titre traduit ou la valeur par défaut dans une mise à jour."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Options du mod et raccourcis",
+                      "to": "/mods/options"
+                    },
+                    {
+                      "label": "Créer la fenêtre et son formulaire",
+                      "to": "/mods/horloge"
+                    }
+                  ]
                 }
               ]
             },
@@ -2854,7 +2940,7 @@
               "blocks": [
                 {
                   "kind": "code",
-                  "code": "package nimby.mod\n\nimport nimby.*\n\nfun createMod() = toolMod(modInfo) {\n    metadata(author = \"Your name\", description = \"Read the game clock.\")\n    window(\"clock\", \"Clock\", shortcut = \"Ctrl+Shift+T\") { event ->\n        showWindow(event, clock().dateTime().toString(),\n            listOf(ToolButton(\"refresh\", \"Refresh\")))\n    }\n}",
+                  "code": "package nimby.mod\n\nimport nimby.*\n\nfun createMod() = toolMod(modInfo) {\n    metadata(author = \"Your name\", description = \"Read the game clock.\")\n    window(\"clock\", \"Clock\", shortcut = \"F9\") { event ->\n        showWindow(event, clock().dateTime().toString(),\n            listOf(ToolButton(\"refresh\", \"Refresh\")))\n    }\n}",
                   "title": "Outil complet en lecture seule",
                   "language": "kotlin"
                 },
@@ -2871,11 +2957,11 @@
                   "rows": [
                     [
                       "window(id, title, shortcut, handler)",
-                      "id identifie la fenêtre ; title est son titre visible et accepte tr ; shortcut vaut F8 par défaut. Jusqu’à 8 fenêtres, identifiants et raccourcis distincts."
+                      "id identifie la fenêtre et reste stable ; title nomme la fenêtre et sa ligne de raccourci, et accepte tr ; shortcut vaut F8 s’il est omis. Jusqu’à 8 fenêtres, identifiants et raccourcis non vides distincts. Le joueur peut modifier chaque raccourci dans Options → NRF Hub, rubrique Raccourcis."
                     ],
                     [
-                      "Ctrl+Shift+A … Ctrl+Shift+Z · F1 … F12",
-                      "Raccourcis Windows disponibles. Le SDK ouvre l’outil seulement quand le jeu est au premier plan. Un conflit de raccourci est signalé dans le journal."
+                      "Ctrl / Alt / Shift · A–Z · 0–9 · F1–F24",
+                      "Modificateurs facultatifs dans cet ordre, puis une touche ; les touches nommées comme Enter et PageUp sont aussi disponibles. Vide désactive le raccourci. Le SDK vérifie les conflits avec le jeu et les autres mods, et ouvre l’outil seulement dans un contexte de jeu actif hors saisie de texte."
                     ],
                     [
                       "ToolWindowEvent",
@@ -2890,6 +2976,23 @@
                 {
                   "kind": "text",
                   "text": "Les champs numériques acceptent la saisie, l’effacement et le collage. Au clic, toutes les valeurs doivent respecter leurs bornes ; un événement unique transmet le formulaire complet. Il n’y a pas d’événement par touche. Le callback doit rendre la main rapidement ; une perte de partie masque les fenêtres et invalide les événements."
+                },
+                {
+                  "kind": "text",
+                  "text": "L’exemple propose F9 à la première utilisation. La valeur déclarée dans le code ne remplace pas une préférence compatible déjà choisie par le joueur, y compris un raccourci désactivé. Ne changez pas l’identifiant \"clock\" pour renommer la fenêtre ou proposer un autre raccourci par défaut."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Options du mod et raccourcis",
+                      "to": "/mods/options"
+                    },
+                    {
+                      "label": "Nommer le mod et sa fenêtre",
+                      "to": "/mods/metadonnees-traduites#noms-outil"
+                    }
+                  ]
                 },
                 {
                   "kind": "text",
@@ -3195,6 +3298,254 @@
                     {
                       "label": "Changer le calendrier",
                       "to": "/mods/horloge"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "mods/options",
+          "group": "Créer un mod",
+          "title": "Options du mod et raccourcis",
+          "description": "Déclarer les préférences du joueur, lire leurs valeurs typées et laisser le SDK gérer les raccourcis des fenêtres.",
+          "status": "experimental",
+          "sections": [
+            {
+              "id": "declarer",
+              "title": "Ajouter des options à un mod",
+              "blocks": [
+                {
+                  "kind": "text",
+                  "text": "Cette API Kotlin/Native appartient à l’édition 0.9 en développement. Un mod enregistre ses objets d’option avec options(...) dans toolMod ou signalMod, y compris la déclaration de plusieurs modèles. Le SDK les présente dans Options → NRF Hub. Un outil qui déclare seulement des fenêtres n’a pas besoin d’ajouter options(...) : ses raccourcis apparaissent automatiquement. Un projet doit utiliser le kit et le SDK d’exécution qui prennent en charge cette API."
+                },
+                {
+                  "kind": "table",
+                  "columns": [
+                    "Rubrique dans Options → NRF Hub",
+                    "Contenu"
+                  ],
+                  "rows": [
+                    [
+                      "Interface",
+                      "Préférences déclarées avec options(...) : cases à cocher, valeurs numériques et listes de choix."
+                    ],
+                    [
+                      "Raccourcis",
+                      "Raccourcis des fenêtres déclarées avec window(...), à personnaliser ou à désactiver."
+                    ]
+                  ]
+                },
+                {
+                  "kind": "text",
+                  "text": "Seules les rubriques correspondant aux réglages des mods chargés apparaissent. S’il n’y a que des raccourcis, ils s’affichent directement sous le titre Raccourcis ; s’il n’y a que des préférences, elles s’affichent directement sous Interface. Les boutons de navigation apparaissent uniquement lorsque les deux rubriques sont utiles. Chaque rubrique regroupe les réglages par mod et utilise ses libellés ; aucune interface de réglages supplémentaire à créer dans le mod."
+                },
+                {
+                  "kind": "text",
+                  "text": "Dans un projet Kotlin/Native créé avec le kit, remplacez Entry.kt par cet exemple et utilisez le manifeste ci-dessous. Le plugin génère modInfo depuis mod.json : toolMod(modInfo) garde l’identité Kotlin et celle du paquet cohérentes. Le titre de groupe sera Clock tools dans cet exemple ; metadata(name = tr(\"mod.name\")) fournit séparément le nom traduit dans la liste des mods du jeu."
+                },
+                {
+                  "kind": "code",
+                  "code": "{\n  \"id\": \"clock-history\",\n  \"name\": \"Clock tools\",\n  \"modId\": \"ClockHistory\",\n  \"version\": \"0.1.0-alpha.1\",\n  \"module\": \"ClockHistoryMod\",\n  \"language\": \"kotlin-native\",\n  \"sdkMin\": \"0.9.0-alpha.1\",\n  \"sdkMaxExclusive\": \"0.10.0\",\n  \"gameSha256\": [\n    \"fff49ac21720abfc824c2b4f68b862727630eb0db71cfe1f9ea8f685d0db10ae\"\n  ]\n}",
+                  "title": "mod.json",
+                  "language": "json"
+                },
+                {
+                  "kind": "code",
+                  "code": "package nimby.mod\n\nimport nimby.*\n\nprivate val showDate = BooleanOption(\"showDate\", tr(\"options.showDate\"), true)\nprivate val historySize = IntegerOption(\n    \"historySize\", tr(\"options.historySize\"), defaultValue = 5, minimum = 1, maximum = 20,\n)\nprivate val order = ChoiceOption(\"order\", tr(\"options.order\"), listOf(\n    OptionChoice(\"newest\", tr(\"options.newest\")),\n    OptionChoice(\"oldest\", tr(\"options.oldest\")),\n), \"newest\")\n\nprivate val samples = mutableListOf<ToolClock>()\nprivate var session: Pair<String, Long>? = null\n\nfun createMod() = toolMod(modInfo) {\n    metadata(author = \"Your name\", name = tr(\"mod.name\"), description = tr(\"mod.description\"))\n    options(showDate, historySize, order)\n    window(\"history\", tr(\"window.history\"), shortcut = \"F9\") { event ->\n        val currentSession = worldId to generation\n        if (session != currentSession) {\n            samples.clear()\n            session = currentSession\n        }\n        when (event.action) {\n            \"open\", \"sample\" -> samples.add(clock())\n            \"refresh\" -> Unit\n            else -> return@window\n        }\n        val limit = historySize.value\n        val newestFirst = order.value == \"newest\"\n        val displayDate = showDate.value\n        while (samples.size > limit) samples.removeAt(0)\n        val rows = if (newestFirst) samples.asReversed() else samples\n        val message = rows.joinToString(\"\\n\") { sample ->\n            if (displayDate) sample.dateTime().toString()\n            else \"${sample.elapsedMillis} ms\"\n        }\n        showWindow(event, message, listOf(\n            ToolButton(\"sample\", tr(\"history.sample\")),\n            ToolButton(\"refresh\", tr(\"history.refresh\")),\n        ))\n    }\n    onStop {\n        samples.clear()\n        session = null\n    }\n}\n",
+                  "title": "src/main/kotlin/Entry.kt",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "L’ouverture et le bouton Ajouter une lecture ajoutent une observation de l’horloge. Actualiser l’affichage relit les préférences sans ajouter de lecture. Le joueur choisit le nombre de lignes conservées, leur ordre et le texte affiché. Le mod lit .value pendant le callback, puis limite son historique à vingt lectures maximum. L’historique est effacé lors d’un changement de partie ou de l’arrêt du mod ; les préférences restent enregistrées par le SDK."
+                },
+                {
+                  "kind": "code",
+                  "code": "{\n  \"fallback\": \"en\",\n  \"languages\": {\n    \"en\": {\n      \"mod.name\": \"Clock tools\",\n      \"mod.description\": \"Keep a short history of clock readings.\",\n      \"window.history\": \"Reading history\",\n      \"options.showDate\": \"Show dates\",\n      \"options.historySize\": \"Number of readings\",\n      \"options.order\": \"Reading order\",\n      \"options.newest\": \"Newest first\",\n      \"options.oldest\": \"Oldest first\",\n      \"history.sample\": \"Add a reading\",\n      \"history.refresh\": \"Refresh display\"\n    },\n    \"fr\": {\n      \"mod.name\": \"Outils d’horloge\",\n      \"mod.description\": \"Conserver un court historique des lectures de l’horloge.\",\n      \"window.history\": \"Historique des lectures\",\n      \"options.showDate\": \"Afficher les dates\",\n      \"options.historySize\": \"Nombre de lectures\",\n      \"options.order\": \"Ordre des lectures\",\n      \"options.newest\": \"Plus récentes en premier\",\n      \"options.oldest\": \"Plus anciennes en premier\",\n      \"history.sample\": \"Ajouter une lecture\",\n      \"history.refresh\": \"Actualiser l’affichage\"\n    }\n  }\n}",
+                  "title": "assets/translations.json",
+                  "language": "json"
+                },
+                {
+                  "kind": "note",
+                  "text": "Une option appartient au mod entier. Pour une valeur différente sur chaque signal, utilisez les réglages du signal ; pour une saisie temporaire dans un formulaire, utilisez ToolNumberInput. options(...) accepte au maximum 64 options, raccourcis de fenêtres compris.",
+                  "title": "À retenir"
+                }
+              ]
+            },
+            {
+              "id": "libelles",
+              "title": "Nommer le groupe, la fenêtre et les options",
+              "blocks": [
+                {
+                  "kind": "text",
+                  "text": "Le nom du mod et le titre de sa fenêtre ont deux rôles distincts. Dans Raccourcis, le SDK affiche d’abord le groupe du mod, puis le titre de chaque fenêtre et sa combinaison de touches. Voir BB Timechange puis Date et heure décrit donc un groupe et une action, pas deux installations du mod."
+                },
+                {
+                  "kind": "table",
+                  "columns": [
+                    "Élément affiché",
+                    "Source dans le mod",
+                    "Exemple"
+                  ],
+                  "rows": [
+                    [
+                      "Groupe du mod",
+                      "toolMod(modInfo) → modInfo.title → mod.json.name",
+                      "Clock tools"
+                    ],
+                    [
+                      "Nom dans la liste des mods du jeu",
+                      "metadata(name = tr(\"mod.name\"))",
+                      "Outils d’horloge"
+                    ],
+                    [
+                      "Fenêtre et son raccourci",
+                      "window(..., title = tr(\"window.history\"))",
+                      "Historique des lectures"
+                    ],
+                    [
+                      "Préférence",
+                      "BooleanOption.label / IntegerOption.label / ChoiceOption.label",
+                      "Afficher les dates — tr(\"options.showDate\")"
+                    ],
+                    [
+                      "Valeur d’une liste de choix",
+                      "OptionChoice.label",
+                      "Plus récentes en premier — tr(\"options.newest\")"
+                    ]
+                  ]
+                },
+                {
+                  "kind": "text",
+                  "text": "Le groupe utilise GameMod.title : avec toolMod(modInfo) ou signalMod(modInfo), il vient du champ name de mod.json. mod.name et window.history sont ici des clés de traduction choisies par l’auteur pour les autres libellés. Le SDK n’ajoute pas automatiquement le nom du mod au titre de la fenêtre. Donnez au groupe le nom du produit et à chaque fenêtre un titre court qui décrit sa fonction. Si la clé window.history contient déjà le nom du mod, ce nom sera affiché une seconde fois dans sa rubrique."
+                },
+                {
+                  "kind": "text",
+                  "text": "metadata(name = ...) sert aux informations du mod destinées à la liste des mods du jeu ; ce paramètre ne remplace pas le title utilisé pour le groupe dans Options → NRF Hub. Utilisez tr(...) et assets/translations.json pour traduire les noms visibles, en gardant les identifiants inchangés."
+                }
+              ]
+            },
+            {
+              "id": "types",
+              "title": "Choisir le bon type",
+              "blocks": [
+                {
+                  "kind": "table",
+                  "columns": [
+                    "Déclaration",
+                    "Valeur et validation"
+                  ],
+                  "rows": [
+                    [
+                      "BooleanOption",
+                      "value est un Boolean. La valeur par défaut est false si elle est omise."
+                    ],
+                    [
+                      "IntegerOption",
+                      "value est un Int compris entre minimum et maximum inclus. La valeur par défaut doit respecter ces bornes."
+                    ],
+                    [
+                      "ChoiceOption",
+                      "Deux à seize OptionChoice distincts. value renvoie l’identifiant stable du choix, jamais son libellé traduit. defaultValue doit désigner un choix existant."
+                    ],
+                    [
+                      "window(..., shortcut = ...)",
+                      "Chaque fenêtre possède automatiquement son raccourci configurable. Une chaîne vide le désactive ; le SDK ouvre la fenêtre et appelle son handler."
+                    ]
+                  ]
+                },
+                {
+                  "kind": "text",
+                  "text": "L’id d’une option ou d’un OptionChoice doit commencer par une lettre ASCII, puis utiliser uniquement des lettres ASCII, chiffres, _, . ou -, sur 128 caractères maximum. Les identifiants d’options sont uniques dans le mod ; les identifiants de choix sont uniques dans leur liste. Le préfixe window. est réservé au SDK pour les options de raccourci. Les libellés acceptent tr et sont limités à 256 octets UTF-8 ; description est facultative, accepte tr et permet 1024 octets."
+                },
+                {
+                  "kind": "note",
+                  "text": "Une déclaration invalide échoue avec IllegalArgumentException : identifiant ou libellé invalide, doublon, bornes incohérentes, valeur par défaut hors limites ou choix absent. Corrigez la déclaration avant de distribuer le mod. Il s’agit d’une erreur d’auteur, distincte du refus d’une affectation en conflit choisie par le joueur : ce dernier conserve son ancien réglage et reçoit un message dans le jeu.",
+                  "title": "À retenir"
+                },
+                {
+                  "kind": "text",
+                  "text": "Conservez les mêmes objets d’option que ceux enregistrés avec options(...). .value est en lecture seule, sans lecture du réseau ni du disque. Le SDK actualise les valeurs entre les callbacks ; une modification invalide ne remplace pas les valeurs déjà acceptées. Lire .value dans une règle de signal est possible sans ToolContext."
+                },
+                {
+                  "kind": "text",
+                  "text": "À la création de l’objet, .value vaut defaultValue. Les préférences enregistrées sont ensuite appliquées par le SDK. Lisez .value au moment de traiter une action ou de calculer une règle : une copie faite à l’initialisation du fichier Kotlin conserverait seulement cette ancienne valeur. Déclarer deux objets avec le même id ne les lie pas entre eux et leur enregistrement en double est refusé."
+                },
+                {
+                  "kind": "note",
+                  "text": "Cette API ne déclare pas de callback onChange. Une modification des préférences ne redessine pas automatiquement le formulaire de votre outil. Dans l’exemple, le prochain clic ou la prochaine ouverture lit les valeurs courantes et renvoie le formulaire avec showWindow. Une règle de signal les lit lors de son prochain calcul.",
+                  "title": "À retenir"
+                }
+              ]
+            },
+            {
+              "id": "raccourcis",
+              "title": "Confier les raccourcis au SDK",
+              "blocks": [
+                {
+                  "kind": "text",
+                  "text": "Chaque window(id, title, shortcut, handler) ajoute automatiquement une option de raccourci ; aucune option supplémentaire à déclarer. shortcut est sa valeur par défaut ; le joueur peut la modifier ou la désactiver dans Options → NRF Hub, rubrique Raccourcis, sous le nom du mod. Un identifiant de fenêtre stable conserve la préférence lorsque vous réorganisez les déclarations. Cette version propose les raccourcis d’ouverture des fenêtres, sans callback de touche général."
+                },
+                {
+                  "kind": "code",
+                  "code": "window(\"history\", tr(\"window.history\"), shortcut = \"F9\") { event ->\n    showWindow(event, clock().dateTime().toString(), emptyList())\n}",
+                  "title": "Valeur initiale d’un raccourci de fenêtre",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "L’identifiant history reste indépendant du titre traduit. Pour cet identifiant, le SDK crée l’option réservée window.history ; vous ne la déclarez pas et n’écrivez pas son fichier de préférences. Gardez l’id passé à window stable pour conserver l’affectation, même si le titre ou l’ordre des fenêtres change. Un mod peut déclarer huit fenêtres au maximum ; leurs identifiants sont uniques, de 1 à 128 caractères ASCII parmi lettres, chiffres, _, . et -. Deux fenêtres du même mod ne peuvent pas déclarer le même raccourci initial non vide ; plusieurs raccourcis vides sont permis."
+                },
+                {
+                  "kind": "text",
+                  "text": "Format : Ctrl+, Alt+, Shift+ dans cet ordre, chacun facultatif, puis une touche. Touches disponibles : A–Z, 0–9, F1–F24, Backspace, Tab, Enter, Escape, Space, Left, Right, Up, Down, Home, End, PageUp, PageDown, Insert et Delete. Exemples : F8, Ctrl+T, Alt+F12, Ctrl+Alt+Shift+F24. Une chaîne vide désactive le raccourci."
+                },
+                {
+                  "kind": "text",
+                  "text": "Le SDK vérifie les raccourcis du jeu et ceux des mods chargés. Une affectation en conflit est refusée et l’ancienne valeur est conservée. Un conflit déjà présent désactive le déclenchement concerné jusqu’à sa résolution. Si les raccourcis du jeu ne peuvent pas être vérifiés, leur utilisation reste suspendue. Les raccourcis ne doivent pas ouvrir d’outil pendant la saisie de texte, la capture d’un raccourci ou lorsque le jeu est en arrière-plan."
+                },
+                {
+                  "kind": "text",
+                  "text": "Une combinaison valide n’est pas nécessairement libre : F9 est une valeur d’exemple, pas une touche réservée à votre mod. Les vérifications tiennent compte des affectations actuelles du joueur. Certaines actions natives réservent aussi les variantes avec Ctrl, Alt ou Maj ; ajouter un modificateur ne garantit donc pas l’absence de conflit. Le message Déjà utilisé par indique l’action concernée."
+                },
+                {
+                  "kind": "text",
+                  "text": "Pour modifier une affectation, le joueur clique sur le raccourci actuel ou Attribuer un raccourci, puis appuie sur la combinaison souhaitée. Échap annule la capture ; Retour arrière ou Effacer le raccourci désactive l’affectation. Ces deux touches servent au dialogue de capture et ne s’y attribuent pas comme un raccourci ordinaire. La fermeture du panneau ou la sortie de Raccourcis annule la capture. Un appui maintenu ne répète pas l’ouverture de la fenêtre."
+                }
+              ]
+            },
+            {
+              "id": "conservation",
+              "title": "Conserver les choix du joueur",
+              "blocks": [
+                {
+                  "kind": "text",
+                  "text": "Les préférences sont propres à l’utilisateur et au mod, communes à ses parties. Le SDK prend en charge leur enregistrement et leur chargement. L’identité du mod est GameMod.id, donc modInfo.id issu du champ id de mod.json quand vous utilisez toolMod(modInfo) ou signalMod(modInfo). Le champ modId du manifeste est une autre identité, destinée à la distribution. Gardez stables id, les identifiants d’options et ceux des choix ; traduire un libellé ne change pas l’identité. defaultValue s’applique lorsqu’aucune valeur compatible n’est enregistrée et lors d’une réinitialisation."
+                },
+                {
+                  "kind": "text",
+                  "text": "Changer defaultValue ou shortcut dans une nouvelle version ne remplace pas un choix enregistré encore valide. Si une valeur sort des nouvelles bornes numériques ou si son identifiant de choix n’existe plus, le SDK utilise la valeur par défaut de cette option. Rétablir les valeurs par défaut de ce mod concerne toutes ses préférences et tous ses raccourcis, y compris ceux de l’autre rubrique. Si un raccourci par défaut entre en conflit, la réinitialisation est refusée sans appliquer partiellement les autres valeurs."
+                },
+                {
+                  "kind": "text",
+                  "text": "Avant de distribuer le mod, vérifiez les valeurs initiales, leur conservation après redémarrage, les bornes numériques, le changement de langue, un raccourci désactivé et un conflit volontaire. Vérifiez aussi qu’un changement de partie ne rejoue pas une demande d’ouverture ancienne."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Référence des options",
+                      "to": "/reference/native/nimby/modoptions"
+                    },
+                    {
+                      "label": "Fenêtres et horloge",
+                      "to": "/mods/horloge"
+                    },
+                    {
+                      "label": "Réglages par signal",
+                      "to": "/mods/reglages"
                     }
                   ]
                 }
@@ -4562,7 +4913,7 @@
               "blocks": [
                 {
                   "kind": "text",
-                  "text": "Prérequis : un projet Kotlin/Native configuré et un modèle ou service existant. Ce guide traduit ses textes visibles sans changer ses identifiants, ses réglages ou ses règles."
+                  "text": "Prérequis : un projet Kotlin/Native configuré et un modèle, un service ou une fenêtre d’outil existants. Ce guide traduit leurs textes visibles sans changer leurs identifiants, leurs réglages ou leurs règles."
                 },
                 {
                   "kind": "text",
@@ -4577,6 +4928,10 @@
                 {
                   "kind": "text",
                   "text": "fallback choisit la langue de repli ; en est utilisé si ce champ est omis. Cette langue doit exister et contenir toutes les clés. Les autres langues peuvent être incomplètes : une clé absente reprend le texte de repli."
+                },
+                {
+                  "kind": "text",
+                  "text": "Vous choisissez les clés : mod.name, window.clock et title sont des exemples, pas des noms réservés. Une clé n’a d’effet que lorsqu’un appel tr(\"clé\") la transmet à un texte visible. Ajouter mod.name au JSON ne renomme donc pas automatiquement le mod ; ajouter window.clock ne crée ni fenêtre ni raccourci."
                 }
               ]
             },
@@ -4611,6 +4966,10 @@
                   ],
                   "rows": [
                     [
+                      "metadata(name = tr(...), description = tr(...))",
+                      "modInfo.id · modId · module"
+                    ],
+                    [
                       "Checkbox.label / description",
                       "Checkbox.name"
                     ],
@@ -4624,8 +4983,29 @@
                     ],
                     [
                       "ToolWindow.title · message",
-                      "window / action / service / whenMod"
+                      "ToolWindow.id · action · service · whenMod"
                     ]
+                  ]
+                },
+                {
+                  "kind": "text",
+                  "text": "Dans Options → NRF Hub, le nom du groupe vient du titre déclaré par toolMod ou signalMod. Avec toolMod(modInfo), il s’agit de modInfo.title, généré depuis name dans mod.json. metadata(name = tr(\"mod.name\")) traduit le nom dans les listes et fiches du jeu ; il ne remplace pas ce titre de groupe. Le title transmis à window nomme à la fois la fenêtre et sa ligne dans Raccourcis."
+                },
+                {
+                  "kind": "text",
+                  "text": "Pour un groupe BB Timechange, utilisez par exemple tr(\"window.clock\") avec « Date et heure » pour le titre de la fenêtre. La ligne reste courte, sans répéter « BB Timechange — Date et heure ». Gardez son identifiant \"clock\" inchangé dans les deux langues et lors des mises à jour : changer le libellé ne doit pas créer une nouvelle préférence de raccourci."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Nom du mod, groupe et fenêtre",
+                      "to": "/mods/metadonnees-traduites#noms-outil"
+                    },
+                    {
+                      "label": "Options du mod et raccourcis",
+                      "to": "/mods/options"
+                    }
                   ]
                 }
               ]
@@ -4764,6 +5144,10 @@
                       "to": "/reference/mod"
                     },
                     {
+                      "label": "ModOptions — Préférences globales du joueur et raccourcis configurables dans l’onglet NRF Hub des options du jeu.",
+                      "to": "/reference/native/nimby/modoptions"
+                    },
+                    {
                       "label": "ModResources — Déclarations publiques Kotlin du SDK.",
                       "to": "/reference/modresources"
                     },
@@ -4884,7 +5268,7 @@
               "blocks": [
                 {
                   "kind": "text",
-                  "text": "28 fichiers publics Kotlin sont recensés. Chaque propriété de constructeur et valeur d’enum possède une entrée. Les mêmes noms dans nimby et fr.nimby.sdk appartiennent à deux API distinctes : choisir les imports du bon environnement."
+                  "text": "29 fichiers publics Kotlin sont recensés. Chaque propriété de constructeur et valeur d’enum possède une entrée. Les mêmes noms dans nimby et fr.nimby.sdk appartiennent à deux API distinctes : choisir les imports du bon environnement."
                 },
                 {
                   "kind": "note",
@@ -5229,7 +5613,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -5448,7 +5832,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -5532,7 +5916,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -5851,7 +6235,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -9291,6 +9675,425 @@
           ]
         },
         {
+          "slug": "reference/native/nimby/modoptions",
+          "title": "ModOptions",
+          "group": "Référence",
+          "description": "Préférences globales du joueur et raccourcis configurables dans l’onglet NRF Hub des options du jeu.",
+          "sections": [
+            {
+              "id": "contexte",
+              "title": "Contexte d’utilisation",
+              "blocks": [
+                {
+                  "kind": "table",
+                  "columns": [
+                    "Module",
+                    "Package",
+                    "Source SDK"
+                  ],
+                  "rows": [
+                    [
+                      "Kotlin/Native",
+                      "nimby",
+                      "kotlin/src/nimby/ModOptions.kt"
+                    ]
+                  ]
+                },
+                {
+                  "kind": "text",
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                },
+                {
+                  "kind": "note",
+                  "text": "Les valeurs optionnelles, données non demandées et réponses en attente ont des significations distinctes. Consultez le contrat avant de remplacer null par une valeur par défaut ou de répéter une commande.",
+                  "title": "À retenir"
+                },
+                {
+                  "kind": "code",
+                  "code": "import nimby.ModOption\nimport nimby.BooleanOption\nimport nimby.IntegerOption\nimport nimby.OptionChoice\nimport nimby.ChoiceOption",
+                  "title": "Imports de cette page",
+                  "language": "kotlin"
+                }
+              ]
+            },
+            {
+              "id": "api-modoption-7e91dc2322",
+              "title": "ModOption",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "sealed class ModOption<T>",
+                  "title": "nimby · class",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Préférence typée propre au mod et à l’utilisateur, commune à ses parties. Créez un type concret, enregistrez-le avec options(...) puis lisez value. Le SDK conserve les valeurs et les actualise entre les callbacks."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-modoption-id-830eb826d3",
+              "title": "ModOption.id",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val id: String",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Identifiant stable et unique dans le mod : première lettre ASCII, puis lettres, chiffres, _, . ou -, au maximum 128 caractères. Le préfixe window. est réservé au SDK."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-modoption-label-decda9bb8f",
+              "title": "ModOption.label",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val label: String",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Libellé affiché dans les options, non vide, jusqu’à 256 octets UTF-8. Accepte tr ; traduire ce texte ne change pas l’identité."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-modoption-defaultvalue-1f680b04d6",
+              "title": "ModOption.defaultValue",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val defaultValue: T",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Valeur initiale déclarée, appliquée en l’absence de préférence enregistrée compatible et lors d’une réinitialisation. Distincte de la valeur actuelle du joueur."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-modoption-description-00fe184b30",
+              "title": "ModOption.description",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val description: String",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Explication facultative, jusqu’à 1024 octets UTF-8 ; accepte tr. Une chaîne vide omet l’explication."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-modoption-value-b8ebeb90ea",
+              "title": "ModOption.value",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val value: T",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Valeur courante en lecture seule, initialement defaultValue. Lisez-la dans les callbacks et les règles, sans ToolContext. Lecture locale sans accès au jeu ni au disque ; les changements invalides conservent les valeurs acceptées."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-booleanoption-d36ec55a7b",
+              "title": "BooleanOption",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "class BooleanOption(\n    id: String, label: String, defaultValue: Boolean = false, description: String = \"\",\n) : ModOption<Boolean>",
+                  "title": "nimby · class",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Préférence activée ou désactivée, lue comme Boolean dans value. defaultValue vaut false si omis ; le libellé et la description acceptent tr."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-integeroption-8755f2570c",
+              "title": "IntegerOption",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "class IntegerOption(\n    id: String, label: String, defaultValue: Int, val minimum: Int, val maximum: Int,\n    description: String = \"\",\n) : ModOption<Int>",
+                  "title": "nimby · class",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Préférence entière bornée, lue comme Int. minimum doit être inférieur ou égal à maximum, et defaultValue doit appartenir à cet intervalle inclusif. Une valeur invalide est refusée."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-integeroption-minimum-a5931e8079",
+              "title": "IntegerOption.minimum",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val minimum: Int",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Borne inférieure inclusive de la préférence ; entier signé Kotlin Int."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-integeroption-maximum-15a0b46d59",
+              "title": "IntegerOption.maximum",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val maximum: Int",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Borne supérieure inclusive de la préférence ; au moins minimum."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-optionchoice-744f73f3fb",
+              "title": "OptionChoice",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "data class OptionChoice(val id: String, val label: String)",
+                  "title": "nimby · class",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Valeur proposée par ChoiceOption : id stable conservé dans la préférence, label affiché au joueur. Les identifiants sont uniques au sein d’une liste de choix."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-optionchoice-id-171aed903b",
+              "title": "OptionChoice.id",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val id: String",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Identifiant renvoyé par ChoiceOption.value ; suit le format des identifiants d’options. Ne pas traduire ni remplacer par le texte visible."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-optionchoice-label-701afdc5eb",
+              "title": "OptionChoice.label",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val label: String",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Texte visible du choix, non vide et limité à 256 octets UTF-8 ; accepte tr."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-choiceoption-6bc5eabc47",
+              "title": "ChoiceOption",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "class ChoiceOption(\n    id: String, label: String, choices: List<OptionChoice>, defaultValue: String,\n    description: String = \"\",\n) : ModOption<String>",
+                  "title": "nimby · class",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Sélection parmi deux à seize choix distincts. defaultValue doit être l’id d’un choix ; value renvoie cet identifiant String, jamais le libellé traduit."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-choiceoption-choices-37b81ae667",
+              "title": "ChoiceOption.choices",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val choices: List<OptionChoice>",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Copie des choix déclarés, dans leur ordre d’affichage. Modifier la liste fournie au constructeur après création ne change pas les choix de cette option."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
           "slug": "reference/modresources",
           "title": "ModResources",
           "group": "Référence",
@@ -9317,7 +10120,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -9402,7 +10205,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Nom de base issu de mod.json. metadata(name=...) peut choisir un autre texte affiché sans changer l’identité."
+                  "text": "Nom issu de mod.json, utilisé comme titre du groupe dans Options → NRF Hub avec toolMod(modInfo) ou signalMod(modInfo). metadata(name=...) personnalise séparément le nom des listes de mods du jeu."
                 },
                 {
                   "kind": "links",
@@ -9518,7 +10321,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Nom affiché optionnel, éventuellement traduit. null reprend le nom de mod.json sans modifier identifiant ni version."
+                  "text": "Nom optionnel pour les listes et fiches de mods du jeu, éventuellement traduit. null reprend le nom de mod.json. Ne remplace pas GameMod.title dans le groupe Options → NRF Hub, ni ToolWindow.title ; identifiant et version restent inchangés."
                 },
                 {
                   "kind": "links",
@@ -9884,7 +10687,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -10472,7 +11275,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Nom de base déclaré pour le mod ; l’identité technique reste id. Les métadonnées peuvent fournir un autre nom affiché."
+                  "text": "Titre déclaré du mod, utilisé pour regrouper ses préférences et raccourcis dans Options → NRF Hub. Vient de modInfo.title avec la surcharge modInfo ; metadata(name=...) ne remplace pas ce titre. L’identité reste id."
                 },
                 {
                   "kind": "links",
@@ -10521,6 +11324,31 @@
                     {
                       "label": "Guide complémentaire 3 →",
                       "to": "/mods/cycle-outils"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-gamemod-options-671f4c4d74",
+              "title": "GameMod.options",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "open val options: List<ModOption<*>>",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Options explicites du mod, vides par défaut. Gardez leurs objets pour lire value. La limite de 64 inclut les raccourcis des fenêtres ajoutés automatiquement par le SDK."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
                     }
                   ]
                 }
@@ -10802,7 +11630,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Nom de base déclaré pour le mod ; l’identité technique reste id. Les métadonnées peuvent fournir un autre nom affiché."
+                  "text": "Titre déclaré du mod, utilisé pour regrouper ses préférences et raccourcis dans Options → NRF Hub. Vient de modInfo.title avec la surcharge modInfo ; metadata(name=...) ne remplace pas ce titre. L’identité reste id."
                 },
                 {
                   "kind": "links",
@@ -10884,6 +11712,31 @@
                     {
                       "label": "Guide complémentaire 3 →",
                       "to": "/mods/cycle-outils"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-toolmod-options-9b71b647b3",
+              "title": "ToolMod.options",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "override val options: List<ModOption<*>>",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Options explicites du mod, vides par défaut. Gardez leurs objets pour lire value. La limite de 64 inclut les raccourcis des fenêtres ajoutés automatiquement par le SDK."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
                     }
                   ]
                 }
@@ -11088,6 +11941,31 @@
               ]
             },
             {
+              "id": "api-toolmodbuilder-options-ca3c3b0507",
+              "title": "ToolModBuilder.options",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "fun options(vararg values: ModOption<*>): Unit",
+                  "title": "nimby · fun",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Enregistre une ou plusieurs préférences globales ; plusieurs appels ajoutent des options. Refuse les identifiants dupliqués et plus de 64 options, raccourcis de fenêtres compris. Conservez les objets déclarés pour lire leur value."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "id": "symbol-23",
               "title": "ToolModBuilder.window",
               "blocks": [
@@ -11099,7 +11977,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Enregistre une fenêtre autonome et son handler. Jusqu’à 8 fenêtres, identifiants et raccourcis distincts. Raccourcis acceptés : F1 à F12 ou Ctrl+Shift+A à Z ; F8 par défaut. showWindow fournit le contenu."
+                  "text": "Enregistre une fenêtre autonome et son handler, jusqu’à 8 identifiants distincts. Le SDK crée son option de raccourci, modifiable par le joueur : F8 par défaut, vide pour désactiver. Format : Ctrl+, Alt+, Shift+ facultatifs dans cet ordre puis A–Z, 0–9, F1–F24 ou une touche nommée du guide. Les raccourcis non vides du mod doivent être distincts. showWindow fournit le contenu."
                 },
                 {
                   "kind": "links",
@@ -11132,7 +12010,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Déclare auteur, description et nom affiché optionnel de l’outil. name et description acceptent tr ; le nom technique vient de mod.json."
+                  "text": "Déclare auteur, description et nom optionnel pour les listes et fiches de mods du jeu. name et description acceptent tr. Ne remplace ni le titre du groupe dans Options → NRF Hub, ni les titres de fenêtres ; l’identité vient de mod.json."
                 },
                 {
                   "kind": "links",
@@ -11314,7 +12192,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -11590,7 +12468,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -11810,7 +12688,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -12609,6 +13487,31 @@
               ]
             },
             {
+              "id": "api-signalmodbuilder-options-5d38f46823",
+              "title": "SignalModBuilder.options",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "fun options(vararg values: ModOption<*>): Unit",
+                  "title": "nimby · fun",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Enregistre une ou plusieurs préférences globales ; plusieurs appels ajoutent des options. Refuse les identifiants dupliqués et plus de 64 options, raccourcis de fenêtres compris. Conservez les objets déclarés pour lire leur value."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "id": "symbol-25",
               "title": "SignalModBuilder.maximumLineSpeed",
               "blocks": [
@@ -13043,7 +13946,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -14600,6 +15503,31 @@
               ]
             },
             {
+              "id": "api-signalmodelsbuilder-options-157d880a62",
+              "title": "SignalModelsBuilder.options",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "fun options(vararg values: ModOption<*>): Unit",
+                  "title": "nimby · fun",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Enregistre une ou plusieurs préférences globales ; plusieurs appels ajoutent des options. Refuse les identifiants dupliqués et plus de 64 options, raccourcis de fenêtres compris. Conservez les objets déclarés pour lire leur value."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Guide et exemple d’utilisation →",
+                      "to": "/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "id": "api-signalmodelsbuilder-preparenetwork-f32e127b2d",
               "title": "SignalModelsBuilder.prepareNetwork",
               "blocks": [
@@ -14831,7 +15759,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -14905,7 +15833,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -17294,7 +18222,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -17437,7 +18365,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -18081,7 +19009,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -18137,7 +19065,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Identifiant de fenêtre unique dans le mod, reçu dans ToolWindowEvent.window."
+                  "text": "Identifiant de fenêtre unique dans le mod, reçu dans ToolWindowEvent.window. Gardez-le stable entre versions : la préférence du raccourci lui est rattachée. Ne pas traduire cet identifiant."
                 },
                 {
                   "kind": "links",
@@ -18166,7 +19094,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Titre de la fenêtre visible par le joueur ; accepte tr et ne sert pas d’identifiant."
+                  "text": "Texte utilisé à la fois comme titre de fenêtre et comme libellé de son raccourci sous le groupe du mod dans Options → NRF Hub. Accepte tr ; un titre court évite de répéter le nom du mod. Le modifier ne change pas l’identité."
                 },
                 {
                   "kind": "links",
@@ -18195,7 +19123,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Raccourci déclaré : F1..F12 ou Ctrl+Shift+A..Z. Distinct des autres fenêtres de ce mod ; actif dans le contexte du jeu."
+                  "text": "Raccourci initial au format accepté par window(...) ; vide pour désactiver. Le joueur peut modifier l’affectation dans les options du SDK. La déclaration ne représente pas forcément son affectation actuelle."
                 },
                 {
                   "kind": "links",
@@ -18618,7 +19546,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -21884,7 +22812,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -23550,7 +24478,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -23624,7 +24552,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -23993,7 +24921,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -24237,7 +25165,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -24806,7 +25734,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -26500,7 +27428,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -27276,7 +28204,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -27720,7 +28648,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -31850,7 +32778,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -32220,7 +33148,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -33186,7 +34114,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "API publique du SDK 0.9.0-alpha.1. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
+                  "text": "API publique du SDK 0.9.0-alpha.2. Chaque entrée donne la signature Kotlin et son contrat : sens de la valeur, conditions d’utilisation et effets à connaître. Choisissez les imports du module indiqué ci-dessus."
                 },
                 {
                   "kind": "note",
@@ -36439,6 +37367,16 @@
                       "Stable identifiers, defaults, bounds, order and visibility."
                     ],
                     [
+                      "Player preferences shared across games",
+                      "options · BooleanOption · IntegerOption · ChoiceOption · value",
+                      "Stable IDs, defaults, bounds and reading values in callbacks."
+                    ],
+                    [
+                      "Customizable window shortcut",
+                      "window · ToolWindow.title · ToolWindow.shortcut",
+                      "Action title and initial shortcut; the SDK manages the player’s binding and conflicts."
+                    ],
+                    [
                       "Static or animated appearance",
                       "construction · images · appearance · steady · blink",
                       "Resources, catalogue order and simulated-time cadence."
@@ -36500,6 +37438,10 @@
                     {
                       "label": "Settings",
                       "to": "/en/mods/reglages"
+                    },
+                    {
+                      "label": "Mod options and shortcuts",
+                      "to": "/en/mods/options"
                     },
                     {
                       "label": "Appearance",
@@ -38191,7 +39133,7 @@
           "slug": "mods/metadonnees-traduites",
           "group": "Creating a mod",
           "title": "Translate the mod name and description",
-          "description": "Present the mod and its signals in the game language through a shared text catalogue.",
+          "description": "Name the mod, its windows and its signals in the game language while keeping identifiers stable.",
           "status": "experimental",
           "sections": [
             {
@@ -38220,8 +39162,76 @@
                 },
                 {
                   "kind": "note",
-                  "text": "Never translate id, modId, module, textureSet, or model, service and checkbox identifiers. These values connect packages, settings and saves; they are not player-facing text.",
+                  "text": "Never translate id, modId, module, textureSet, or model, service, window and setting identifiers. These values connect packages, preferences and saves; they are not player-facing text.",
                   "title": "Keep in mind"
+                }
+              ]
+            },
+            {
+              "id": "noms-outil",
+              "title": "Distinguish the mod, group and window",
+              "blocks": [
+                {
+                  "kind": "text",
+                  "text": "A tool has several visible names. Use the product name for the mod and a short title describing each window’s purpose. For example, the BB Timechange group contains a Date and time row; repeating BB Timechange in that row adds no information."
+                },
+                {
+                  "kind": "table",
+                  "columns": [
+                    "Displayed text",
+                    "Declaration to use"
+                  ],
+                  "rows": [
+                    [
+                      "Name in the game’s mod lists and details",
+                      "metadata(name = tr(\"mod.name\"), ...)"
+                    ],
+                    [
+                      "Group in Options → NRF Hub",
+                      "The title of toolMod or signalMod. With toolMod(modInfo), modInfo.title comes from name in mod.json."
+                    ],
+                    [
+                      "Window title and row under Shortcuts",
+                      "window(\"clock\", tr(\"window.clock\"), ...)"
+                    ]
+                  ]
+                },
+                {
+                  "kind": "text",
+                  "text": "metadata.name does not replace the group title. In this example, the project sets name: \"BB Timechange\" in mod.json; the catalogue gives the mod details the same name and translates the window title separately."
+                },
+                {
+                  "kind": "code",
+                  "code": "fun createMod() = toolMod(modInfo) {\n    metadata(\n        author = \"Your name\",\n        name = tr(\"mod.name\"),\n        description = tr(\"mod.description\")\n    )\n    window(\"clock\", tr(\"window.clock\"), shortcut = \"F9\") { event ->\n        showWindow(event, clock().dateTime().toString(), emptyList())\n    }\n}",
+                  "title": "Inside nimby.mod, with import nimby.*",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "code",
+                  "code": "{\n  \"fallback\": \"en\",\n  \"languages\": {\n    \"fr\": {\n      \"mod.name\": \"BB Timechange\",\n      \"mod.description\": \"Consulter la date et l’heure du jeu.\",\n      \"window.clock\": \"Date et heure\"\n    },\n    \"en\": {\n      \"mod.name\": \"BB Timechange\",\n      \"mod.description\": \"View the game date and time.\",\n      \"window.clock\": \"Date and time\"\n    }\n  }\n}",
+                  "title": "assets/translations.json",
+                  "language": "json"
+                },
+                {
+                  "kind": "text",
+                  "text": "The keys mod.name and window.clock are your choice: you can rename them by updating the corresponding tr calls. The position of the Kotlin call determines where the text appears. However, \"clock\" is the window identifier: keep it stable, without tr, to preserve the player’s shortcut."
+                },
+                {
+                  "kind": "text",
+                  "text": "F9 is only this example’s default shortcut. The player can change or disable it in Options → NRF Hub, under Shortcuts. An existing compatible preference is preserved even if you change the translated title or default value in an update."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Mod options and shortcuts",
+                      "to": "/en/mods/options"
+                    },
+                    {
+                      "label": "Create the window and its form",
+                      "to": "/en/mods/horloge"
+                    }
+                  ]
                 }
               ]
             },
@@ -38332,7 +39342,7 @@
               "blocks": [
                 {
                   "kind": "code",
-                  "code": "package nimby.mod\n\nimport nimby.*\n\nfun createMod() = toolMod(modInfo) {\n    metadata(author = \"Your name\", description = \"Read the game clock.\")\n    window(\"clock\", \"Clock\", shortcut = \"Ctrl+Shift+T\") { event ->\n        showWindow(event, clock().dateTime().toString(),\n            listOf(ToolButton(\"refresh\", \"Refresh\")))\n    }\n}",
+                  "code": "package nimby.mod\n\nimport nimby.*\n\nfun createMod() = toolMod(modInfo) {\n    metadata(author = \"Your name\", description = \"Read the game clock.\")\n    window(\"clock\", \"Clock\", shortcut = \"F9\") { event ->\n        showWindow(event, clock().dateTime().toString(),\n            listOf(ToolButton(\"refresh\", \"Refresh\")))\n    }\n}",
                   "title": "Complete read-only tool",
                   "language": "kotlin"
                 },
@@ -38349,11 +39359,11 @@
                   "rows": [
                     [
                       "window(id, title, shortcut, handler)",
-                      "id identifies the window; title is its visible caption and accepts tr; shortcut defaults to F8. Up to 8 windows, with distinct IDs and shortcuts."
+                      "id identifies the window and stays stable; title names the window and its shortcut row, and accepts tr; shortcut defaults to F8 when omitted. Up to 8 windows, with distinct IDs and nonempty shortcuts. The player can change each shortcut in Options → NRF Hub, under Shortcuts."
                     ],
                     [
-                      "Ctrl+Shift+A … Ctrl+Shift+Z · F1 … F12",
-                      "Supported Windows shortcuts. The SDK opens the tool only while the game is in the foreground. Shortcut conflicts are reported in the log."
+                      "Ctrl / Alt / Shift · A–Z · 0–9 · F1–F24",
+                      "Optional modifiers in this order, followed by one key; named keys such as Enter and PageUp are also available. Empty disables the shortcut. The SDK checks conflicts with the game and other mods and opens the tool only in an active game context outside text entry."
                     ],
                     [
                       "ToolWindowEvent",
@@ -38368,6 +39378,23 @@
                 {
                   "kind": "text",
                   "text": "Integer fields support typing, deletion and pasting. On a button click, every value must satisfy its bounds; one event carries the complete form. There is no event per keystroke. The callback should return promptly; losing the game session hides windows and invalidates events."
+                },
+                {
+                  "kind": "text",
+                  "text": "The example proposes F9 on first use. The value declared in code does not replace an existing compatible player preference, including a disabled shortcut. Do not change the \"clock\" identifier to rename the window or propose another default shortcut."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Mod options and shortcuts",
+                      "to": "/en/mods/options"
+                    },
+                    {
+                      "label": "Name the mod and its window",
+                      "to": "/en/mods/metadonnees-traduites#noms-outil"
+                    }
+                  ]
                 },
                 {
                   "kind": "text",
@@ -38673,6 +39700,254 @@
                     {
                       "label": "Change the calendar",
                       "to": "/en/mods/horloge"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "slug": "mods/options",
+          "group": "Creating a mod",
+          "title": "Mod options and shortcuts",
+          "description": "Declare player preferences, read their typed values and let the SDK manage window shortcuts.",
+          "status": "experimental",
+          "sections": [
+            {
+              "id": "declarer",
+              "title": "Add options to a mod",
+              "blocks": [
+                {
+                  "kind": "text",
+                  "text": "This Kotlin/Native API belongs to the 0.9 edition under development. A mod registers its option objects with options(...) inside toolMod or signalMod, including multiple-model declarations. The SDK presents them in Options → NRF Hub. A tool that only declares windows does not need options(...): its shortcuts appear automatically. The project must use a kit and runtime SDK that support this API."
+                },
+                {
+                  "kind": "table",
+                  "columns": [
+                    "Section in Options → NRF Hub",
+                    "Contents"
+                  ],
+                  "rows": [
+                    [
+                      "Interface",
+                      "Preferences declared with options(...): checkboxes, numeric values and choices."
+                    ],
+                    [
+                      "Shortcuts",
+                      "Shortcuts for windows declared with window(...), which the player can customize or disable."
+                    ]
+                  ]
+                },
+                {
+                  "kind": "text",
+                  "text": "Only sections matching the loaded mods’ settings appear. If there are only shortcuts, they appear directly under Shortcuts; if there are only preferences, they appear directly under Interface. Navigation buttons appear only when both sections are needed. Each section groups settings by mod and uses its labels; the mod does not need to create an additional settings interface."
+                },
+                {
+                  "kind": "text",
+                  "text": "In a Kotlin/Native project created with the kit, replace Entry.kt with this example and use the manifest below. The plugin generates modInfo from mod.json: toolMod(modInfo) keeps the Kotlin and package identities consistent. The group title in this example is Clock tools; metadata(name = tr(\"mod.name\")) separately supplies the translated name in the game’s mod list."
+                },
+                {
+                  "kind": "code",
+                  "code": "{\n  \"id\": \"clock-history\",\n  \"name\": \"Clock tools\",\n  \"modId\": \"ClockHistory\",\n  \"version\": \"0.1.0-alpha.1\",\n  \"module\": \"ClockHistoryMod\",\n  \"language\": \"kotlin-native\",\n  \"sdkMin\": \"0.9.0-alpha.1\",\n  \"sdkMaxExclusive\": \"0.10.0\",\n  \"gameSha256\": [\n    \"fff49ac21720abfc824c2b4f68b862727630eb0db71cfe1f9ea8f685d0db10ae\"\n  ]\n}",
+                  "title": "mod.json",
+                  "language": "json"
+                },
+                {
+                  "kind": "code",
+                  "code": "package nimby.mod\n\nimport nimby.*\n\nprivate val showDate = BooleanOption(\"showDate\", tr(\"options.showDate\"), true)\nprivate val historySize = IntegerOption(\n    \"historySize\", tr(\"options.historySize\"), defaultValue = 5, minimum = 1, maximum = 20,\n)\nprivate val order = ChoiceOption(\"order\", tr(\"options.order\"), listOf(\n    OptionChoice(\"newest\", tr(\"options.newest\")),\n    OptionChoice(\"oldest\", tr(\"options.oldest\")),\n), \"newest\")\n\nprivate val samples = mutableListOf<ToolClock>()\nprivate var session: Pair<String, Long>? = null\n\nfun createMod() = toolMod(modInfo) {\n    metadata(author = \"Your name\", name = tr(\"mod.name\"), description = tr(\"mod.description\"))\n    options(showDate, historySize, order)\n    window(\"history\", tr(\"window.history\"), shortcut = \"F9\") { event ->\n        val currentSession = worldId to generation\n        if (session != currentSession) {\n            samples.clear()\n            session = currentSession\n        }\n        when (event.action) {\n            \"open\", \"sample\" -> samples.add(clock())\n            \"refresh\" -> Unit\n            else -> return@window\n        }\n        val limit = historySize.value\n        val newestFirst = order.value == \"newest\"\n        val displayDate = showDate.value\n        while (samples.size > limit) samples.removeAt(0)\n        val rows = if (newestFirst) samples.asReversed() else samples\n        val message = rows.joinToString(\"\\n\") { sample ->\n            if (displayDate) sample.dateTime().toString()\n            else \"${sample.elapsedMillis} ms\"\n        }\n        showWindow(event, message, listOf(\n            ToolButton(\"sample\", tr(\"history.sample\")),\n            ToolButton(\"refresh\", tr(\"history.refresh\")),\n        ))\n    }\n    onStop {\n        samples.clear()\n        session = null\n    }\n}\n",
+                  "title": "src/main/kotlin/Entry.kt",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Opening the window and the Add a reading button record a clock observation. Refresh display reads the preferences without adding a reading. The player chooses the number of retained rows, their order and the displayed text. The mod reads .value during the callback, then limits its history to at most twenty readings. History is cleared when the game session changes or the mod stops; the SDK keeps the saved preferences."
+                },
+                {
+                  "kind": "code",
+                  "code": "{\n  \"fallback\": \"en\",\n  \"languages\": {\n    \"en\": {\n      \"mod.name\": \"Clock tools\",\n      \"mod.description\": \"Keep a short history of clock readings.\",\n      \"window.history\": \"Reading history\",\n      \"options.showDate\": \"Show dates\",\n      \"options.historySize\": \"Number of readings\",\n      \"options.order\": \"Reading order\",\n      \"options.newest\": \"Newest first\",\n      \"options.oldest\": \"Oldest first\",\n      \"history.sample\": \"Add a reading\",\n      \"history.refresh\": \"Refresh display\"\n    },\n    \"fr\": {\n      \"mod.name\": \"Outils d’horloge\",\n      \"mod.description\": \"Conserver un court historique des lectures de l’horloge.\",\n      \"window.history\": \"Historique des lectures\",\n      \"options.showDate\": \"Afficher les dates\",\n      \"options.historySize\": \"Nombre de lectures\",\n      \"options.order\": \"Ordre des lectures\",\n      \"options.newest\": \"Plus récentes en premier\",\n      \"options.oldest\": \"Plus anciennes en premier\",\n      \"history.sample\": \"Ajouter une lecture\",\n      \"history.refresh\": \"Actualiser l’affichage\"\n    }\n  }\n}",
+                  "title": "assets/translations.json",
+                  "language": "json"
+                },
+                {
+                  "kind": "note",
+                  "text": "An option belongs to the entire mod. For a separate value on each signal, use signal settings; for temporary form input, use ToolNumberInput. options(...) supports at most 64 options, including window shortcuts.",
+                  "title": "Keep in mind"
+                }
+              ]
+            },
+            {
+              "id": "libelles",
+              "title": "Name the group, window and options",
+              "blocks": [
+                {
+                  "kind": "text",
+                  "text": "The mod name and its window title have distinct roles. In Shortcuts, the SDK first shows the mod group, followed by each window’s title and key combination. Seeing BB Timechange followed by Date and time therefore describes one group and one action, not two installations of the mod."
+                },
+                {
+                  "kind": "table",
+                  "columns": [
+                    "Displayed element",
+                    "Source in the mod",
+                    "Example"
+                  ],
+                  "rows": [
+                    [
+                      "Mod group",
+                      "toolMod(modInfo) → modInfo.title → mod.json.name",
+                      "Clock tools"
+                    ],
+                    [
+                      "Name in the game’s mod list",
+                      "metadata(name = tr(\"mod.name\"))",
+                      "Clock tools"
+                    ],
+                    [
+                      "Window and its shortcut",
+                      "window(..., title = tr(\"window.history\"))",
+                      "Reading history"
+                    ],
+                    [
+                      "Preference",
+                      "BooleanOption.label / IntegerOption.label / ChoiceOption.label",
+                      "Show dates — tr(\"options.showDate\")"
+                    ],
+                    [
+                      "Choice label",
+                      "OptionChoice.label",
+                      "Newest first — tr(\"options.newest\")"
+                    ]
+                  ]
+                },
+                {
+                  "kind": "text",
+                  "text": "The group uses GameMod.title: with toolMod(modInfo) or signalMod(modInfo), it comes from the name field in mod.json. mod.name and window.history are translation keys chosen by the author for the other labels in this example. The SDK does not automatically add the mod name to the window title. Give the group the product name and each window a short title describing its purpose. If window.history already contains the mod name, that name will appear again within its section."
+                },
+                {
+                  "kind": "text",
+                  "text": "metadata(name = ...) supplies mod information for the game’s mod list; it does not replace the title used for the group in Options → NRF Hub. Use tr(...) and assets/translations.json to translate visible names while keeping identifiers unchanged."
+                }
+              ]
+            },
+            {
+              "id": "types",
+              "title": "Choose the right type",
+              "blocks": [
+                {
+                  "kind": "table",
+                  "columns": [
+                    "Declaration",
+                    "Value and validation"
+                  ],
+                  "rows": [
+                    [
+                      "BooleanOption",
+                      "value is a Boolean. The default is false when omitted."
+                    ],
+                    [
+                      "IntegerOption",
+                      "value is an Int between minimum and maximum, inclusive. The default must satisfy these bounds."
+                    ],
+                    [
+                      "ChoiceOption",
+                      "Two to sixteen distinct OptionChoice entries. value returns the stable choice ID, never its translated label. defaultValue must name an existing choice."
+                    ],
+                    [
+                      "window(..., shortcut = ...)",
+                      "Each window automatically has its configurable shortcut. An empty string disables it; the SDK opens the window and calls its handler."
+                    ]
+                  ]
+                },
+                {
+                  "kind": "text",
+                  "text": "An option or OptionChoice id must start with an ASCII letter and then use only ASCII letters, digits, _, . or -, up to 128 characters. Option IDs are unique within the mod; choice IDs are unique within their list. The SDK reserves the window. prefix for shortcut options. Labels accept tr and are limited to 256 UTF-8 bytes; description is optional, accepts tr and allows 1024 bytes."
+                },
+                {
+                  "kind": "note",
+                  "text": "An invalid declaration fails with IllegalArgumentException: invalid ID or label, duplicate, inconsistent bounds, out-of-range default or missing choice. Fix the declaration before distributing the mod. This is an authoring error, distinct from rejecting a conflicting assignment chosen by the player: the player keeps the previous setting and receives an in-game message.",
+                  "title": "Keep in mind"
+                },
+                {
+                  "kind": "text",
+                  "text": "Keep the same option objects that you registered with options(...). .value is read-only and reads neither the network nor disk. The SDK updates values between callbacks; an invalid change does not replace previously accepted values. A signal rule can read .value without ToolContext."
+                },
+                {
+                  "kind": "text",
+                  "text": "When an object is created, .value equals defaultValue. The SDK subsequently applies saved preferences. Read .value when handling an action or calculating a rule: a copy made during Kotlin file initialization would retain that earlier value. Declaring two objects with the same id does not link them, and registering duplicate IDs is rejected."
+                },
+                {
+                  "kind": "note",
+                  "text": "This API does not declare an onChange callback. Changing preferences does not automatically redraw your tool’s form. In the example, the next click or opening reads current values and returns the form with showWindow. A signal rule reads them during its next calculation.",
+                  "title": "Keep in mind"
+                }
+              ]
+            },
+            {
+              "id": "raccourcis",
+              "title": "Let the SDK manage shortcuts",
+              "blocks": [
+                {
+                  "kind": "text",
+                  "text": "Each window(id, title, shortcut, handler) automatically adds a shortcut option; no additional option declaration is needed. shortcut is its default; the player can change or disable it under the mod’s name in the Shortcuts section of Options → NRF Hub. A stable window ID preserves the preference when you reorder declarations. This version provides window-opening shortcuts without a general key callback."
+                },
+                {
+                  "kind": "code",
+                  "code": "window(\"history\", tr(\"window.history\"), shortcut = \"F9\") { event ->\n    showWindow(event, clock().dateTime().toString(), emptyList())\n}",
+                  "title": "Initial value of a window shortcut",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "The history identifier is independent of the translated title. For this ID, the SDK creates the reserved window.history option; you neither declare it nor write its preferences file. Keep the id passed to window stable to preserve the assignment even when its title or window order changes. A mod can declare at most eight windows; their IDs are unique, with 1 to 128 ASCII letters, digits, _, . or -. Two windows in the same mod cannot declare the same nonempty initial shortcut; multiple empty shortcuts are allowed."
+                },
+                {
+                  "kind": "text",
+                  "text": "Format: Ctrl+, Alt+, Shift+ in that order, each optional, followed by a key. Supported keys: A–Z, 0–9, F1–F24, Backspace, Tab, Enter, Escape, Space, Left, Right, Up, Down, Home, End, PageUp, PageDown, Insert and Delete. Examples: F8, Ctrl+T, Alt+F12, Ctrl+Alt+Shift+F24. An empty string disables the shortcut."
+                },
+                {
+                  "kind": "text",
+                  "text": "The SDK checks the game bindings and those of loaded mods. A conflicting assignment is rejected and the previous value is retained. An existing conflict disables the affected trigger until resolved. If game bindings cannot be verified, shortcut use remains suspended. Shortcuts must not open a tool during text entry, shortcut capture or while the game is in the background."
+                },
+                {
+                  "kind": "text",
+                  "text": "A valid combination is not necessarily available: F9 is an example default, not a key reserved for your mod. Checks account for the player’s current assignments. Some native actions also reserve Ctrl, Alt or Shift variants, so adding a modifier does not guarantee an unused combination. The Already used by message identifies the conflicting action."
+                },
+                {
+                  "kind": "text",
+                  "text": "To change an assignment, the player clicks the current shortcut or Assign a shortcut, then presses the desired combination. Escape cancels capture; Backspace or Clear shortcut disables the assignment. Those two keys control the capture dialogue and are not assigned there as ordinary shortcuts. Closing the panel or leaving Shortcuts cancels capture. Holding a key does not repeatedly open the window."
+                }
+              ]
+            },
+            {
+              "id": "conservation",
+              "title": "Preserve player choices",
+              "blocks": [
+                {
+                  "kind": "text",
+                  "text": "Preferences belong to the user and mod and are shared across that user’s games. The SDK handles saving and loading. The mod identity is GameMod.id, hence modInfo.id from the id field in mod.json when using toolMod(modInfo) or signalMod(modInfo). The manifest’s modId field is a separate distribution identity. Keep id, option IDs and choice IDs stable; translating a label does not change identity. defaultValue applies when no compatible value is saved and when resetting an option."
+                },
+                {
+                  "kind": "text",
+                  "text": "Changing defaultValue or shortcut in a new version does not replace a saved choice that remains valid. If a value falls outside new numeric bounds or its choice ID no longer exists, the SDK uses that option’s default. Restore this mod’s defaults covers all its preferences and shortcuts, including those in the other section. If a default shortcut conflicts, the reset is rejected without partially applying the other values."
+                },
+                {
+                  "kind": "text",
+                  "text": "Before distributing the mod, check initial values, persistence after restart, numeric bounds, language changes, a disabled shortcut and an intentional conflict. Also verify that changing game sessions does not replay an old opening request."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Options reference",
+                      "to": "/en/reference/native/nimby/modoptions"
+                    },
+                    {
+                      "label": "Windows and clock",
+                      "to": "/en/mods/horloge"
+                    },
+                    {
+                      "label": "Per-signal settings",
+                      "to": "/en/mods/reglages"
                     }
                   ]
                 }
@@ -40040,7 +41315,7 @@
               "blocks": [
                 {
                   "kind": "text",
-                  "text": "Prerequisites: a configured Kotlin/Native project and an existing model or service. This guide translates visible text without changing identifiers, settings or rules."
+                  "text": "Prerequisites: a configured Kotlin/Native project and an existing model, service or tool window. This guide translates their visible text without changing identifiers, settings or rules."
                 },
                 {
                   "kind": "text",
@@ -40055,6 +41330,10 @@
                 {
                   "kind": "text",
                   "text": "fallback selects the fallback language; en is used when omitted. This language must exist and contain every key. Other languages may be incomplete: a missing key uses fallback text."
+                },
+                {
+                  "kind": "text",
+                  "text": "You choose the keys: mod.name, window.clock and title are examples, not reserved names. A key only takes effect when a tr(\"key\") call supplies it to visible text. Adding mod.name to JSON therefore does not automatically rename the mod; adding window.clock creates neither a window nor a shortcut."
                 }
               ]
             },
@@ -40089,6 +41368,10 @@
                   ],
                   "rows": [
                     [
+                      "metadata(name = tr(...), description = tr(...))",
+                      "modInfo.id · modId · module"
+                    ],
+                    [
                       "Checkbox.label / description",
                       "Checkbox.name"
                     ],
@@ -40102,8 +41385,29 @@
                     ],
                     [
                       "ToolWindow.title · message",
-                      "window / action / service / whenMod"
+                      "ToolWindow.id · action · service · whenMod"
                     ]
+                  ]
+                },
+                {
+                  "kind": "text",
+                  "text": "In Options → NRF Hub, the group name comes from the title declared by toolMod or signalMod. With toolMod(modInfo), this is modInfo.title, generated from name in mod.json. metadata(name = tr(\"mod.name\")) translates the name in the game’s lists and details; it does not replace that group title. The title passed to window names both the window and its row under Shortcuts."
+                },
+                {
+                  "kind": "text",
+                  "text": "For a BB Timechange group, use tr(\"window.clock\") with “Date and time” as the window title, for example. The row stays concise without repeating “BB Timechange — Date and time”. Keep its \"clock\" identifier unchanged in both languages and across updates: changing the label should not create a new shortcut preference."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Mod name, group and window",
+                      "to": "/en/mods/metadonnees-traduites#noms-outil"
+                    },
+                    {
+                      "label": "Mod options and shortcuts",
+                      "to": "/en/mods/options"
+                    }
                   ]
                 }
               ]
@@ -40242,6 +41546,10 @@
                       "to": "/en/reference/mod"
                     },
                     {
+                      "label": "ModOptions — Global player preferences and shortcuts configurable from the NRF Hub tab of the game options.",
+                      "to": "/en/reference/native/nimby/modoptions"
+                    },
+                    {
                       "label": "ModResources — Public Kotlin SDK declarations.",
                       "to": "/en/reference/modresources"
                     },
@@ -40362,7 +41670,7 @@
               "blocks": [
                 {
                   "kind": "text",
-                  "text": "28 public Kotlin files are listed. Each constructor property and enum entry has its own entry. Identical names in nimby and fr.nimby.sdk belong to two distinct APIs: choose imports for the correct environment."
+                  "text": "29 public Kotlin files are listed. Each constructor property and enum entry has its own entry. Identical names in nimby and fr.nimby.sdk belong to two distinct APIs: choose imports for the correct environment."
                 },
                 {
                   "kind": "note",
@@ -40707,7 +42015,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -40926,7 +42234,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -41010,7 +42318,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -41329,7 +42637,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -44769,6 +46077,425 @@
           ]
         },
         {
+          "slug": "reference/native/nimby/modoptions",
+          "title": "ModOptions",
+          "group": "Reference",
+          "description": "Global player preferences and shortcuts configurable from the NRF Hub tab of the game options.",
+          "sections": [
+            {
+              "id": "contexte",
+              "title": "Usage context",
+              "blocks": [
+                {
+                  "kind": "table",
+                  "columns": [
+                    "Module",
+                    "Package",
+                    "SDK source"
+                  ],
+                  "rows": [
+                    [
+                      "Kotlin/Native",
+                      "nimby",
+                      "kotlin/src/nimby/ModOptions.kt"
+                    ]
+                  ]
+                },
+                {
+                  "kind": "text",
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                },
+                {
+                  "kind": "note",
+                  "text": "Optional values, data that was not requested and pending responses have distinct meanings. Read the contract before replacing null with a default or repeating a command.",
+                  "title": "Keep in mind"
+                },
+                {
+                  "kind": "code",
+                  "code": "import nimby.ModOption\nimport nimby.BooleanOption\nimport nimby.IntegerOption\nimport nimby.OptionChoice\nimport nimby.ChoiceOption",
+                  "title": "Imports on this page",
+                  "language": "kotlin"
+                }
+              ]
+            },
+            {
+              "id": "api-modoption-7e91dc2322",
+              "title": "ModOption",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "sealed class ModOption<T>",
+                  "title": "nimby · class",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Typed preference belonging to the mod and user, shared across the user’s games. Create a concrete type, register it with options(...) and read value. The SDK saves values and updates them between callbacks."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-modoption-id-830eb826d3",
+              "title": "ModOption.id",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val id: String",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Stable identifier unique within the mod: starts with an ASCII letter, then letters, digits, _, . or -, up to 128 characters. The window. prefix is reserved for the SDK."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-modoption-label-decda9bb8f",
+              "title": "ModOption.label",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val label: String",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Nonempty label displayed in options, up to 256 UTF-8 bytes. Accepts tr; translating this text does not change identity."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-modoption-defaultvalue-1f680b04d6",
+              "title": "ModOption.defaultValue",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val defaultValue: T",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Declared initial value, used when no compatible preference is saved and when resetting. Separate from the player’s current value."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-modoption-description-00fe184b30",
+              "title": "ModOption.description",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val description: String",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Optional explanation, up to 1024 UTF-8 bytes; accepts tr. An empty string omits the explanation."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-modoption-value-b8ebeb90ea",
+              "title": "ModOption.value",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val value: T",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Read-only current value, initially defaultValue. Read it in callbacks and rules without ToolContext. A local read with no game or disk access; invalid changes preserve accepted values."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-booleanoption-d36ec55a7b",
+              "title": "BooleanOption",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "class BooleanOption(\n    id: String, label: String, defaultValue: Boolean = false, description: String = \"\",\n) : ModOption<Boolean>",
+                  "title": "nimby · class",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Enabled or disabled preference, read as Boolean through value. defaultValue is false when omitted; label and description accept tr."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-integeroption-8755f2570c",
+              "title": "IntegerOption",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "class IntegerOption(\n    id: String, label: String, defaultValue: Int, val minimum: Int, val maximum: Int,\n    description: String = \"\",\n) : ModOption<Int>",
+                  "title": "nimby · class",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Bounded integer preference, read as Int. minimum must be at most maximum, and defaultValue must lie within the inclusive range. Invalid values are rejected."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-integeroption-minimum-a5931e8079",
+              "title": "IntegerOption.minimum",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val minimum: Int",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Inclusive lower preference bound; a signed Kotlin Int."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-integeroption-maximum-15a0b46d59",
+              "title": "IntegerOption.maximum",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val maximum: Int",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Inclusive upper preference bound; at least minimum."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-optionchoice-744f73f3fb",
+              "title": "OptionChoice",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "data class OptionChoice(val id: String, val label: String)",
+                  "title": "nimby · class",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Value offered by ChoiceOption: stable id saved in the preference and label displayed to the player. IDs are unique within a choice list."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-optionchoice-id-171aed903b",
+              "title": "OptionChoice.id",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val id: String",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Identifier returned by ChoiceOption.value; follows the option ID format. Do not translate it or replace it with display text."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-optionchoice-label-701afdc5eb",
+              "title": "OptionChoice.label",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val label: String",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Visible choice text, nonempty and limited to 256 UTF-8 bytes; accepts tr."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-choiceoption-6bc5eabc47",
+              "title": "ChoiceOption",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "class ChoiceOption(\n    id: String, label: String, choices: List<OptionChoice>, defaultValue: String,\n    description: String = \"\",\n) : ModOption<String>",
+                  "title": "nimby · class",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Selection among two to sixteen distinct choices. defaultValue must be a choice id; value returns that String identifier, never its translated label."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-choiceoption-choices-37b81ae667",
+              "title": "ChoiceOption.choices",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "val choices: List<OptionChoice>",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Copy of declared choices in display order. Changing the list supplied to the constructor afterwards does not change this option’s choices."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            }
+          ]
+        },
+        {
           "slug": "reference/modresources",
           "title": "ModResources",
           "group": "Reference",
@@ -44795,7 +46522,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -44880,7 +46607,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Base name from mod.json. metadata(name=...) can select different display text without changing identity."
+                  "text": "Name from mod.json, used as the group heading in Options → NRF Hub with toolMod(modInfo) or signalMod(modInfo). metadata(name=...) separately customizes the name in the game’s mod lists."
                 },
                 {
                   "kind": "links",
@@ -44996,7 +46723,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Optional display name, possibly translated. null uses the name from mod.json without changing identifier or version."
+                  "text": "Optional name for the game’s mod lists and details, possibly translated. null uses the name from mod.json. Does not replace GameMod.title in the Options → NRF Hub group or ToolWindow.title; identifier and version remain unchanged."
                 },
                 {
                   "kind": "links",
@@ -45362,7 +47089,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -45950,7 +47677,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Declared base name of the mod; technical identity remains id. Metadata may provide a different display name."
+                  "text": "Declared mod title, used to group its preferences and shortcuts in Options → NRF Hub. Comes from modInfo.title with the modInfo overload; metadata(name=...) does not replace it. Identity remains id."
                 },
                 {
                   "kind": "links",
@@ -45999,6 +47726,31 @@
                     {
                       "label": "Related guide 3 →",
                       "to": "/en/mods/cycle-outils"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-gamemod-options-671f4c4d74",
+              "title": "GameMod.options",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "open val options: List<ModOption<*>>",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Explicit mod options, empty by default. Retain their objects to read value. The limit of 64 includes window shortcuts added automatically by the SDK."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
                     }
                   ]
                 }
@@ -46280,7 +48032,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Declared base name of the mod; technical identity remains id. Metadata may provide a different display name."
+                  "text": "Declared mod title, used to group its preferences and shortcuts in Options → NRF Hub. Comes from modInfo.title with the modInfo overload; metadata(name=...) does not replace it. Identity remains id."
                 },
                 {
                   "kind": "links",
@@ -46362,6 +48114,31 @@
                     {
                       "label": "Related guide 3 →",
                       "to": "/en/mods/cycle-outils"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "id": "api-toolmod-options-9b71b647b3",
+              "title": "ToolMod.options",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "override val options: List<ModOption<*>>",
+                  "title": "nimby · val",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Explicit mod options, empty by default. Retain their objects to read value. The limit of 64 includes window shortcuts added automatically by the SDK."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
                     }
                   ]
                 }
@@ -46566,6 +48343,31 @@
               ]
             },
             {
+              "id": "api-toolmodbuilder-options-ca3c3b0507",
+              "title": "ToolModBuilder.options",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "fun options(vararg values: ModOption<*>): Unit",
+                  "title": "nimby · fun",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Registers one or more global preferences; multiple calls append options. Rejects duplicate IDs and more than 64 options including window shortcuts. Keep the declared objects to read their value."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "id": "symbol-23",
               "title": "ToolModBuilder.window",
               "blocks": [
@@ -46577,7 +48379,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Registers a standalone window and handler. Up to 8 windows, with distinct IDs and shortcuts. Accepted shortcuts: F1 to F12 or Ctrl+Shift+A to Z; defaults to F8. showWindow supplies its content."
+                  "text": "Registers a standalone window and handler, up to 8 distinct IDs. The SDK creates its player-configurable shortcut option: F8 by default, empty to disable. Format: optional Ctrl+, Alt+, Shift+ in that order followed by A–Z, 0–9, F1–F24 or a named key from the guide. Nonempty shortcuts within the mod must be distinct. showWindow supplies the content."
                 },
                 {
                   "kind": "links",
@@ -46610,7 +48412,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Declares the tool’s author, description and optional display name. name and description accept tr; technical identity comes from mod.json."
+                  "text": "Declares the author, description and optional name for the game’s mod lists and details. name and description accept tr. Replaces neither the group heading in Options → NRF Hub nor window titles; identity comes from mod.json."
                 },
                 {
                   "kind": "links",
@@ -46792,7 +48594,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -47068,7 +48870,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -47288,7 +49090,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -48087,6 +49889,31 @@
               ]
             },
             {
+              "id": "api-signalmodbuilder-options-5d38f46823",
+              "title": "SignalModBuilder.options",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "fun options(vararg values: ModOption<*>): Unit",
+                  "title": "nimby · fun",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Registers one or more global preferences; multiple calls append options. Rejects duplicate IDs and more than 64 options including window shortcuts. Keep the declared objects to read their value."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "id": "symbol-25",
               "title": "SignalModBuilder.maximumLineSpeed",
               "blocks": [
@@ -48521,7 +50348,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -50078,6 +51905,31 @@
               ]
             },
             {
+              "id": "api-signalmodelsbuilder-options-157d880a62",
+              "title": "SignalModelsBuilder.options",
+              "blocks": [
+                {
+                  "kind": "code",
+                  "code": "fun options(vararg values: ModOption<*>): Unit",
+                  "title": "nimby · fun",
+                  "language": "kotlin"
+                },
+                {
+                  "kind": "text",
+                  "text": "Registers one or more global preferences; multiple calls append options. Rejects duplicate IDs and more than 64 options including window shortcuts. Keep the declared objects to read their value."
+                },
+                {
+                  "kind": "links",
+                  "items": [
+                    {
+                      "label": "Usage guide and example →",
+                      "to": "/en/mods/options"
+                    }
+                  ]
+                }
+              ]
+            },
+            {
               "id": "api-signalmodelsbuilder-preparenetwork-f32e127b2d",
               "title": "SignalModelsBuilder.prepareNetwork",
               "blocks": [
@@ -50309,7 +52161,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -50383,7 +52235,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -52772,7 +54624,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -52915,7 +54767,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -53559,7 +55411,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -53615,7 +55467,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Window identifier unique within the mod, received in ToolWindowEvent.window."
+                  "text": "Window identifier unique within the mod, received in ToolWindowEvent.window. Keep it stable across versions: the shortcut preference is attached to it. Do not translate this identifier."
                 },
                 {
                   "kind": "links",
@@ -53644,7 +55496,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Window title visible to the player; accepts tr and does not serve as an identifier."
+                  "text": "Text used both as the window title and its shortcut label under the mod’s group in Options → NRF Hub. Accepts tr; a short title avoids repeating the mod name. Changing it does not change identity."
                 },
                 {
                   "kind": "links",
@@ -53673,7 +55525,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Declared shortcut: F1..F12 or Ctrl+Shift+A..Z. Distinct from this mod’s other windows; active in the game context."
+                  "text": "Initial shortcut in the format accepted by window(...); empty to disable. The player can change the binding in the SDK options. The declaration does not necessarily represent the current binding."
                 },
                 {
                   "kind": "links",
@@ -54096,7 +55948,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -57362,7 +59214,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -59028,7 +60880,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -59102,7 +60954,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -59471,7 +61323,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -59715,7 +61567,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -60284,7 +62136,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -61978,7 +63830,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -62754,7 +64606,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -63198,7 +65050,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -67328,7 +69180,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -67698,7 +69550,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",
@@ -68664,7 +70516,7 @@
                 },
                 {
                   "kind": "text",
-                  "text": "Public API for SDK 0.9.0-alpha.1. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
+                  "text": "Public API for SDK 0.9.0-alpha.2. Each entry provides the Kotlin signature and its contract: what the value means, conditions of use and effects to understand. Choose imports from the module shown above."
                 },
                 {
                   "kind": "note",

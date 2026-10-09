@@ -3,9 +3,9 @@
   "editions": [
     {
       "id": "0.9",
-      "sdkVersion": "0.9.0-alpha.1",
+      "sdkVersion": "0.9.0-alpha.2",
       "archived": false,
-      "sha256": "8a6d1a1c80405eba2442141616652f4da31d6660e9f537fadd455e918eda50f2"
+      "sha256": "ba2f39fc557c3d80d4fdb0d5efed5ac2dfb4e64c427c0b09edac6e0b93232f7f"
     },
     {
       "id": "0.8",

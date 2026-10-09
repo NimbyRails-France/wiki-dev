@@ -16,14 +16,14 @@ test('version selection reads independent archives and preserves valid page and 
   await expect(page.getByLabel('Édition de la documentation')).toHaveValue('0.9')
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     'href',
-    'https://wiki.nimbyrails-france.fr/version/0.9/commencer/bienvenue',
+    'https://wiki-dev.nimbyrails-france.fr/version/0.9/commencer/bienvenue',
   )
   await page.getByLabel('Édition de la documentation').selectOption('0.8')
   await expect(page).toHaveURL(/\/version\/0\.8\/commencer\/bienvenue$/)
   await expect(page.locator('.archive-banner')).toContainText('0.8.0-alpha.8')
   await expect(page.locator('link[hreflang="en"]')).toHaveAttribute(
     'href',
-    'https://wiki.nimbyrails-france.fr/en/version/0.8/commencer/bienvenue',
+    'https://wiki-dev.nimbyrails-france.fr/en/version/0.8/commencer/bienvenue',
   )
   await page.getByRole('link', { name: 'Langue', exact: true }).click()
   await expect(page).toHaveURL(/\/en\/version\/0\.8\/commencer\/bienvenue$/)
@@ -55,7 +55,7 @@ test('legacy aliases preserve query, hash, locale and retired historical pages',
   )
   await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
     'href',
-    'https://wiki.nimbyrails-france.fr/en/version/0.9/reference/toolcontext',
+    'https://wiki-dev.nimbyrails-france.fr/en/version/0.9/reference/toolcontext',
   )
   await page.goto('/maintenance/contribuer')
   await expect(page).toHaveURL(/\/version\/0\.8\/maintenance\/contribuer$/)
